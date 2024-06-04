@@ -1,0 +1,7 @@
+[user]
+name = rotorsoft
+email = rotorsoft@outlook.com
+[core]
+	editor = code --wait
+[push]
+	autoSetupRemote = true
