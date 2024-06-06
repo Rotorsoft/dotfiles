@@ -14,7 +14,7 @@
   "editor.fontFamily": "JetBrainsMono Nerd Font",
   "editor.fontLigatures": true,
   "editor.fontSize": 16,
-  "editor.lineHeight": 32,
+  "editor.lineHeight": 28,
   "editor.tabSize": 2,
   "editor.tabCompletion": "on",
   "editor.renderControlCharacters": true,
