@@ -12,12 +12,12 @@ export NVM_DIR="${HOME}/.nvm"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 # modular paths
-export MODULAR_HOME="${HOME}/.modular"
-export PATH="${HOME}/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
+export MODULAR_HOME="${HOMEBREW_PREFIX}/bin/.modular"
+export PATH="${MODULAR_HOME}/pkg/packages.modular.com_mojo/bin:$PATH"
 
 # gcloud path
-#source ~/google-cloud-sdk/path.zsh.inc 
-#source ~/google-cloud-sdk/completion.zsh.inc
+#source ${HOME}/google-cloud-sdk/path.zsh.inc 
+#source ${HOME}/google-cloud-sdk/completion.zsh.inc
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
