@@ -11,7 +11,7 @@
     "source.fixAll": "explicit"
   },
   "editor.multiCursorModifier": "ctrlCmd",
-  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontFamily": "JetBrains Mono",
   "editor.fontLigatures": true,
   "editor.fontSize": 16,
   "editor.lineHeight": 28,
@@ -29,9 +29,9 @@
     "textMateRules": []
   },
 
-  "markdown.preview.fontFamily": "JetBrainsMono Nerd Font",
+  "markdown.preview.fontFamily": "JetBrains Mono",
 
-  "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+  "terminal.integrated.fontFamily": "IosevkaTerm Nerd Font",
   "terminal.integrated.fontSize": 12,
   "terminal.integrated.env.osx": {
     "Q_NEW_SESSION": "1"
@@ -47,7 +47,7 @@
   "terminal.integrated.cursorStyle": "underline",
   "terminal.integrated.minimumContrastRatio": 1,
 
-  "debug.console.fontFamily": "JetBrainsMono Nerd Font",
+  "debug.console.fontFamily": "IosevkaTerm Nerd Font",
   "debug.javascript.autoAttachFilter": "disabled",
 
   "workbench.colorTheme": "dark-rotor-blue",
