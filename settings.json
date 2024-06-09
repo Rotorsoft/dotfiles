@@ -176,7 +176,6 @@
     "aggregates": "../../../../icons/folder-aggregate",
     "commands": "../../../../icons/folder-command",
     "events": "../../../../icons/folder-event",
-    "messages": "../../../../icons/folder-message",
     "policies": "../../../../icons/folder-policy",
     "projections": "../../../../icons/folder-projector",
     "projectors": "../../../../icons/folder-projector",
