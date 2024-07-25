@@ -18,3 +18,6 @@ ln -s $HOME/.dotfiles/settings.json "${HOME}/Library/Application Support/Code/Us
 
 # Link icons
 ln -s $HOME/.dotfiles/icons "${HOME}/.vscode/extensions/icons"
+
+# Link iTerm2 settings
+ln -s $HOME/.dotfiles/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist

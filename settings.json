@@ -1,100 +1,140 @@
 {
-  "editor.guides.indentation": false,
-  "editor.guides.bracketPairs": false,
-  "editor.language.colorizedBracketPairs": [],
-  "editor.occurrencesHighlight": "singleFile",
-  "editor.codeLens": true,
-  "editor.formatOnType": false,
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
   },
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.fontFamily": "'JetBrains Mono'",
-  "editor.fontLigatures": true,
-  "editor.fontSize": 16,
-  "editor.lineHeight": 28,
-  "editor.tabSize": 2,
-  "editor.tabCompletion": "on",
-  "editor.renderControlCharacters": true,
-  "editor.accessibilitySupport": "off",
-  "editor.rulers": [],
-  "editor.inlineSuggest.suppressSuggestions": true,
-  "editor.minimap.enabled": false,
-  "editor.lightbulb.enabled": "off",
-  "editor.colorDecorators": true,
-  "editor.codeLensFontSize": 12,
-  "editor.tokenColorCustomizations": {
-    "textMateRules": []
-  },
-
-  "markdown.preview.fontFamily": "'JetBrains Mono'",
-
-  "terminal.integrated.fontFamily": "IosevkaTerm Nerd Font",
-  "terminal.integrated.fontSize": 12,
-  "terminal.integrated.env.osx": {
-    "Q_NEW_SESSION": "1"
-  },
-  "terminal.integrated.tabs.enabled": true,
-  "terminal.integrated.defaultProfile.osx": "zsh",
-  "terminal.integrated.lineHeight": 1.2,
-  "terminal.integrated.allowChords": true,
-  "terminal.integrated.fontWeight": "normal",
-  "terminal.integrated.fontWeightBold": "bold",
-  "terminal.integrated.drawBoldTextInBrightColors": false,
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.cursorStyle": "underline",
-  "terminal.integrated.minimumContrastRatio": 1,
-
-  "debug.console.fontFamily": "IosevkaTerm Nerd Font",
-  "debug.javascript.autoAttachFilter": "disabled",
-
-  "workbench.colorTheme": "dark-rotor-blue",
-  "workbench.preferredDarkColorTheme": "dark-rotor-blue",
-  "workbench.editor.empty.hint": "hidden",
-  "workbench.panel.defaultLocation": "right",
-  "workbench.sideBar.location": "right",
-  "workbench.fontAliasing": "antialiased",
-  "workbench.colorCustomizations": {},
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.layoutControl.enabled": false,
-  "window.commandCenter": false,
-  "breadcrumbs.enabled": false,
-
-  "zenMode.hideLineNumbers": false,
-  "zenMode.centerLayout": false,
-  "zenMode.hideStatusBar": true,
-
-  "typescript.updateImportsOnFileMove.enabled": "prompt",
-
-  "eslint.codeAction.showDocumentation": {
-    "enable": true
-  },
-
-  "diffEditor.ignoreTrimWhitespace": false,
-
-  "scm.inputFontSize": 12,
-
-  "redhat.telemetry.enabled": false,
-  "githubPullRequests.fileListLayout": "tree",
-  "githubPullRequests.pullBranch": "never",
-
-  "git.confirmSync": false,
-  "git.decorations.enabled": true,
-
-  "gitlens.graph.minimap.additionalTypes": ["localBranches", "remoteBranches"],
-  "gitlens.graph.minimap.enabled": false,
-  "gitlens.views.commitDetails.files.layout": "list",
-  "gitlens.currentLine.enabled": false,
-  "gitlens.currentLine.pullRequests.enabled": false,
-  "gitlens.currentLine.scrollable": false,
-  "gitlens.currentLine.fontSize": 14,
-  "gitlens.blame.fontSize": 14,
-
+  "[esml]": {},
   "[python]": {
     "editor.formatOnType": true
   },
+  "amazonQ.telemetry": false,
+  "better-comments.tags": [
+    {
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false,
+      "strikethrough": false,
+      "tag": "*",
+      "underline": false
+    }
+  ],
+  "cody.autocomplete.advanced.provider": "experimental-ollama",
+  "debug.console.fontFamily": "IosevkaTerm Nerd Font",
+  "debug.javascript.autoAttachFilter": "disabled",
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.accessibilitySupport": "off",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "editor.codeLens": true,
+  "editor.codeLensFontSize": 12,
+  "editor.colorDecorators": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.fontFamily": "'JetBrains Mono'",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 16,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": false,
+  "editor.guides.bracketPairs": false,
+  "editor.guides.indentation": false,
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "editor.language.colorizedBracketPairs": [],
+  "editor.lightbulb.enabled": "off",
+  "editor.lineHeight": 28,
+  "editor.minimap.enabled": false,
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.occurrencesHighlight": "singleFile",
+  "editor.renderControlCharacters": true,
+  "editor.rulers": [],
+  "editor.tabCompletion": "on",
+  "editor.tabSize": 2,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": []
+  },
+  "eslint.codeAction.showDocumentation": {
+    "enable": true
+  },
+  "files.associations": {
+    "\".css\"": "tailwindcss",
+    "*.css": "tailwindcss"
+  },
+  "git.confirmSync": false,
+  "git.decorations.enabled": true,
+  "git.openRepositoryInParentFolders": "never",
+  "githubPullRequests.fileListLayout": "tree",
+  "githubPullRequests.pullBranch": "never",
+  "gitlens.blame.fontSize": 14,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.currentLine.fontSize": 14,
+  "gitlens.currentLine.pullRequests.enabled": false,
+  "gitlens.currentLine.scrollable": false,
+  "gitlens.graph.minimap.additionalTypes": ["localBranches", "remoteBranches"],
+  "gitlens.graph.minimap.enabled": false,
+  "gitlens.views.commitDetails.files.layout": "list",
+  "importCost.typescriptExtensions": ["\\.tsx?$"],
+  "markdown.preview.fontFamily": "'JetBrains Mono'",
+  "material-icon-theme.files.associations": {
+    "*.aggregate.ts": "../../icons/aggregate",
+    "*.aggregates.ts": "../../icons/aggregate",
+    "*.command.ts": "../../icons/command",
+    "*.commands.ts": "../../icons/command",
+    "*.event.ts": "../../icons/event",
+    "*.events.ts": "../../icons/event",
+    "*.model.ts": "sql",
+    "*.models.ts": "sql",
+    "*.policies.ts": "../../icons/policy",
+    "*.policy.ts": "../../icons/policy",
+    "*.process.ts": "../../icons/process",
+    "*.projection.ts": "../../icons/projector",
+    "*.projections.ts": "../../icons/projector",
+    "*.projector.ts": "../../icons/projector",
+    "*.projectors.ts": "../../icons/projector",
+    "*.queries.ts": "../../icons/projector",
+    "*.query.ts": "../../icons/projector",
+    "*.schema.ts": "json",
+    "*.schemas.ts": "json",
+    "*.system.ts": "../../icons/system",
+    "*.systems.ts": "../../icons/system"
+  },
+  "material-icon-theme.folders.associations": {
+    "aggregates": "../../../../icons/folder-aggregate",
+    "commands": "../../../../icons/folder-command",
+    "events": "../../../../icons/folder-event",
+    "policies": "../../../../icons/folder-policy",
+    "projections": "../../../../icons/folder-projector",
+    "projectors": "../../../../icons/folder-projector",
+    "queries": "../../../../icons/folder-projector",
+    "systems": "../../../../icons/folder-system"
+  },
+  "prettier.semi": false,
+  "redhat.telemetry.enabled": false,
+  "scm.inputFontSize": 12,
+  "solidity.telemetry": false,
+  "terminal.integrated.allowChords": true,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "underline",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.drawBoldTextInBrightColors": false,
+  "terminal.integrated.env.osx": {
+    "Q_NEW_SESSION": "1"
+  },
+  "terminal.integrated.fontFamily": "IosevkaTerm Nerd Font",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.fontWeight": "normal",
+  "terminal.integrated.fontWeightBold": "bold",
+  "terminal.integrated.lineHeight": 1.2,
+  "terminal.integrated.minimumContrastRatio": 1,
+  "terminal.integrated.tabs.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "prompt",
+  "window.commandCenter": false,
+  "workbench.colorCustomizations": {},
+  "workbench.colorTheme": "dark-rotor-charcoal",
+  "workbench.editor.empty.hint": "hidden",
+  "workbench.fontAliasing": "antialiased",
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.layoutControl.enabled": false,
+  "workbench.panel.defaultLocation": "right",
+  "workbench.preferredDarkColorTheme": "dark-rotor-blue",
+  "workbench.sideBar.location": "right",
   "yaml.customTags": [
     "!And",
     "!And sequence",
@@ -124,62 +164,7 @@
     "!Split",
     "!Split sequence"
   ],
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "files.associations": {
-    "\".css\"": "tailwindcss",
-    "*.css": "tailwindcss"
-  },
-  "prettier.semi": false,
-  "[esml]": {},
-  "solidity.telemetry": false,
-  "importCost.typescriptExtensions": ["\\.tsx?$"],
-  "cody.autocomplete.advanced.provider": "experimental-ollama",
-  "amazonQ.telemetry": false,
-  "better-comments.tags": [
-    {
-      "tag": "*",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    }
-  ],
-  "git.openRepositoryInParentFolders": "never",
-
-  "material-icon-theme.files.associations": {
-    "*.aggregate.ts": "../../icons/aggregate",
-    "*.aggregates.ts": "../../icons/aggregate",
-    "*.command.ts": "../../icons/command",
-    "*.commands.ts": "../../icons/command",
-    "*.event.ts": "../../icons/event",
-    "*.events.ts": "../../icons/event",
-    "*.policy.ts": "../../icons/policy",
-    "*.policies.ts": "../../icons/policy",
-    "*.process.ts": "../../icons/process",
-    "*.projector.ts": "../../icons/projector",
-    "*.projectors.ts": "../../icons/projector",
-    "*.projection.ts": "../../icons/projector",
-    "*.projections.ts": "../../icons/projector",
-    "*.query.ts": "../../icons/projector",
-    "*.queries.ts": "../../icons/projector",
-    "*.system.ts": "../../icons/system",
-    "*.systems.ts": "../../icons/system",
-    "*.model.ts": "sql",
-    "*.models.ts": "sql",
-    "*.schema.ts": "json",
-    "*.schemas.ts": "json"
-  },
-  "material-icon-theme.folders.associations": {
-    "aggregates": "../../../../icons/folder-aggregate",
-    "commands": "../../../../icons/folder-command",
-    "events": "../../../../icons/folder-event",
-    "policies": "../../../../icons/folder-policy",
-    "projections": "../../../../icons/folder-projector",
-    "projectors": "../../../../icons/folder-projector",
-    "queries": "../../../../icons/folder-projector",
-    "systems": "../../../../icons/folder-system"
-  }
+  "zenMode.centerLayout": false,
+  "zenMode.hideLineNumbers": false,
+  "zenMode.hideStatusBar": true
 }
