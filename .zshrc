@@ -11,6 +11,9 @@ export NVM_DIR="${HOME}/.nvm"
 # psql path
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
+# java path
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
 # modular paths
 export MODULAR_HOME="${HOMEBREW_PREFIX}/bin/.modular"
 export PATH="${MODULAR_HOME}/pkg/packages.modular.com_mojo/bin:$PATH"

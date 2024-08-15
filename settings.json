@@ -4,7 +4,9 @@
   },
   "[esml]": {},
   "[python]": {
-    "editor.formatOnType": true
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.defaultFormatter": "ms-python.autopep8"
   },
   "amazonQ.telemetry": false,
   "better-comments.tags": [
@@ -166,5 +168,6 @@
   ],
   "zenMode.centerLayout": false,
   "zenMode.hideLineNumbers": false,
-  "zenMode.hideStatusBar": true
+  "zenMode.hideStatusBar": true,
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3.12"
 }
