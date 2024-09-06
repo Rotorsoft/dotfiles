@@ -1,7 +1,15 @@
 [user]
-name = rotorsoft
-email = rotorsoft@outlook.com
+	name = rotorsoft
+	email = rotorsoft@outlook.com
+[init]
+	defaultBranch = master
 [core]
 	editor = code --wait
+	pager = delta
+[delta]
+	line-numbers = true	
+	side-by-side = true
 [push]
 	autoSetupRemote = true
+	default = current
+
