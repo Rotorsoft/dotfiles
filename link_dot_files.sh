@@ -1,16 +1,13 @@
 #!/bin/bash
-DOTFILES_DIR=$HOME/.dotfiles
 
-# Loop through all dotfiles in the .dotfiles directory
-for file in $DOTFILES_DIR/.*; do
-  # Skip . and ..
-  if [[ $(basename "$file") == "." || $(basename "$file") == ".." ]]; then
-    continue
-  fi
-  filename=$(basename "$file")
-  # Create a symlink in the home directory
-  ln -s "$file" $HOME/"$filename"
-done
+# Remove all existing links
+find $HOME -maxdepth 1 -type l -exec rm {} \;
+
+# Link dotfiles
+ln -s $HOME/.dotfiles/.gitconfig "${HOME}/.gitconfig"
+ln -s $HOME/.dotfiles/.p10k.zsh "${HOME}/.p10k.zsh"
+ln -s $HOME/.dotfiles/.zprofile "${HOME}/.zprofile"
+ln -s $HOME/.dotfiles/.zshrc "${HOME}/.zshrc"
 
 # Link vscode settings.json 
 rm "${HOME}/Library/Application Support/Code/User/settings.json"
@@ -20,4 +17,7 @@ ln -s $HOME/.dotfiles/settings.json "${HOME}/Library/Application Support/Code/Us
 ln -s $HOME/.dotfiles/icons "${HOME}/.vscode/extensions/icons"
 
 # Link iTerm2 settings
-ln -s $HOME/.dotfiles/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+ln -s $HOME/.dotfiles/com.googlecode.iterm2.plist "${HOME}/Library/Preferences/com.googlecode.iterm2.plist"
+
+# Link keychron layout
+ln -s $HOME/.dotfiles/keychron_q6_max_ansi_knob.layout.json "${HOME}/keychron_q6_max_ansi_knob.layout.json"
