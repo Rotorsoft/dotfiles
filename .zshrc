@@ -9,10 +9,13 @@ export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
 export NVM_DIR="${HOME}/.nvm"
 
 # psql path
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+export PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:$PATH"
 
 # java path
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="${HOMEBREW_PREFIX}/opt/openjdk/bin:$PATH"
+
+# python3 path
+export PATH="${HOMEBREW_PREFIX}/bin/python3:$PATH"
 
 # modular paths
 export MODULAR_HOME="${HOMEBREW_PREFIX}/bin/.modular"

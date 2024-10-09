@@ -8,7 +8,9 @@ export COREPACK_ENABLE_STRICT=0
 
 # my aliases
 alias p=pnpm
+alias python=python3
 alias py=python3
+alias pip=pip3
 
 # Q post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh"

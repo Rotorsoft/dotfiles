@@ -169,5 +169,8 @@
   ],
   "zenMode.centerLayout": false,
   "zenMode.hideLineNumbers": false,
-  "zenMode.hideStatusBar": true
+  "zenMode.hideStatusBar": true,
+  "breadcrumbs.enabled": false,
+  "supermaven.allowGitignore": true,
+  "javascript.updateImportsOnFileMove.enabled": "never"
 }
