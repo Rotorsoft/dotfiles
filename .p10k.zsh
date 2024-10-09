@@ -56,9 +56,46 @@
 
   # Right prompt segments.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    node_version              # node version
-    command_execution_time    # previous command duration
-    status                    # exit code
+    custom_env                 # Custom segment to show either Node or Python version
+    command_execution_time     # Previous command duration
+    status                     # Exit code
+  )
+
+  # Define a custom segment called `custom_env`.
+  typeset -g POWERLEVEL9K_CUSTOM_ENV="echo_env_version"
+  typeset -g POWERLEVEL9K_CUSTOM_ENV_FOREGROUND=cyan
+  typeset -g POWERLEVEL9K_CUSTOM_ENV_BACKGROUND=  # Transparent background
+  typeset -g POWERLEVEL9K_CUSTOM_ENV_VISUAL_IDENTIFIER_EXPANSION=''
+
+  # This function will be called to show the active environment.
+  echo_env_version() {
+    # Check if a Python virtual environment is active.
+    if [[ -n $VIRTUAL_ENV ]]; then
+      # Show the Python version and icon if a venv is active.
+      local python_version="%F{green}🐍 $(python --version 2>&1 | sed 's/Python //')%f"
+      echo -n $python_version
+    else
+      # Look for `package.json` up to 3 levels up in the parent directories.
+      local dir=$PWD
+      for i in {1..3}; do
+        if [[ -f "$dir/package.json" ]]; then
+          # If found, show the Node.js version and icon.
+          local node_version="%F{yellow} $(node --version 2>&1 | sed 's/v//')%f"
+          echo -n $node_version
+          return
+        fi
+        dir=$(dirname "$dir")  # Move up one directory level
+      done
+      # If no environment is active, show nothing.
+      echo -n ""
+    fi
+  }
+
+  # Right prompt segments.
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+    custom_env                 # Custom segment to show either Node or Python version
+    command_execution_time     # Previous command duration
+    status                     # Exit code
   )
 
   # Basic style options that define the overall prompt look.
