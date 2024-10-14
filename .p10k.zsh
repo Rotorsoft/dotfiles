@@ -46,21 +46,6 @@
   local cyan='#9AEDFE'
   local white='#F1F1F0'
 
-  # Left prompt segments.
-  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    context                   # user@host
-    dir                       # current directory
-    vcs                       # git status
-    prompt_char               # prompt symbol
-  )
-
-  # Right prompt segments.
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    custom_env                 # Custom segment to show either Node or Python version
-    command_execution_time     # Previous command duration
-    status                     # Exit code
-  )
-
   # Define a custom segment called `custom_env`.
   typeset -g POWERLEVEL9K_CUSTOM_ENV="echo_env_version"
   typeset -g POWERLEVEL9K_CUSTOM_ENV_FOREGROUND=cyan
@@ -70,9 +55,9 @@
   # This function will be called to show the active environment.
   echo_env_version() {
     # Check if a Python virtual environment is active.
-    if [[ -n $VIRTUAL_ENV ]]; then
+    if [[ -n $VIRTUAL_ENV && -d $VIRTUAL_ENV ]]; then
       # Show the Python version and icon if a venv is active.
-      local python_version="%F{green}🐍 $(python --version 2>&1 | sed 's/Python //')%f"
+      local python_version="%F{yellow}🐍 $(python --version 2>&1 | sed 's/Python //')%f"
       echo -n $python_version
     else
       # Look for `package.json` up to 3 levels up in the parent directories.
@@ -80,7 +65,7 @@
       for i in {1..3}; do
         if [[ -f "$dir/package.json" ]]; then
           # If found, show the Node.js version and icon.
-          local node_version="%F{yellow} $(node --version 2>&1 | sed 's/v//')%f"
+          local node_version="%F{green} $(node --version 2>&1 | sed 's/v//')%f"
           echo -n $node_version
           return
         fi
@@ -90,6 +75,14 @@
       echo -n ""
     fi
   }
+
+  # Left prompt segments.
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+    context                   # user@host
+    dir                       # current directory
+    vcs                       # git status
+    prompt_char               # prompt symbol
+  )
 
   # Right prompt segments.
   typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
