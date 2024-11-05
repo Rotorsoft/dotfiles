@@ -1,16 +1,42 @@
-# Q pre block. Keep at the top of this file.
+# Q pre block (session-wide)
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh"
-eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# homebrew bin
+export HOMEBREW_PREFIX="/opt/homebrew"
+export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
+
+# nvm dir
+export NVM_DIR="${HOME}/.nvm"
+
+# psql path
+export PATH="${HOMEBREW_PREFIX}/opt/libpq/bin:$PATH"
+
+# java path
+export PATH="${HOMEBREW_PREFIX}/opt/openjdk/bin:$PATH"
+
+# python3 path
+export PATH="${HOMEBREW_PREFIX}/bin/python3:$PATH"
+
+# modular paths
+export MODULAR_HOME="${HOMEBREW_PREFIX}/bin/.modular"
+export PATH="${MODULAR_HOME}/pkg/packages.modular.com_mojo/bin:$PATH"
+
+# pnpm path
+export PNPM_HOME="${HOME}/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
+
+# Corepack settings for pnpm
+export COREPACK_ENABLE_STRICT=0 # to allo new pnpm versions
+
+# gcloud path
+#source ${HOME}/google-cloud-sdk/path.zsh.inc 
+#source ${HOME}/google-cloud-sdk/completion.zsh.inc
+
+# Initialize Homebrew environment
+eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
+
+# Initialize zoxide
 eval "$(zoxide init zsh)"
 
-# allow new pnpm versions 
-export COREPACK_ENABLE_STRICT=0
-
-# my aliases
-alias p=pnpm
-alias python=python3
-alias py=python3
-alias pip=pip3
-
-# Q post block. Keep at the bottom of this file.
+# Q post block (session-wide)
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh"
