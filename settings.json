@@ -8,7 +8,6 @@
     "editor.formatOnSave": true,
     "editor.formatOnType": true
   },
-  "amazonQ.telemetry": false,
   "better-comments.tags": [
     {
       "backgroundColor": "transparent",
@@ -170,7 +169,10 @@
   "zenMode.centerLayout": false,
   "zenMode.hideLineNumbers": false,
   "zenMode.hideStatusBar": true,
-  "breadcrumbs.enabled": false,
   "supermaven.allowGitignore": true,
-  "javascript.updateImportsOnFileMove.enabled": "never"
+  "javascript.updateImportsOnFileMove.enabled": "never",
+
+  "vscode_custom_css.imports": [
+    "file://${userHome}/.dotfiles/vscode-custom.css"
+  ]
 }

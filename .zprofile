@@ -1,6 +1,3 @@
-# Q pre block (session-wide)
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh"
-
 # homebrew bin
 export HOMEBREW_PREFIX="/opt/homebrew"
 export PATH="$HOMEBREW_PREFIX/bin:$HOMEBREW_PREFIX/sbin:$PATH"
@@ -37,6 +34,3 @@ eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 
 # Initialize zoxide
 eval "$(zoxide init zsh)"
-
-# Q post block (session-wide)
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh"
