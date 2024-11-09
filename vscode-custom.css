@@ -80,5 +80,6 @@ background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-
 	background-repeat: no-repeat no-repeat !important;
 	background-position: center center !important;
 	background-size: contain !important;
-	width: 60% !important;
+	width: 30% !important;
+	filter: drop-shadow(0 0 4px rgba(20, 20, 200, .5));
 }
