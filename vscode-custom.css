@@ -88,3 +88,32 @@ background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-
 	filter: drop-shadow(0 0 70px rgba(255, 150, 250, 0.4));
 	width: 33% !important;
 }
+
+/* TS Pretty errors - allow copying */
+.codicon-none {
+	user-select: text !important;
+	-webkit-user-select: text !important;
+}
+
+/* Hide original TS errors */
+div.monaco-hover-content:has(.codicon-none) > .hover-row:first-child {
+	display: none !important;
+}
+div.monaco-hover-content:has([style="color:#f96363;"]) > .hover-row:first-child {
+	display: none !important
+}
+
+/* Change order */
+.monaco-hover .monaco-hover-content {
+	display: flex;
+	flex-direction: column;
+}
+.monaco-hover .monaco-hover-content .hover-row {
+	order: 2;
+}
+.monaco-hover .monaco-hover-content .hover-row:has(.codicon-none) {
+	order: 1;
+}
+.monaco-hover .monaco-hover-content .hover-row:has([style="color:#f96363;"]) {
+	order: 1;
+}

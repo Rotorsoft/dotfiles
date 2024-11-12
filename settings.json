@@ -174,5 +174,6 @@
 
   "vscode_custom_css.imports": [
     "file://${userHome}/.dotfiles/vscode-custom.css"
-  ]
+  ],
+  "vitest.shellType": "terminal"
 }
