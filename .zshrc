@@ -12,10 +12,6 @@ source $ZSH/oh-my-zsh.sh
 # Enable Zsh completions (interactive)
 autoload -Uz compinit && compinit
 
-# nvm completions
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && . "/opt/homebrew/opt/nvm/nvm.sh"  
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
-
 # Homebrew plugins (syntax highlighting, autosuggestions, Powerlevel10k theme)
 source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -24,6 +20,10 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # Prompt customization file (interactive)
 # to customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh 
+
+# nvm
+[ -s "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh" 
+nvm use default 
 
 # Bun completions
 [ -s "${HOME}/.bun/_bun" ] && source "${HOME}/.bun/_bun"
