@@ -129,10 +129,8 @@
   "typescript.updateImportsOnFileMove.enabled": "never",
   "window.commandCenter": false,
   "workbench.colorCustomizations": {},
-  "workbench.colorTheme": "dark-rotor-charcoal",
   "workbench.editor.empty.hint": "hidden",
   "workbench.fontAliasing": "antialiased",
-  "workbench.iconTheme": "material-icon-theme",
   "workbench.layoutControl.enabled": false,
   "workbench.panel.defaultLocation": "right",
   "workbench.preferredDarkColorTheme": "dark-rotor-blue",
@@ -175,5 +173,6 @@
   "vscode_custom_css.imports": [
     "file://${userHome}/.dotfiles/vscode-custom.css"
   ],
-  "vitest.shellType": "terminal"
+  "vitest.shellType": "terminal",
+  "workbench.colorTheme": "dark-rotor-charcoal"
 }
