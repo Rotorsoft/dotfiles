@@ -4,7 +4,6 @@
   },
   "[esml]": {},
   "[python]": {
-    "editor.defaultFormatter": "ms-python.autopep8",
     "editor.formatOnSave": true,
     "editor.formatOnType": true
   },
@@ -174,5 +173,6 @@
     "file://${userHome}/.dotfiles/vscode-custom.css"
   ],
   "vitest.shellType": "terminal",
-  "workbench.colorTheme": "dark-rotor-charcoal"
+  "workbench.colorTheme": "dark-rotor-charcoal",
+  "workbench.iconTheme": "material-icon-theme"
 }
