@@ -173,6 +173,10 @@
     "file://${userHome}/.dotfiles/vscode-custom.css"
   ],
   "vitest.shellType": "terminal",
-  "workbench.colorTheme": "dark-rotor-charcoal",
-  "workbench.iconTheme": "material-icon-theme"
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "C_Cpp.default.cppStandard": "c++23",
+  "workbench.colorTheme": "dark-rotor-charcoal"
 }
