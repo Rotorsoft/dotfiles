@@ -175,6 +175,6 @@
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "C_Cpp.default.cppStandard": "c++23",
-  "workbench.colorTheme": "dark-rotor-charcoal",
-  "workbench.iconTheme": "material-icon-theme"
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "dark-rotor-charcoal"
 }
