@@ -169,14 +169,12 @@
   "supermaven.allowGitignore": true,
   "javascript.updateImportsOnFileMove.enabled": "never",
 
-  "vscode_custom_css.imports": [
-    "file://${userHome}/.dotfiles/vscode-custom.css"
-  ],
   "vitest.shellType": "terminal",
   "C_Cpp.default.compilerPath": "/usr/bin/clang++",
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },
   "C_Cpp.default.cppStandard": "c++23",
-  "workbench.colorTheme": "dark-rotor-charcoal"
+  "workbench.colorTheme": "dark-rotor-charcoal",
+  "workbench.iconTheme": "material-icon-theme"
 }
