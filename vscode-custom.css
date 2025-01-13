@@ -5,6 +5,10 @@
   font-family: "JetBrains Mono", monospace !important;
 }
 
+.line-numbers {
+  font-size: 60% !important;
+}
+
 /* Code canvas top shadow */
 .monaco-editor .scroll-decoration {
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.75) !important;
@@ -52,8 +56,8 @@
 /* Override display:none when JS hides the element */
 .quick-input-widget[style*="display: none;"] {
   display: block !important; /* Keep the element in the flow */
-  opacity: 0;
-  transform: scaleY(0.9);
+  opacity: 0 !important;
+  transform: scaleY(0) !important;
   pointer-events: none;
 }
 /* Visible state */
