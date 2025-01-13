@@ -43,27 +43,25 @@
 
 /* Command Palette */
 .quick-input-widget {
-  transform: translateY(-50%) !important;
-  top: 50% !important;
+  top: 25% !important;
   box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.45) !important;
   padding: 10px 10px 18px 10px !important;
   backdrop-filter: blur(3px) !important;
   border-radius: 20px !important;
   transform-origin: top;
   opacity: 1;
-  transition: opacity 300ms ease, transform 300ms ease;
+  transition: opacity 300ms ease,
+    transform 300ms cubic-bezier(0.42, 0, 0.58, 1.2);
 }
-/* Override display:none when JS hides the element */
 .quick-input-widget[style*="display: none;"] {
   display: block !important; /* Keep the element in the flow */
   opacity: 0 !important;
-  transform: scaleY(0) !important;
+  transform: scale(0.5) translateY(-200%) !important;
   pointer-events: none;
 }
-/* Visible state */
 .quick-input-widget[style*="display: block;"] {
   opacity: 1 !important;
-  transform: scaleY(1) !important;
+  transform: scale(1) translateY(0) !important; /* Slide to its normal position */
   pointer-events: auto; /* Enable interaction */
 }
 
