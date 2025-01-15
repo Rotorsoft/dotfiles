@@ -2,7 +2,8 @@
 .mac,
 .title,
 .label-name {
-  font-family: "JetBrains Mono", monospace !important;
+  font-family: "IosevkaTerm Nerd Font", monospace !important;
+  font-size: 16px !important;
 }
 
 .line-numbers {
@@ -30,11 +31,11 @@
 .monaco-hover {
   box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.45) !important;
   backdrop-filter: blur(3px) !important;
-  border-radius: 10px !important;
+  border-radius: 16px !important;
 }
 
 .monaco-hover-content:first-child {
-  font-size: 90% !important;
+  /* font-size: 90% !important; */
   padding: 10px !important;
 }
 .hover-row span:first-child {
