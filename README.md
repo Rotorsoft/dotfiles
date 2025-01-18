@@ -1,11 +1,5 @@
 # Setup
 
-## Symlink .dotfiles
-
-```bash
-./.dotfiles/link_dot_files.sh
-```
-
 ## Homebrew
 
 ```bash
@@ -37,4 +31,10 @@ echo $SHELL
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+```
+
+## Symlink .dotfiles
+
+```bash
+./.dotfiles/link_dot_files.sh
 ```
