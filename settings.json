@@ -17,7 +17,6 @@
       "underline": false
     }
   ],
-  "cody.autocomplete.advanced.provider": "experimental-ollama",
   "debug.console.fontFamily": "IosevkaTerm Nerd Font",
   "debug.javascript.autoAttachFilter": "disabled",
   "diffEditor.ignoreTrimWhitespace": false,
@@ -185,5 +184,9 @@
   ],
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "code-runner.runInTerminal": true,
+  "code-runner.executorMap": {
+    "cpp": "cd $dir && g++ -std=c++20 $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
   }
 }
