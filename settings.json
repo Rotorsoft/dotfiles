@@ -120,9 +120,6 @@
   "terminal.integrated.cursorStyle": "underline",
   "terminal.integrated.defaultProfile.osx": "zsh",
   "terminal.integrated.drawBoldTextInBrightColors": false,
-  "terminal.integrated.env.osx": {
-    "Q_NEW_SESSION": "1"
-  },
   "terminal.integrated.fontFamily": "IosevkaTerm Nerd Font",
   "terminal.integrated.fontSize": 12,
   "terminal.integrated.fontWeight": "normal",
