@@ -9,7 +9,7 @@ append_path() {
       *) 
         # otherwise append to path
         export PATH="$PATH:$1" 
-        echo "Appended $1 to PATH"
+        # echo "Appended $1 to PATH"
         ;;
     esac
     return 0 # success

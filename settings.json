@@ -170,23 +170,20 @@
   "supermaven.allowGitignore": true,
   "javascript.updateImportsOnFileMove.enabled": "never",
   "vitest.shellType": "terminal",
-  "C_Cpp.default.compilerPath": "/usr/bin/clang++",
-  "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools"
-  },
-  "C_Cpp.default.cppStandard": "c++23",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "dark-rotor-charcoal",
   "breadcrumbs.enabled": false,
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++",
+  "C_Cpp.default.cppStandard": "c++20",
+  "C_Cpp.formatting": "clangFormat",
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
   "cmake.pinnedCommands": [
     "workbench.action.tasks.configureTaskRunner",
     "workbench.action.tasks.runTask"
   ],
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "code-runner.runInTerminal": true,
-  "code-runner.executorMap": {
-    "cpp": "cd $dir && g++ -std=c++20 $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-  }
 }
