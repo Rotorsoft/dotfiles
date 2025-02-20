@@ -22,7 +22,7 @@
   "diffEditor.ignoreTrimWhitespace": false,
   "editor.accessibilitySupport": "off",
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll": "explicit",
   },
   "editor.codeLens": true,
   "editor.codeLensFontSize": 14,
@@ -70,8 +70,7 @@
     "localBranches",
     "remoteBranches"
   ],
-  "gitlens.graph.minimap.enabled": false,
-  "gitlens.views.commitDetails.files.layout": "list",
+  "gitlens.views.commitDetails.files.layout": "tree",
   "importCost.typescriptExtensions": [
     "\\.tsx?$"
   ],
@@ -109,7 +108,6 @@
     "queries": "../../../../icons/folder-projector",
     "systems": "../../../../icons/folder-system"
   },
-  "prettier.semi": false,
   "python.defaultInterpreterPath": "/opt/homebrew/bin/python3.12",
   "redhat.telemetry.enabled": false,
   "scm.inputFontSize": 12,
@@ -186,4 +184,5 @@
     "workbench.action.tasks.configureTaskRunner",
     "workbench.action.tasks.runTask"
   ],
+  "gitlens.graph.minimap.enabled": false,
 }
