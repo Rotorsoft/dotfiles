@@ -67,8 +67,7 @@
   "gitlens.currentLine.pullRequests.enabled": false,
   "gitlens.currentLine.scrollable": false,
   "gitlens.graph.minimap.additionalTypes": [
-    "localBranches",
-    "remoteBranches"
+    "tags"
   ],
   "gitlens.views.commitDetails.files.layout": "tree",
   "importCost.typescriptExtensions": [
@@ -184,5 +183,6 @@
     "workbench.action.tasks.configureTaskRunner",
     "workbench.action.tasks.runTask"
   ],
+  "gitlens.views.launchpad.files.layout": "list",
   "gitlens.graph.minimap.enabled": false,
 }
