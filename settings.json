@@ -169,7 +169,6 @@
   "vitest.shellType": "terminal",
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "dark-rotor-charcoal",
-  "breadcrumbs.enabled": false,
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
