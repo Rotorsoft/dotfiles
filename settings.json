@@ -168,7 +168,6 @@
   "javascript.updateImportsOnFileMove.enabled": "never",
   "vitest.shellType": "terminal",
   "workbench.iconTheme": "material-icon-theme",
-  "workbench.colorTheme": "dark-rotor-charcoal",
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
@@ -184,4 +183,13 @@
   ],
   "gitlens.views.launchpad.files.layout": "list",
   "gitlens.graph.minimap.enabled": false,
+  "workbench.colorTheme": "dark-rotor-charcoal",
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false
+  },
+  "docker.extension.enableComposeLanguageServer": false,
+  "workbench.startupEditor": "none",
 }
