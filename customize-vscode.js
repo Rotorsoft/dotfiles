@@ -4,7 +4,7 @@ const path = require("path")
 // Paths
 const vscodeWorkbenchPath = path.join(
   process.env.HOME,
-  "Applications/Visual Studio Code.app/Contents/Resources/app/out/vs/code/electron-sandbox/workbench"
+  "Applications/Visual Studio Code.app/Contents/Resources/app/out/vs/code/electron-browser/workbench"
 )
 const workbenchFile = path.join(vscodeWorkbenchPath, "workbench.html")
 const backupFile = `${workbenchFile}.bak`

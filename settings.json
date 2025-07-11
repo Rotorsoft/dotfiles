@@ -192,4 +192,5 @@
   },
   "docker.extension.enableComposeLanguageServer": false,
   "workbench.startupEditor": "none",
+  "git.blame.editorDecoration.enabled": false,
 }
