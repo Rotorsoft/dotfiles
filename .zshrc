@@ -10,6 +10,7 @@ export ZSH="$HOME/.oh-my-zsh"
 source $ZSH/oh-my-zsh.sh
 
 # zsh completions
+fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit && compinit
 autoload -Uz colors && colors
 
