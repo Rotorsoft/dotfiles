@@ -107,7 +107,7 @@
     "queries": "../../../../icons/folder-projector",
     "systems": "../../../../icons/folder-system"
   },
-  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3.12",
+  "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
   "redhat.telemetry.enabled": false,
   "scm.inputFontSize": 12,
   "solidity.telemetry": false,

@@ -24,16 +24,16 @@ use_tool() {
   case $1 in
     java)
       append_path "$HOMEBREW_PREFIX/opt/openjdk/bin" || return
-      echo "✅ Java"
+      echo "✓ Java"
       ;;
     dotnet)
       append_path "/usr/local/share/dotnet" || return
-      echo "✅ .NET"
+      echo "✓ .NET"
       ;;
     modular)
       export MODULAR_HOME="$HOMEBREW_PREFIX/bin/.modular"
       append_path "$MODULAR_HOME/pkg/packages.modular.com_mojo/bin" || return
-      echo "✅ Modular"
+      echo "✓ modular"
       ;;
     node)
       # pnpm 
@@ -43,29 +43,23 @@ use_tool() {
       alias p=pnpm
       # nvm
       . "$HOME/.nvm/nvm.sh" || return
-      echo "✅ Node"
+      echo "✓ node"
       ;;
     psql)
       append_path "$HOMEBREW_PREFIX/opt/libpq/bin" || return
-      echo "✅ psql"
+      echo "✓ psql"
       ;;
     gcloud)
       source $HOME/google-cloud-sdk/path.zsh.inc || return
       source $HOME/google-cloud-sdk/completion.zsh.inc || return
-      echo "✅ gcloud"
+      echo "✓ gcloud"
       ;;
     bun)
       source "$HOME/.bun/_bun" || return
-      echo "✅ Bun"
-      ;;
-    python)
-      alias python=python3
-      alias py=python3
-      alias pip=pip3
-      echo "✅ Python aliases"
+      echo "✓ bun"
       ;;
     *)
-      echo "Usage: use_tool [java|dotnet|modular|node|psql|gcloud|bun|python]"
+      echo "Usage: use_tool [java|dotnet|modular|node|psql|gcloud|bun]"
       ;;
   esac
 }
@@ -76,9 +70,7 @@ append_path "$HOMEBREW_PREFIX/bin"
 append_path "$HOMEBREW_PREFIX/sbin"
 eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 
-# zoxide
-eval "$(zoxide init zsh)"
-
 # init my tools
 use_tool node
 use_tool psql
+

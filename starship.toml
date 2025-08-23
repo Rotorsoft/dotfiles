@@ -1,0 +1,35 @@
+add_newline = false
+
+format = """$directory$git_branch$git_status$character"""
+right_format = """$python$nodejs$golang$docker_context"""
+
+[character]
+success_symbol = "[❱](green)"
+error_symbol = "[❱](red)"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "cyan"
+
+[git_branch]
+symbol = " "
+style = "purple"
+
+[git_status]
+style = "red"
+
+[python]
+symbol = "🐍 "
+style = "yellow"
+format = "[$symbol$version]($style) "
+
+[nodejs]
+symbol = "⬢ "
+style = "green"
+format = "[$symbol$version]($style) "
+
+[docker_context]
+symbol = "🐳 "
+style = "cyan"
+format = "[$symbol]($style) "
