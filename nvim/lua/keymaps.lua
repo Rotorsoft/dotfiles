@@ -93,9 +93,6 @@ end, { desc = "write session" })
 
 -- Git mappings
 local gs = require("gitsigns")
-vim.keymap.set("n", "<leader>gg", ":Neogit<CR>", { desc = "show git status" })
-vim.keymap.set("n", "<leader>gv", ":Gitsigns<CR>", { desc = "show git signs" })
-vim.keymap.set({ "o", "x" }, "gh", ":<C-U>Gitsigns select_hunk<CR>", { desc = "select hunk" })
 gs.setup({
   on_attach = function(bufnr)
     local function map(mode, lhs, rhs, desc)
@@ -166,5 +163,5 @@ miniclue.setup({
     { mode = "n", keys = "<leader>c", desc = " lsp" },
     { mode = "n", keys = "<leader>s", desc = " session" },
   },
-  window = { delay = 0 },
+  window = { config = { width = 60 }, delay = 0 },
 })
