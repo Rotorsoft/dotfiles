@@ -20,7 +20,6 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldnestmax = 4
 vim.o.foldmethod = "expr"
-vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldtext = ""
 vim.o.shiftwidth = 2
 vim.o.tabstop = 2
@@ -30,36 +29,45 @@ vim.o.clipboard = "unnamedplus"
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = " " }
 
-require("bootstrap")
-require("keymaps")
-require("commands")
+vim.pack.add({
+  -- LSP
+  { src = "https://github.com/neovim/nvim-lspconfig" },
+  { src = "https://github.com/mason-org/mason.nvim" },
+  { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
+  { src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
+  -- Completion
+  { src = "https://github.com/hrsh7th/nvim-cmp" },
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path" },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+  { src = "https://github.com/supermaven-inc/supermaven-nvim" },
+  -- Formatting
+  { src = "https://github.com/stevearc/conform.nvim" },
+  -- UI
+  { src = "https://github.com/catppuccin/nvim" },
+  { src = "https://github.com/nvim-lualine/lualine.nvim" },
+  { src = "https://github.com/echasnovski/mini.nvim" },
+  -- Git
+  { src = "https://github.com/lewis6991/gitsigns.nvim" },
+})
 
+-- Theme
 require("catppuccin").setup({
   flavour = "mocha",
   transparent_background = true,
-  float = { transparent = true, solid = false },
+  float = { transparent = true },
 })
 vim.cmd.colorscheme("catppuccin")
--- override colorscheme for more transparency
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "none", underline = false, blend = 20 })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFD700", bg = "none", bold = true })
 
--- List highlight groups with their colors
-function List_hl()
-  local all_hl = vim.fn.getcompletion("", "highlight") -- get all highlight group names
-  for _, name in ipairs(all_hl) do
-    if name:match("^Diagnostic") then
-      local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name })
-      if ok then
-        local fg = hl.fg and string.format("#%06x", hl.fg) or "none"
-        local bg = hl.bg and string.format("#%06x", hl.bg) or "none"
-        local style = (hl.bold and "bold " or "")
-          .. (hl.italic and "italic " or "")
-          .. (hl.underline and "underline" or "")
-        print(string.format("%-25s fg=%-8s bg=%-8s style=%s", name, fg, bg, style))
-      end
-    end
-  end
-end
-
--- vim: ts=2 sts=2 sw=2 et
+-- Plugins
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    require("tui")
+    require("lsp")
+    require("git")
+    vim.defer_fn(function()
+      require("keymaps")
+    end, 100)
+  end,
+})
