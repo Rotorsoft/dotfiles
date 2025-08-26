@@ -81,9 +81,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local bufnr = args.buf
     local pickers = require("mini.extra").pickers
 
-    vim.keymap.set("n", "K", function()
-      vim.lsp.buf.hover({ border = "rounded" })
-    end, { desc = "Hover" })
     vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, { desc = "Rename" })
     vim.keymap.set("n", "<F4>", vim.lsp.buf.code_action, { desc = "Code Action" })
     vim.keymap.set("n", "<F12>", vim.lsp.buf.definition, { desc = "Goto Definition" })

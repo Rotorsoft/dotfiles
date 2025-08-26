@@ -1,6 +1,16 @@
 -- override colorscheme for more transparency
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "none", underline = false, blend = 20 })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFD700", bg = "none", bold = true })
+-- override floating window border to rounded by default
+do
+  local orig = vim.lsp.util.open_floating_preview
+  ---@diagnostic disable-next-line duplicate field
+  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or "rounded"
+    return orig(contents, syntax, opts, ...)
+  end
+end
 
 -- yank highlight
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -9,13 +19,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.hl.on_yank()
   end,
 })
-
-local sessions = require("mini.sessions")
-sessions.setup({ autoread = true, autowrite = true })
-vim.keymap.set("n", "<leader>ss", sessions.select, { desc = "Select" })
-vim.keymap.set("n", "<leader>sw", function()
-  sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim")
-end, { desc = "Write" })
 
 require("lualine").setup({
   options = {
@@ -51,8 +54,12 @@ require("lualine").setup({
         symbols = { error = " ", warn = " ", info = " ", hint = "󰌶 " },
       },
     },
-    lualine_y = { { "progress" } },
-    lualine_z = { { "location", padding = { left = 0, right = 1 } } },
+    lualine_y = {
+      { "lsp_status", padding = { left = 1, right = 0 } },
+      { "filesize", separator = "/", padding = { left = 1, right = 0 } },
+      { "progress", padding = { left = 0, right = 1 } },
+    },
+    lualine_z = { { "location" } },
   },
   inactive_sections = {
     lualine_c = { "filename" },
@@ -69,8 +76,9 @@ require("mini.icons").setup()
 require("mini.indentscope").setup()
 require("mini.move").setup()
 require("mini.files").setup()
-require("mini.pick").setup()
+require("mini.pick").setup({ window = { config = { border = "rounded" } } })
 require("mini.extra").setup()
+require("mini.notify").setup()
 
 local hipatterns = require("mini.hipatterns")
 hipatterns.setup({

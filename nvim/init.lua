@@ -60,14 +60,22 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme("catppuccin")
 
+-- LSP
+require("lsp")
+
+-- Sessions
+local sessions = require("mini.sessions")
+sessions.setup({ autoread = true, autowrite = true })
+vim.keymap.set("n", "<leader>ss", sessions.select, { desc = "Select" })
+vim.keymap.set("n", "<leader>sw", function()
+  sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim")
+end, { desc = "Write" })
+
 -- Plugins
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     require("tui")
-    require("lsp")
     require("git")
-    vim.defer_fn(function()
-      require("keymaps")
-    end, 100)
+    require("keymaps")
   end,
 })
