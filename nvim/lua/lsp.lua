@@ -62,7 +62,6 @@ vim.lsp.config("ts_ls", { capabilities = capabilities })
 
 vim.diagnostic.config({
   severity_sort = true,
-  float = { border = "rounded", source = true },
   underline = { severity = vim.diagnostic.severity.ERROR },
   virtual_text = { source = true, spacing = 4 },
   signs = {

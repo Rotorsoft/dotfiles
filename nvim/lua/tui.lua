@@ -1,16 +1,6 @@
 -- override colorscheme for more transparency
 vim.api.nvim_set_hl(0, "CursorLine", { bg = "none", underline = false, blend = 20 })
 vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFD700", bg = "none", bold = true })
--- override floating window border to rounded by default
-do
-  local orig = vim.lsp.util.open_floating_preview
-  ---@diagnostic disable-next-line duplicate field
-  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-    opts = opts or {}
-    opts.border = opts.border or "rounded"
-    return orig(contents, syntax, opts, ...)
-  end
-end
 
 -- yank highlight
 vim.api.nvim_create_autocmd("TextYankPost", {

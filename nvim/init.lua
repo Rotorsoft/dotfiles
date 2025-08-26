@@ -25,6 +25,7 @@ vim.o.shiftwidth = 2
 vim.o.tabstop = 2
 vim.o.softtabstop = 2
 vim.o.expandtab = true
+vim.o.winborder = "rounded"
 vim.o.clipboard = "unnamedplus"
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = " " }
