@@ -30,10 +30,10 @@ mapn("<leader>e", function() require("mini.files").open() end, "Explore")
 local bp = require("mini.pick").builtin
 mapn("<leader><leader>", bp.buffers, "Buffers")
 mapn("<leader>ff", bp.files, "Files")
-mapn("<leader>fg", bp.grep, "Grep")
-mapn("<leader>fl", bp.grep_live, "Live Grep")
-mapn("<leader>f?", bp.help, "Help")
+mapn("<leader>fg", bp.grep_live, "Grep")
+mapn("<leader>f/", bp.grep, "Grep Pattern")
 mapn("<leader>f.", bp.resume, "Resume")
+mapn("<leader>f?", bp.help, "Help")
 
 local ep = require("mini.extra").pickers
 mapn("<leader>fo", ep.oldfiles, "Old Files")
