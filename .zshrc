@@ -24,8 +24,10 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 # aliases
 alias la='lsd -la'
+alias lat='lsd -la --tree --ignore-glob node_modules --ignore-glob .git'
 alias g=git
 alias p=pnpm
+alias v=nvim
 alias py=python3
 alias pip=pip3
 alias use=use_tool
