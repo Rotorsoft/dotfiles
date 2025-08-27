@@ -26,30 +26,17 @@ vim.o.tabstop = 2
 vim.o.softtabstop = 2
 vim.o.expandtab = true
 vim.o.winborder = "rounded"
+vim.o.termguicolors = true
 vim.o.clipboard = "unnamedplus"
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = " " }
 
 vim.pack.add({
-  -- LSP
-  { src = "https://github.com/neovim/nvim-lspconfig" },
   { src = "https://github.com/mason-org/mason.nvim" },
-  { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
-  { src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-  -- Completion
-  { src = "https://github.com/hrsh7th/nvim-cmp" },
-  { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
-  { src = "https://github.com/hrsh7th/cmp-buffer" },
-  { src = "https://github.com/hrsh7th/cmp-path" },
-  { src = "https://github.com/L3MON4D3/LuaSnip" },
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-  -- Formatting
-  { src = "https://github.com/stevearc/conform.nvim" },
-  -- UI
   { src = "https://github.com/catppuccin/nvim" },
   { src = "https://github.com/nvim-lualine/lualine.nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
-  -- Git
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
 
@@ -62,21 +49,49 @@ require("catppuccin").setup({
 vim.cmd.colorscheme("catppuccin")
 
 -- LSP
-require("lsp")
-
--- Sessions
-local sessions = require("mini.sessions")
-sessions.setup({ autoread = true, autowrite = true })
-vim.keymap.set("n", "<leader>ss", sessions.select, { desc = "Select" })
-vim.keymap.set("n", "<leader>sw", function()
-  sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim")
-end, { desc = "Write" })
+vim.lsp.enable({ "lua_ls", "ts_ls" })
+vim.diagnostic.config({
+  severity_sort = true,
+  underline = { severity = vim.diagnostic.severity.ERROR },
+  virtual_text = { source = true, spacing = 4 },
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = "󰅚 ",
+      [vim.diagnostic.severity.WARN] = "󰀪 ",
+      [vim.diagnostic.severity.INFO] = "󰋽 ",
+      [vim.diagnostic.severity.HINT] = "󰌶 ",
+    },
+  },
+})
 
 -- Plugins
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
+    require("mini.sessions").setup({ autoread = true, autowrite = true })
+    require("mini.ai").setup({ n_lines = 500 })
+    require("mini.surround").setup()
+    require("mini.comment").setup()
+    require("mini.pairs").setup()
+    require("mini.icons").setup()
+    require("mini.indentscope").setup()
+    require("mini.move").setup()
+    require("mini.files").setup()
+    require("mini.pick").setup({ window = { config = { border = "rounded" } } })
+    require("mini.extra").setup()
+    require("mini.notify").setup()
+    require("mini.hipatterns").setup({
+      highlighters = {
+        fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+        hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+        todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+        note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+        hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
+      },
+    })
     require("tui")
     require("git")
-    require("keymaps")
+    require("map")
+    require("mason").setup()
+    require("supermaven-nvim").setup({ disable_inline_completion = false })
   end,
 })
