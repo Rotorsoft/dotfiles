@@ -35,7 +35,6 @@ vim.pack.add({
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
   { src = "https://github.com/catppuccin/nvim" },
-  { src = "https://github.com/nvim-lualine/lualine.nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
@@ -47,6 +46,14 @@ require("catppuccin").setup({
   float = { transparent = true },
 })
 vim.cmd.colorscheme("catppuccin")
+-- override colorscheme for more transparency
+vim.api.nvim_set_hl(0, "CursorLine", { bg = "none", underline = false, blend = 20 })
+vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFD700", bg = "none", bold = true })
+-- yank highlight
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+  callback = function() vim.hl.on_yank() end,
+})
 
 -- LSP
 vim.lsp.enable({ "lua_ls", "ts_ls" })
@@ -88,10 +95,29 @@ vim.api.nvim_create_autocmd("VimEnter", {
         hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
       },
     })
-    require("tui")
-    require("git")
+    require("status").setup()
+    require("gitsigns").setup({
+      preview_config = { border = "rounded" },
+      on_attach = function(bufnr)
+        local gs = require("gitsigns")
+        local function mapn(lhs, rhs, desc)
+          vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
+        end
+        --- @diagnostic disable-next-line: param-type-mismatch
+        mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "all", preview = true }) end, "Next Hunk")
+        --- @diagnostic disable-next-line: param-type-mismatch
+        mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "all", preview = true }) end, "Previous Hunk")
+        mapn("<C-M-Space>", gs.stage_hunk, "Toggle Stage")
+        mapn("<leader>gr", gs.reset_hunk, "Reset Hunk")
+        mapn("<leader>gb", gs.blame_line, "Blame Line")
+        mapn("<leader>gl", gs.toggle_current_line_blame, "Toggle Line Blame")
+        mapn("<leader>gS", gs.stage_buffer, "Stage Buffer")
+        mapn("<leader>gR", gs.reset_buffer, "Reset Buffer")
+      end,
+    })
     require("map")
     require("mason").setup()
     require("supermaven-nvim").setup({ disable_inline_completion = false })
+    vim.ui.select = require("mini.pick").ui_select
   end,
 })
