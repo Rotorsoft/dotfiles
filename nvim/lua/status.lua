@@ -175,7 +175,7 @@ function M.statusline()
     diagnostics(),
     lsp_status(), " ",
     filesize(), progress(), " ",
-    location(), " ",
+    -- location(), " ",
   })
 end
 

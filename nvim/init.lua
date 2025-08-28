@@ -64,7 +64,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("mini.comment").setup()
     require("mini.pairs").setup()
     require("mini.icons").setup()
-    require("mini.indentscope").setup()
     require("mini.move").setup()
     require("mini.files").setup()
     require("mini.pick").setup({ window = { config = { border = "rounded" } } })
