@@ -102,5 +102,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("mason").setup()
     require("supermaven-nvim").setup({ disable_inline_completion = false })
     vim.ui.select = require("mini.pick").ui_select
+    vim.notify = require("mini.notify").notify
   end,
 })

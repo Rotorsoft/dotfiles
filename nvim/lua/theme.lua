@@ -97,13 +97,20 @@ function M.setup()
   -- hl(0, "Error", { fg = colors.red, bold = true })
   -- hl(0, "Todo", { fg = colors.peach, bold = true })
 
-  -- yank highlight
+  -- Yank highlight
   vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
     callback = function() vim.hl.on_yank() end,
   })
-
-  -- Semi-transparent background only for MiniPick selection
+  -- Hide command line when not in command mode
+  vim.o.cmdheight = 0
+  vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
+    callback = function() vim.o.cmdheight = 1 end -- show the command line when entering command mode
+  })
+  vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
+    callback = function() vim.o.cmdheight = 0 end -- hide again when leaving command mode
+  })
+  -- Background for mini
   vim.api.nvim_set_hl(0, "MiniPickMatchCurrent", { fg = colors.text, bg = colors.surface0, })
   vim.api.nvim_set_hl(0, "MiniFilesCursorLine", { fg = colors.text, bg = colors.surface0, })
 end
