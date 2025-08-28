@@ -30,32 +30,17 @@ vim.o.termguicolors = true
 vim.o.clipboard = "unnamedplus"
 vim.o.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = " " }
+vim.opt.fillchars = "fold:·,eob: "
 
 vim.pack.add({
   { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-  { src = "https://github.com/catppuccin/nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
 })
 
--- Theme
-require("catppuccin").setup({
-  flavour = "mocha",
-  transparent_background = true,
-  float = { transparent = true },
-})
-vim.cmd.colorscheme("catppuccin")
--- override colorscheme for more transparency
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "none", underline = false, blend = 20 })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#FFD700", bg = "none", bold = true })
--- yank highlight
-vim.api.nvim_create_autocmd("TextYankPost", {
-  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-  callback = function() vim.hl.on_yank() end,
-})
+require("theme").setup()
 
--- LSP
 vim.lsp.enable({ "lua_ls", "ts_ls" })
 vim.diagnostic.config({
   severity_sort = true,
@@ -71,7 +56,6 @@ vim.diagnostic.config({
   },
 })
 
--- Plugins
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     require("mini.sessions").setup({ autoread = true, autowrite = true })
