@@ -5,21 +5,21 @@ end
 
 mapn("<leader>w", function() vim.cmd.w() end, "Write")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
-mapn("<leader>x", ":bdelete<CR>", "Close")
-mapn("<Tab>", ":bnext<CR>", "Next Buffer")
+mapn("<leader>x", function() vim.cmd.bd() end, "Close")
+mapn("<Tab>", function() vim.cmd.bn() end, "Next Buffer")
 
 mapn("<C-h>", "<C-w>h", "Move to left split")
 mapn("<C-j>", "<C-w>j", "Move to below split")
 mapn("<C-k>", "<C-w>k", "Move to above split")
 mapn("<C-l>", "<C-w>l", "Move to right split")
 
-mapn("<Up>", ":resize +4<CR>", "Increase height")
-mapn("<Down>", ":resize -4<CR>", "Decrease height")
-mapn("<Left>", ":vertical resize -4<CR>", "Decrease width")
-mapn("<Right>", ":vertical resize +4<CR>", "Increase width")
+mapn("<Up>", function() vim.cmd.resize(4) end, "Increase height")
+mapn("<Down>", function() vim.cmd.resize(-4) end, "Decrease height")
+mapn("<Left>", function() vim.cmd.vertical(4) end, "Decrease width")
+mapn("<Right>", function() vim.cmd.vertical(-4) end, "Increase width")
 
 -- Clear highlights on search when pressing <Esc> in normal mode
-mapn("<Esc>", "<cmd>nohlsearch<CR>")
+mapn("<Esc>", function() vim.cmd.nohlsearch() end)
 
 -- Easy terminal escape
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
@@ -65,9 +65,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
       if client:supports_method("textDocument/formatting") then
         vim.api.nvim_create_autocmd("BufWritePre", {
           buffer = bufnr,
-          callback = function()
-            vim.lsp.buf.format { bufnr = bufnr, id = client.id, async = false, }
-          end
+          callback = function() vim.lsp.buf.format { bufnr = bufnr, id = client.id, async = false, } end
         })
       end
       -- Completion
