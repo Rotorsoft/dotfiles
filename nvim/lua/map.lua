@@ -21,7 +21,7 @@ mapn("<Right>", function() vim.cmd("vertical resize +4") end, "Increase width")
 mapn("<Esc>", function() vim.cmd.nohlsearch() end)
 
 -- Easy terminal escape
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode", silent = true, noremap = true })
 
 local bp = require("mini.pick").builtin
 local ep = require("mini.extra").pickers
@@ -35,7 +35,8 @@ mapn("<leader>k", ep.keymaps, "Keymaps")
 mapn("<leader>m", ep.marks, "Marks")
 mapn("<leader>o", ep.oldfiles, "Old Files")
 mapn("<leader>r", ep.registers, "Registers")
-mapn("<leader>t", ep.treesitter, "Treesitter")
+map({ "n", "t" }, "<leader>t", require("terminal").toggle, { desc = "Terminal", silent = true, noremap = true })
+mapn("<leader>T", ep.treesitter, "Treesitter")
 mapn("<leader>:", ep.commands, "Commands")
 mapn("<leader>.", bp.resume, "Resume")
 mapn("<leader>/", bp.grep, "Grep Pattern")

@@ -62,8 +62,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
       modules = {},
       ignore_install = {},
     })
-    require("theme").setup()
-    require("status").setup()
     require("mini.sessions").setup({ autoread = true, autowrite = true })
     require("mini.ai").setup({ n_lines = 500 })
     require("mini.surround").setup()
@@ -84,10 +82,18 @@ vim.api.nvim_create_autocmd("VimEnter", {
         hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
       },
     })
-    require("map")
     require("mason").setup()
     require("supermaven-nvim").setup({ disable_inline_completion = false })
+
     -- override ui_select
     vim.ui.select = require("mini.pick").ui_select
+
+    -- my plugins
+    require("terminal").setup()
+    require("theme").setup()
+    require("status").setup()
+
+    -- my keymaps
+    require("map")
   end,
 })

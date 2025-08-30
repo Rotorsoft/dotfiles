@@ -1,49 +1,42 @@
 local M = {}
 
--- Mode map with highlight groups
 local modes = {
-  n = { "NORMAL", "StModeNormal" },
-  i = { "INSERT", "StModeInsert" },
-  v = { "VISUAL", "StModeVisual" },
-  V = { "V-LINE", "StModeVisual" },
-  [""] = { "V-BLOCK", "StModeVisual" },
-  c = { "COMMAND", "StModeCommand" },
-  R = { "REPLACE", "StModeReplace" },
-  t = { "TERMINAL", "StModeTerminal" },
+  n = { "N", "StModeNormal" },
+  i = { "I", "StModeInsert" },
+  v = { "V", "StModeVisual" },
+  V = { "V-L", "StModeVisual" },
+  [""] = { "V-B", "StModeVisual" },
+  c = { "C", "StModeCommand" },
+  R = { "R", "StModeReplace" },
+  t = { "T", "StModeTerminal" },
 }
 local fg = "#1e1e2e"
 
--- Setup highlights that adapt to colorscheme
 local function setup_highlights()
   local hl = function(group, opts)
     vim.api.nvim_set_hl(0, group, opts)
   end
 
-  -- you can tweak colors or link to Catppuccin highlights
-  hl("StModeNormal", { fg = fg, bg = "#89b4fa", bold = true })   -- blue
-  hl("StModeInsert", { fg = fg, bg = "#a6e3a1", bold = true })   -- green
-  hl("StModeVisual", { fg = fg, bg = "#fab387", bold = true })   -- orange
-  hl("StModeCommand", { fg = fg, bg = "#f9e2af", bold = true })  -- yellow
-  hl("StModeReplace", { fg = fg, bg = "#f38ba8", bold = true })  -- red/pink
-  hl("StModeTerminal", { fg = fg, bg = "#94e2d5", bold = true }) -- teal
+  hl("StModeNormal", { fg = fg, bg = "#89b4fa", bold = true })
+  hl("StModeInsert", { fg = fg, bg = "#a6e3a1", bold = true })
+  hl("StModeVisual", { fg = fg, bg = "#fab387", bold = true })
+  hl("StModeCommand", { fg = fg, bg = "#f9e2af", bold = true })
+  hl("StModeReplace", { fg = fg, bg = "#f38ba8", bold = true })
+  hl("StModeTerminal", { fg = fg, bg = "#94e2d5", bold = true })
 
-  -- Git branch backgrounds
-  hl("StGitClean", { fg = fg, bg = "#a6e3a1", bold = true })    -- green
-  hl("StGitDirty", { fg = fg, bg = "#f9e2af", bold = true })    -- yellow
-  hl("StGitConflict", { fg = fg, bg = "#f38ba8", bold = true }) -- red
+  hl("StGitClean", { fg = "#a6e3a1", })
+  hl("StGitDirty", { fg = "#f9e2af", })
+  hl("StGitConflict", { fg = "#f38ba8", })
 
-  -- Git diff icons
   hl("StGitAdd", { fg = "#a6e3a1" })
   hl("StGitChange", { fg = "#fab387" })
   hl("StGitDelete", { fg = "#f38ba8" })
 
-  -- Diagnostics
   hl("StDiagError", { fg = "#f38ba8" })
   hl("StDiagWarn", { fg = "#f9e2af" })
   hl("StDiagInfo", { fg = "#89b4fa" })
   hl("StDiagHint", { fg = "#94e2d5" })
 
-  -- Info
   hl("StInfo", { fg = "#6c7086", bg = "NONE", bold = false })
 end
 
@@ -59,7 +52,7 @@ local function git_branch()
       group = "StGitDirty"
     end
   end
-  return "%#" .. group .. "#  " .. branch .. " %*"
+  return "%#" .. group .. "#  " .. branch .. "%*"
 end
 
 -- Git diff counts
@@ -68,13 +61,13 @@ local function git_diff()
   if not gitsigns then return "" end
   local out = ""
   if gitsigns.added and gitsigns.added > 0 then
-    out = out .. "%#StGitAdd# " .. gitsigns.added .. " %*"
+    out = out .. "%#StGitAdd#+" .. gitsigns.added .. " %*"
   end
   if gitsigns.changed and gitsigns.changed > 0 then
-    out = out .. "%#StGitChange# " .. gitsigns.changed .. " %*"
+    out = out .. "%#StGitChange#~" .. gitsigns.changed .. " %*"
   end
   if gitsigns.removed and gitsigns.removed > 0 then
-    out = out .. "%#StGitDelete# " .. gitsigns.removed .. " %*"
+    out = out .. "%#StGitDelete#-" .. gitsigns.removed .. " %*"
   end
   return out
 end
@@ -120,7 +113,7 @@ local function lsp_status()
   if #clients == 0 then return "" end
   local names = {}
   for _, c in ipairs(clients) do table.insert(names, c.name) end
-  return "%#StInfo#[" .. table.concat(names, ",") .. "]%*"
+  return "%#StInfo#" .. table.concat(names, ",") .. "%*"
 end
 
 -- Filesize
@@ -148,7 +141,7 @@ end
 
 -- Cursor location
 local function location()
-  return vim.fn.line(".") .. ":" .. vim.fn.col(".")
+  return "%#StInfo#" .. vim.fn.line(".") .. ":" .. vim.fn.col(".") .. "%*"
 end
 
 -- Assemble statusline
@@ -175,7 +168,7 @@ function M.statusline()
     diagnostics(),
     lsp_status(), " ",
     filesize(), progress(), " ",
-    -- location(), " ",
+    location(),
   })
 end
 
