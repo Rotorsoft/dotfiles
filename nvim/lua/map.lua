@@ -1,6 +1,6 @@
 local map = vim.keymap.set
 local function mapn(lhs, rhs, desc, buffer)
-  map("n", lhs, rhs, { desc = desc, buffer = buffer })
+  map("n", lhs, rhs, { desc = desc, buffer = buffer, silent = true, noremap = true })
 end
 
 mapn("<leader>w", function() vim.cmd.w() end, "Write")
@@ -12,11 +12,10 @@ mapn("<C-h>", "<C-w>h", "Move to left split")
 mapn("<C-j>", "<C-w>j", "Move to below split")
 mapn("<C-k>", "<C-w>k", "Move to above split")
 mapn("<C-l>", "<C-w>l", "Move to right split")
-
-mapn("<Up>", function() vim.cmd.resize(4) end, "Increase height")
-mapn("<Down>", function() vim.cmd.resize(-4) end, "Decrease height")
-mapn("<Left>", function() vim.cmd.vertical(4) end, "Decrease width")
-mapn("<Right>", function() vim.cmd.vertical(-4) end, "Increase width")
+mapn("<Up>", function() vim.cmd("resize +4") end, "Increase height")
+mapn("<Down>", function() vim.cmd("resize -4") end, "Decrease height")
+mapn("<Left>", function() vim.cmd("vertical resize -4") end, "Decrease width")
+mapn("<Right>", function() vim.cmd("vertical resize +4") end, "Increase width")
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 mapn("<Esc>", function() vim.cmd.nohlsearch() end)
@@ -24,27 +23,24 @@ mapn("<Esc>", function() vim.cmd.nohlsearch() end)
 -- Easy terminal escape
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
 
+local bp = require("mini.pick").builtin
+local ep = require("mini.extra").pickers
+mapn("<leader><leader>", bp.files, "Files")
+mapn("<leader>b", bp.buffers, "Buffers")
 mapn("<leader>d", vim.diagnostic.open_float, "Diagnostic")
 mapn("<leader>e", function() require("mini.files").open() end, "Explore")
-
-local bp = require("mini.pick").builtin
-mapn("<leader><leader>", bp.buffers, "Buffers")
-mapn("<leader>ff", bp.files, "Files")
-mapn("<leader>fg", bp.grep_live, "Grep")
-mapn("<leader>f/", bp.grep, "Grep Pattern")
-mapn("<leader>f.", bp.resume, "Resume")
-mapn("<leader>f?", bp.help, "Help")
-
-local ep = require("mini.extra").pickers
-mapn("<leader>fo", ep.oldfiles, "Old Files")
-mapn("<leader>fc", ep.commands, "Commands")
-mapn("<leader>fk", ep.keymaps, "Keymaps")
-mapn("<leader>fm", ep.marks, "Marks")
-mapn("<leader>fr", ep.registers, "Registers")
-mapn("<leader>fh", ep.history, "History")
-mapn("<leader>fe", ep.explorer, "Explorer")
-mapn("<leader>ft", ep.treesitter, "Treesitter")
-mapn("<leader>fs", ep.colorschemes, "Color Schemes")
+mapn("<leader>E", ep.explorer, "Explorer")
+mapn("<leader>f", bp.grep_live, "Grep")
+mapn("<leader>h", ep.history, "History")
+mapn("<leader>k", ep.keymaps, "Keymaps")
+mapn("<leader>m", ep.marks, "Marks")
+mapn("<leader>o", ep.oldfiles, "Old Files")
+mapn("<leader>r", ep.registers, "Registers")
+mapn("<leader>t", ep.treesitter, "Treesitter")
+mapn("<leader>:", ep.commands, "Commands")
+mapn("<leader>.", bp.resume, "Resume")
+mapn("<leader>/", bp.grep, "Grep Pattern")
+mapn("<leader>?", bp.help, "Help")
 
 local sessions = require("mini.sessions")
 mapn("<leader>ss", sessions.select, "Select")
@@ -53,7 +49,7 @@ mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(),
 mapn("<F2>", vim.lsp.buf.rename, "Rename")
 mapn("<F4>", vim.lsp.buf.code_action, "Code Action")
 mapn("<F12>", vim.lsp.buf.definition, "Goto Definition")
-mapn("<leader>cf", vim.lsp.buf.format, "Format Buffer")
+mapn("<leader>lf", vim.lsp.buf.format, "Format Buffer")
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyLspGroup", { clear = true }),
@@ -87,13 +83,40 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     local p = require("mini.extra").pickers
-    mapn("<leader>cd", function() p.diagnostic() end, "Diagnostics", bufnr)
-    mapn("<leader>ce", function() p.lsp({ scope = "declaration" }) end, "Declaration", bufnr)
-    mapn("<leader>ci", function() p.lsp({ scope = "implementation" }) end, "Implementation", bufnr)
-    mapn("<leader>cr", function() p.lsp({ scope = "references" }) end, "References", bufnr)
-    mapn("<leader>ct", function() p.lsp({ scope = "type_definition" }) end, "Type Definition", bufnr)
-    mapn("<leader>cs", function() p.lsp({ scope = "document_symbol" }) end, "Document Symbols", bufnr)
-    mapn("<leader>cw", function() p.lsp({ scope = "workspace_symbol" }) end, "Workspace Symbols", bufnr)
+    mapn("<leader>ld", function() p.diagnostic() end, "Diagnostics", bufnr)
+    mapn("<leader>le", function() p.lsp({ scope = "declaration" }) end, "Declaration", bufnr)
+    mapn("<leader>li", function() p.lsp({ scope = "implementation" }) end, "Implementation", bufnr)
+    mapn("<leader>lr", function() p.lsp({ scope = "references" }) end, "References", bufnr)
+    mapn("<leader>lt", function() p.lsp({ scope = "type_definition" }) end, "Type Definition", bufnr)
+    mapn("<leader>ls", function() p.lsp({ scope = "document_symbol" }) end, "Document Symbols", bufnr)
+    mapn("<leader>lw", function() p.lsp({ scope = "workspace_symbol" }) end, "Workspace Symbols", bufnr)
+  end,
+})
+
+require("gitsigns").setup({
+  preview_config = { border = "rounded" },
+  on_attach = function(bufnr)
+    local gs = require("gitsigns")
+
+    -- Git Navigation using <C-M-?> prefix
+    --- @diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "all", preview = true }) end, "Next Hunk", bufnr)
+    --- @diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "all", preview = true }) end, "Previous Hunk", bufnr)
+    --- @diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-u>", function() gs.nav_hunk("next", { target = "unstaged", preview = true }) end, "Next Unstaged Hunk",
+      bufnr)
+    --- @diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-U>", function() gs.nav_hunk("prev", { target = "unstaged", preview = true }) end, "Previous Unstaged Hunk",
+      bufnr)
+
+    mapn("<C-M-Space>", gs.stage_hunk, "Toggle Stage", bufnr)
+    mapn("<C-M-r>", gs.reset_hunk, "Reset Hunk", bufnr)
+    mapn("<C-M-b>", gs.blame_line, "Show Line Blame", bufnr)
+    mapn("<C-M-l>", gs.toggle_current_line_blame, "Toggle Line Blame", bufnr)
+    mapn("<C-M-S>", gs.stage_buffer, "Stage Buffer", bufnr)
+    mapn("<C-M-R>", gs.reset_buffer, "Reset Buffer", bufnr)
+    mapn("<C-M-g>", function() ep.git_hunks() end, "Status")
   end,
 })
 
@@ -134,10 +157,8 @@ clue.setup({
     clue.gen_clues.registers(),
     clue.gen_clues.z(),
     -- Groups
-    { mode = "n", keys = "<leader>f", desc = " Find" },
-    { mode = "n", keys = "<leader>g", desc = " Git" },
-    { mode = "n", keys = "<leader>c", desc = " Code (LSP)" },
+    { mode = "n", keys = "<leader>l", desc = " LSP" },
     { mode = "n", keys = "<leader>s", desc = " Session" },
   },
-  window = { config = { width = 60 }, delay = 0 },
+  window = { config = { width = "auto" }, delay = 0 },
 })

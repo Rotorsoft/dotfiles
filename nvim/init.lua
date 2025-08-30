@@ -71,7 +71,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("mini.pairs").setup()
     require("mini.icons").setup()
     require("mini.move").setup()
-    require("mini.files").setup()
+    require("mini.files").setup({ mappings = { close = "<Esc>" }, windows = { preview = true } })
     require("mini.pick").setup({ window = { config = { border = "rounded" } } })
     require("mini.extra").setup()
     require("mini.notify").setup()
@@ -83,25 +83,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
         note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
         hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
       },
-    })
-    require("gitsigns").setup({
-      preview_config = { border = "rounded" },
-      on_attach = function(bufnr)
-        local gs = require("gitsigns")
-        local function mapn(lhs, rhs, desc)
-          vim.keymap.set("n", lhs, rhs, { buffer = bufnr, desc = desc })
-        end
-        --- @diagnostic disable-next-line: param-type-mismatch
-        mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "all", preview = true }) end, "Next Hunk")
-        --- @diagnostic disable-next-line: param-type-mismatch
-        mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "all", preview = true }) end, "Previous Hunk")
-        mapn("<C-M-Space>", gs.stage_hunk, "Toggle Stage")
-        mapn("<leader>gr", gs.reset_hunk, "Reset Hunk")
-        mapn("<leader>gb", gs.blame_line, "Blame Line")
-        mapn("<leader>gl", gs.toggle_current_line_blame, "Toggle Line Blame")
-        mapn("<leader>gS", gs.stage_buffer, "Stage Buffer")
-        mapn("<leader>gR", gs.reset_buffer, "Reset Buffer")
-      end,
     })
     require("map")
     require("mason").setup()
