@@ -36,7 +36,8 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
-vim.lsp.enable({ "lua_ls", "ts_ls" })
+require("lsp")
+
 vim.diagnostic.config({
   severity_sort = true,
   underline = { severity = vim.diagnostic.severity.ERROR },

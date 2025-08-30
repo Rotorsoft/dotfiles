@@ -164,28 +164,23 @@ end
 function M.statusline()
   local winid = vim.g.statusline_winid
   local active = (winid == vim.api.nvim_get_current_win())
-
-  if not active then
-    -- inactive windows: just show mode
-    local m = modes[vim.fn.mode()]
-    local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
-    return ("%#%s# %s %*"):format(mode_hl, mode_str)
-  end
-
-  -- active window: full statusline
   local m = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
 
-  return table.concat({
-    "%#", mode_hl, "# ", mode_str, " %*",
-    git_branch(), " ",
-    git_diff(),
-    filename(), "%=",
-    diagnostics(),
-    lsp_status(), " ",
-    filesize(), progress(), " ",
-    location(),
-  })
+  if not active then
+    return table.concat({ "%#", mode_hl, "# ", mode_str, " %*", })
+  else
+    return table.concat({
+      "%#", mode_hl, "# ", mode_str, " %*",
+      git_branch(), " ",
+      git_diff(),
+      filename(), "%=",
+      diagnostics(),
+      lsp_status(), " ",
+      filesize(), progress(), " ",
+      location(),
+    })
+  end
 end
 
 function M.setup()
