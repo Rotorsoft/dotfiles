@@ -48,7 +48,6 @@ mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(),
 mapn("<F2>", vim.lsp.buf.rename, "Rename")
 mapn("<F4>", vim.lsp.buf.code_action, "Code Action")
 mapn("<F12>", vim.lsp.buf.definition, "Goto Definition")
-mapn("<leader>lf", vim.lsp.buf.format, "Format Buffer")
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyLspGroup", { clear = true }),
@@ -83,6 +82,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     local p = require("mini.extra").pickers
     mapn("<leader>ld", function() p.diagnostic() end, "Diagnostics", bufnr)
+    mapn("<leader>lf", function() vim.lsp.buf.format { bufnr = bufnr, async = true } end, "Format Buffer")
     mapn("<leader>le", function() p.lsp({ scope = "declaration" }) end, "Declaration", bufnr)
     mapn("<leader>li", function() p.lsp({ scope = "implementation" }) end, "Implementation", bufnr)
     mapn("<leader>lr", function() p.lsp({ scope = "references" }) end, "References", bufnr)
