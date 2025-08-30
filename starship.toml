@@ -13,11 +13,8 @@ truncate_to_repo = true
 style = "cyan"
 
 [git_branch]
-symbol = " "
-style = "purple"
-
-[git_status]
-style = "red"
+symbol = " "
+style = "white"
 
 [python]
 symbol = "🐍 "

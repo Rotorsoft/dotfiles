@@ -27,7 +27,6 @@ local function setup_highlights()
   hl("StGitClean", { fg = "#a6e3a1", })
   hl("StGitDirty", { fg = "#f9e2af", })
   hl("StGitConflict", { fg = "#f38ba8", })
-
   hl("StGitAdd", { fg = "#a6e3a1" })
   hl("StGitChange", { fg = "#fab387" })
   hl("StGitDelete", { fg = "#f38ba8" })
@@ -48,8 +47,25 @@ local function git_branch()
   local dict = vim.b.gitsigns_status_dict
   local group = "StGitClean"
   if dict then
-    if (dict.added and dict.added > 0) or (dict.changed and dict.changed > 0) or (dict.removed and dict.removed > 0) then
+    -- unstaged changes
+    if (dict.added and dict.added > 0)
+        or (dict.changed and dict.changed > 0)
+        or (dict.removed and dict.removed > 0) then
       group = "StGitDirty"
+    else
+      -- staged or diverged check
+      local staged = vim.fn.system("git diff --cached --quiet || echo staged")
+      if staged:match("staged") then
+        group = "StGitChange"
+      else
+        local ahead_behind = vim.fn.systemlist("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")[1]
+        if ahead_behind then
+          local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
+          if tonumber(behind) > 0 or tonumber(ahead) > 0 then
+            group = "StGitConflict"
+          end
+        end
+      end
     end
   end
   return "%#" .. group .. "#  " .. branch .. "%*"
