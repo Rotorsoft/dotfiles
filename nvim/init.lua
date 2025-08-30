@@ -71,7 +71,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     require("mini.pairs").setup()
     require("mini.icons").setup()
     require("mini.move").setup()
-    require("mini.files").setup({ mappings = { close = "<Esc>" }, windows = { preview = true } })
+    require("mini.files").setup({ mappings = { close = "<Esc>" }, windows = { preview = true, width_preview = 80 } })
     require("mini.pick").setup({ window = { config = { border = "rounded" } } })
     require("mini.extra").setup()
     require("mini.notify").setup()
