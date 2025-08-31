@@ -6,7 +6,6 @@ end
 mapn("<leader>w", function() vim.cmd.w() end, "Write")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
 mapn("<leader>x", function() vim.cmd.bd() end, "Close")
-mapn("<Tab>", function() vim.cmd.bn() end, "Next Buffer")
 
 mapn("<C-h>", "<C-w>h", "Move to left split")
 mapn("<C-j>", "<C-w>j", "Move to below split")
@@ -47,7 +46,14 @@ mapn("<leader>ss", sessions.select, "Select")
 mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim") end, "Write")
 
 mapn("<F2>", vim.lsp.buf.rename, "Rename")
-mapn("<F4>", vim.lsp.buf.code_action, "Code Action")
+mapn("<F4>", function()
+  vim.lsp.buf.code_action({
+    apply = false,
+    filter = function(action)
+      return not action.disabled
+    end,
+  })
+end, "Code Actions")
 mapn("<F12>", vim.lsp.buf.definition, "Goto Definition")
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -94,29 +100,33 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 require("gitsigns").setup({
-  preview_config = { border = "rounded" },
+  preview_config = {
+    border = "rounded",
+  },
+  diff_opts = {
+    internal = true,
+    algorithm = "histogram",
+    indent_heuristic = true,
+    vertical = true,
+  },
   on_attach = function(bufnr)
     local gs = require("gitsigns")
 
-    -- Git Navigation using <C-M-?> prefix
-    --- @diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "all", preview = true }) end, "Next Hunk", bufnr)
-    --- @diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "all", preview = true }) end, "Previous Hunk", bufnr)
-    --- @diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-u>", function() gs.nav_hunk("next", { target = "unstaged", preview = true }) end, "Next Unstaged Hunk",
-      bufnr)
-    --- @diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-U>", function() gs.nav_hunk("prev", { target = "unstaged", preview = true }) end, "Previous Unstaged Hunk",
-      bufnr)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "unstaged" }) end, "Next Unstaged Hunk", bufnr)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "unstaged" }) end, "Prev Unstaged Hunk", bufnr)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-i>", function() gs.nav_hunk("next", { target = "staged" }) end, "Next Staged Hunk", bufnr)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    mapn("<C-M-o>", function() gs.nav_hunk("prev", { target = "staged" }) end, "Prev Staged Hunk", bufnr)
 
     mapn("<C-M-Space>", gs.stage_hunk, "Toggle Stage", bufnr)
+    mapn("<C-M-p>", gs.preview_hunk, "Preview Hunk", bufnr)
     mapn("<C-M-r>", gs.reset_hunk, "Reset Hunk", bufnr)
     mapn("<C-M-b>", gs.blame_line, "Show Line Blame", bufnr)
     mapn("<C-M-l>", gs.toggle_current_line_blame, "Toggle Line Blame", bufnr)
-    mapn("<C-M-S>", gs.stage_buffer, "Stage Buffer", bufnr)
-    mapn("<C-M-R>", gs.reset_buffer, "Reset Buffer", bufnr)
-    mapn("<C-M-g>", function() ep.git_hunks() end, "Status")
+    mapn("<C-M-g>", ep.git_hunks, "Status")
   end,
 })
 

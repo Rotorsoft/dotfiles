@@ -6,6 +6,7 @@ vim.o.mouse          = "a"
 vim.o.showmode       = false
 vim.o.breakindent    = true
 vim.o.undofile       = true
+vim.o.swapfile       = false
 vim.o.ignorecase     = true
 vim.o.smartcase      = true
 vim.o.signcolumn     = "yes"
@@ -36,7 +37,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
-require("lsp")
+vim.lsp.enable({ "lua_ls", "ts_ls" })
 
 vim.diagnostic.config({
   severity_sort = true,
@@ -63,6 +64,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
       modules = {},
       ignore_install = {},
     })
+
     require("mini.sessions").setup({ autoread = true, autowrite = true })
     require("mini.ai").setup({ n_lines = 500 })
     require("mini.surround").setup()
@@ -83,11 +85,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
         hex_color = require("mini.hipatterns").gen_highlighter.hex_color(),
       },
     })
-    require("mason").setup()
-    require("supermaven-nvim").setup({ disable_inline_completion = false })
-
     -- override ui_select
     vim.ui.select = require("mini.pick").ui_select
+
+    require("mason").setup()
+    require("supermaven-nvim").setup({ disable_inline_completion = false })
 
     -- my plugins
     require("terminal").setup()
