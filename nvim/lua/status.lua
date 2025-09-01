@@ -167,7 +167,7 @@ function M.statusline()
   local m = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
 
-  if not active then
+  if not active or mode_str == "T" then
     return table.concat({ "%#", mode_hl, "# ", mode_str, " %*", })
   else
     return table.concat({

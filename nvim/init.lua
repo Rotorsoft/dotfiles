@@ -26,11 +26,11 @@ vim.o.list           = true
 vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
 vim.opt.fillchars    = "fold:·,eob: "
 vim.wo.foldexpr      = 'v:lua.vim.treesitter.foldexpr()'
+vim.bo.indentexpr    = "v:lua.require'nvim-treesitter'.indentexpr()"
 vim.wo.foldmethod    = 'expr'
 vim.wo.foldlevel     = 99
 
 vim.pack.add({
-  { src = "https://github.com/mason-org/mason.nvim" },
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
   { src = "https://github.com/lewis6991/gitsigns.nvim" },
@@ -53,16 +53,15 @@ vim.diagnostic.config({
   },
 })
 
-vim.api.nvim_create_autocmd("VimEnter", {
+---@diagnostic disable-next-line: param-type-mismatch
+vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
-    require("nvim-treesitter.configs").setup({
-      ensure_installed = { "javascript", "typescript", "tsx", "html", "json", "css" },
-      highlight = { enable = true, },
-      indent = { enable = true, },
-      auto_install = true,
-      sync_install = true,
-      modules = {},
-      ignore_install = {},
+    local languages = { "javascript", "typescript", "tsx", "html", "json", "css" }
+    require("nvim-treesitter").setup()
+    require("nvim-treesitter").install(languages)
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = languages,
+      callback = function() vim.treesitter.start() end,
     })
 
     require("mini.sessions").setup({ autoread = true, autowrite = true })
@@ -88,15 +87,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
     -- override ui_select
     vim.ui.select = require("mini.pick").ui_select
 
-    require("mason").setup()
     require("supermaven-nvim").setup({ disable_inline_completion = false })
-
-    -- my plugins
-    require("terminal").setup()
     require("theme").setup()
     require("status").setup()
-
-    -- my keymaps
     require("map")
   end,
 })
