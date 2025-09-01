@@ -174,7 +174,7 @@ function M.setup()
   hl(0, "StatusLine", { fg = colors.text, bg = "none" })
   hl(0, "StatusLineNC", { fg = colors.overlay1, bg = "none" })
   hl(0, "Pmenu", { fg = colors.text, bg = "none" })
-  hl(0, "PmenuSel", { fg = colors.base, bg = "none" })
+  hl(0, "PmenuSel", { fg = colors.text, bg = colors.overlay0 })
   hl(0, "PmenuSbar", { fg = colors.text, bg = "none" })
   hl(0, "PmenuThumb", { fg = colors.text, bg = "none" })
   hl(0, "TabLine", { fg = colors.overlay1, bg = "none" })
@@ -188,6 +188,7 @@ function M.setup()
   hl(0, "Folded", { fg = colors.overlay1, bg = "none" })
 
   -- Yank highlight
+  ---@diagnostic disable-next-line: param-type-mismatch
   vim.api.nvim_create_autocmd("TextYankPost", {
     group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
     callback = function() vim.hl.on_yank() end,
@@ -195,9 +196,11 @@ function M.setup()
 
   -- Hide command line when not in command mode
   vim.o.cmdheight = 0
+  ---@diagnostic disable-next-line: param-type-mismatch
   vim.api.nvim_create_autocmd({ "CmdlineEnter" }, {
     callback = function() vim.o.cmdheight = 1 end -- show the command line when entering command mode
   })
+  ---@diagnostic disable-next-line: param-type-mismatch
   vim.api.nvim_create_autocmd({ "CmdlineLeave" }, {
     callback = function() vim.o.cmdheight = 0 end -- hide again when leaving command mode
   })
