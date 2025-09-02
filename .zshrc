@@ -38,6 +38,3 @@ eval "$(zoxide init zsh)"
 # starship
 eval "$(starship init zsh)"
 
-if [ -n "$TMUX" ]; then
-  export TERM="tmux-256color"
-fi
