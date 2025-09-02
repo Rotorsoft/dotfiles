@@ -24,7 +24,7 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 # aliases
 alias la='lsd -la'
-alias lat='lsd -la --tree --ignore-glob node_modules --ignore-glob .git'
+alias lat='lsd -la --tree --depth 3 --ignore-glob node_modules --ignore-glob .git --ignore-glob .postgres --ignore-glob .rabbitmq'
 alias g=git
 alias p=pnpm
 alias v=nvim
