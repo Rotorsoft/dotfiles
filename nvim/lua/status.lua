@@ -42,33 +42,60 @@ end
 -- Git branch
 local function git_branch()
   local branch = vim.b.gitsigns_head
-  if not branch or branch == "" then return "" end
-
-  local dict = vim.b.gitsigns_status_dict
-  local group = "StGitClean"
-  if dict then
-    -- unstaged changes
-    if (dict.added and dict.added > 0)
-        or (dict.changed and dict.changed > 0)
-        or (dict.removed and dict.removed > 0) then
-      group = "StGitDirty"
-    else
-      -- staged or diverged check
-      local staged = vim.fn.system("git diff --cached --quiet || echo staged")
-      if staged:match("staged") then
-        group = "StGitChange"
-      else
-        local ahead_behind = vim.fn.systemlist("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")[1]
-        if ahead_behind then
-          local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
-          if tonumber(behind) > 0 or tonumber(ahead) > 0 then
-            group = "StGitConflict"
-          end
-        end
-      end
-    end
+  if not branch or branch == "" then
+    return ""
   end
-  return "%#" .. group .. "#  " .. branch .. "%*"
+
+  local dict = vim.b.gitsigns_status_dict or {}
+  local parts = {}
+
+  -- Determine branch highlight (dirty if unstaged)
+  local group = "StGitClean"
+  if (dict.added or 0) > 0 or (dict.changed or 0) > 0 or (dict.removed or 0) > 0 then
+    group = "StGitDirty"
+  end
+
+  -- Staged changes (use git diff --cached)
+  local staged_str = ""
+  local staged = vim.fn.systemlist("git diff --cached --numstat 2>/dev/null")
+  local staged_added, staged_changed, staged_removed = 0, 0, 0
+
+  for _, line in ipairs(staged) do
+    local added, removed = line:match("(%d+)%s+(%d+)%s+")
+    added, removed = tonumber(added), tonumber(removed)
+    if added and added > 0 then staged_added = staged_added + added end
+    if removed and removed > 0 then staged_removed = staged_removed + removed end
+    if added and removed and added > 0 and removed > 0 then staged_changed = staged_changed + 1 end
+  end
+
+  if staged_added > 0 then
+    staged_str = staged_str .. "%#StGitAdd# +" .. staged_added .. "%*"
+  end
+  if staged_changed > 0 then
+    staged_str = staged_str .. "%#StGitChange# ~" .. staged_changed .. "%*"
+  end
+  if staged_removed > 0 then
+    staged_str = staged_str .. "%#StGitDelete# -" .. staged_removed .. "%*"
+  end
+  table.insert(parts, staged_str)
+
+  -- Ahead/behind counts
+  local ahead_behind = vim.fn.systemlist(
+    "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
+  )[1]
+  if ahead_behind then
+    local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
+    behind, ahead = tonumber(behind), tonumber(ahead)
+    local div = ""
+    if behind and behind > 0 then div = div .. "%#StGitConflict#↓" .. behind .. "%*" end
+    if ahead and ahead > 0 then div = div .. "%#StGitConflict#↑" .. ahead .. "%*" end
+    if div ~= "" then table.insert(parts, div) end
+  end
+
+  -- Branch name
+  table.insert(parts, "%#" .. group .. "# " .. branch .. "%*")
+
+  return table.concat(parts, " ")
 end
 
 -- Git diff counts
