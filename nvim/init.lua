@@ -72,7 +72,31 @@ vim.api.nvim_create_autocmd('VimEnter', {
     require("mini.icons").setup()
     require("mini.move").setup()
     require("mini.files").setup({ mappings = { close = "<Esc>" }, windows = { preview = true, width_preview = 80 } })
-    require("mini.pick").setup({ window = { config = { border = "rounded" } } })
+    require("mini.pick").setup({
+      mappings = {
+        move_start = "<C-g>",
+        move_down = "<C-j>",
+        move_up = "<C-k>",
+        scroll_down = "<C-M-j>",
+        scroll_up = "<C-M-k>",
+        toggle_info = "<C-i>",
+        toggle_preview = "<C-p>",
+        mark = "<C-x>",
+        mark_all = "<C-a>",
+        paste = "<C-r>",
+        refine = "<C-Space>",
+        refine_marked = "<M-Space>",
+        choose = "<CR>",
+        choose_in_split = "<C-s>",
+        choose_in_tabpage = "<C-t>",
+        choose_in_vsplit = "<C-v>",
+        choose_marked = "<M-CR>",
+        delete_left = "<C-u>",
+        delete_word = "<C-w>",
+        stop = "<Esc>",
+      },
+      window = { config = { border = "rounded" } }
+    })
     require("mini.extra").setup()
     require("mini.notify").setup()
     require("mini.hipatterns").setup({
