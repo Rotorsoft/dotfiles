@@ -138,24 +138,18 @@ end
 -- Filename with status
 local function filename()
   local name = vim.fn.expand("%:t")
-  local path = vim.fn.expand("%:~:.")
   if name == "" then
-    return { name = "%#StInfo#∅%*", path = "%#StInfo#∅%*", w = 1, pw = 1 }
-  elseif vim.bo.modified then
-    return {
-      s = "%#StInfoModified#" .. name .. "%*",
-      ls = "%#StInfoModified#" .. path .. "%*",
-      w = #name,
-      lw = #path
-    }
-  else
-    return {
-      s = "%#StInfo#" .. name .. "%*",
-      ls = "%#StInfo#" .. path .. "%*",
-      w = #name,
-      lw = #path
-    }
+    return { s = "", ls = "", w = 0, lw = 0 }
   end
+  local path = vim.fn.expand("%:~:.")
+  local group = "StInfo"
+  if vim.bo.modified then group = "StInfoModified" end
+  return {
+    s = "%#" .. group .. "#" .. name .. "%*",
+    ls = "%#" .. group .. "#" .. path .. "%*",
+    w = #name,
+    lw = #path
+  }
 end
 
 -- Diagnostics (only show if > 0)
