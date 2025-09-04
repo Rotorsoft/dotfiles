@@ -37,13 +37,14 @@ local function setup_highlights()
   hl("StDiagHint", { fg = "#94e2d5" })
 
   hl("StInfo", { fg = "#6c7086", bg = "NONE", bold = false })
+  hl("StInfoModified", { fg = "#7d8197", bg = "NONE", bold = false, italic = true })
 end
 
 -- Git branch
 local function git_branch()
   local branch = vim.b.gitsigns_head
   if not branch or branch == "" then
-    return ""
+    return { s = "", w = 0 }
   end
 
   local dict = vim.b.gitsigns_status_dict or {}
@@ -68,14 +69,18 @@ local function git_branch()
     if added and removed and added > 0 and removed > 0 then staged_changed = staged_changed + 1 end
   end
 
+  local w = #branch + 2
   if staged_added > 0 then
     staged_str = staged_str .. "%#StGitAdd# +" .. staged_added .. "%*"
+    w = w + 3
   end
   if staged_changed > 0 then
     staged_str = staged_str .. "%#StGitChange# ~" .. staged_changed .. "%*"
+    w = w + 3
   end
   if staged_removed > 0 then
     staged_str = staged_str .. "%#StGitDelete# -" .. staged_removed .. "%*"
+    w = w + 3
   end
   table.insert(parts, staged_str)
 
@@ -83,6 +88,7 @@ local function git_branch()
   local upstream_exists = vim.fn.system("git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
   if vim.v.shell_error ~= 0 or upstream_exists == "" then
     table.insert(parts, "%#StGitConflict#↑?%*")
+    w = w + 2
   else
     local ahead_behind = vim.fn.systemlist(
       "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
@@ -92,8 +98,14 @@ local function git_branch()
       local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
       behind, ahead = tonumber(behind), tonumber(ahead)
       local div = ""
-      if behind and behind > 0 then div = div .. "%#StGitConflict#↓" .. behind .. "%*" end
-      if ahead and ahead > 0 then div = div .. "%#StGitConflict#↑" .. ahead .. "%*" end
+      if behind and behind > 0 then
+        div = div .. "%#StGitConflict#↓" .. behind .. "%*"
+        w = w + 2
+      end
+      if ahead and ahead > 0 then
+        div = div .. "%#StGitConflict#↑" .. ahead .. "%*"
+        w = w + 2
+      end
       if div ~= "" then table.insert(parts, div) end
     end
   end
@@ -101,37 +113,52 @@ local function git_branch()
   -- Branch name
   table.insert(parts, "%#" .. group .. "# " .. branch .. "%*")
 
-  return table.concat(parts, " ")
+  return { s = table.concat(parts, ""), w = w }
 end
 
 -- Git diff counts
 local function git_diff()
   local gitsigns = vim.b.gitsigns_status_dict
-  if not gitsigns then return "" end
+  if not gitsigns then return { s = "", w = 0 } end
+
   local out = ""
+  local w = 0
   if gitsigns.added and gitsigns.added > 0 then
-    out = out .. "%#StGitAdd#+" .. gitsigns.added .. " %*"
+    out = out .. "%#StGitAdd#+" .. gitsigns.added .. "%*"
+    w = w + 3
   end
   if gitsigns.changed and gitsigns.changed > 0 then
-    out = out .. "%#StGitChange#~" .. gitsigns.changed .. " %*"
+    out = out .. "%#StGitChange#~" .. gitsigns.changed .. "%*"
+    w = w + 3
   end
   if gitsigns.removed and gitsigns.removed > 0 then
-    out = out .. "%#StGitDelete#-" .. gitsigns.removed .. " %*"
+    out = out .. "%#StGitDelete#-" .. gitsigns.removed .. "%*"
+    w = w + 3
   end
-  return out
+  return { s = out, w = w }
 end
 
 -- Filename with status
 local function filename()
-  local name = vim.fn.expand("%:~:.")
-  if name == "" then name = "∅" end
-  if vim.bo.modified then
-    name = name .. " "
+  local name = vim.fn.expand("%:t")
+  local path = vim.fn.expand("%:~:.")
+  if name == "" then
+    return { name = "%#StInfo#∅%*", path = "%#StInfo#∅%*", w = 1, pw = 1 }
+  elseif vim.bo.modified then
+    return {
+      s = "%#StInfoModified#" .. name .. "%*",
+      ls = "%#StInfoModified#" .. path .. "%*",
+      w = #name,
+      lw = #path
+    }
+  else
+    return {
+      s = "%#StInfo#" .. name .. "%*",
+      ls = "%#StInfo#" .. path .. "%*",
+      w = #name,
+      lw = #path
+    }
   end
-  if not vim.bo.modifiable or vim.bo.readonly then
-    name = name .. " "
-  end
-  return "%#StInfo#" .. name .. "%*"
 end
 
 -- Diagnostics (only show if > 0)
@@ -145,24 +172,30 @@ local function diagnostics()
     { vim.diagnostic.severity.HINT,  "StDiagHint" },
   }
   local signs = vim.diagnostic.config().signs.text or {}
+  local w = 0
 
   for _, item in ipairs(groups) do
     local severity, hl_group = item[1], item[2]
     local n = #vim.diagnostic.get(bufnr, { severity = severity })
     if n > 0 then
       table.insert(parts, "%#" .. hl_group .. "#" .. (signs[severity] or "") .. n .. "%* ")
+      w = w + 3
     end
   end
-  return table.concat(parts)
+  return { s = table.concat(parts), w = w }
 end
 
 -- LSP client names
 local function lsp_status()
   local clients = vim.lsp.get_clients({ bufnr = 0 })
-  if #clients == 0 then return "" end
+  if #clients == 0 then return { s = "", w = 0 } end
   local names = {}
-  for _, c in ipairs(clients) do table.insert(names, c.name) end
-  return "%#StInfo#" .. table.concat(names, ",") .. "%*"
+  local w = 0
+  for _, c in ipairs(clients) do
+    table.insert(names, c.name)
+    w = w + #c.name + 2
+  end
+  return { s = "%#StInfo#" .. table.concat(names, ",") .. "%*", w = w }
 end
 
 -- Filesize
@@ -195,24 +228,34 @@ end
 
 -- Assemble statusline
 function M.statusline()
-  local winid = vim.g.statusline_winid
-  local active = (winid == vim.api.nvim_get_current_win())
-  local m = modes[vim.fn.mode()]
+  local winid             = vim.g.statusline_winid
+  local active            = (winid == vim.api.nvim_get_current_win())
+  local m                 = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
+  local mode              = "%#" .. mode_hl .. "# " .. mode_str .. " %*"
 
   if not active or mode_str == "T" then
-    return table.concat({ "%#", mode_hl, "# ", mode_str, " %*", })
+    return mode
   else
-    return table.concat({
-      "%#", mode_hl, "# ", mode_str, " %*",
-      git_branch(), " ",
-      git_diff(),
-      filename(), "%=",
-      diagnostics(),
-      lsp_status(), " ",
-      filesize(), progress(), " ",
-      location(),
-    })
+    local cols = vim.o.columns - 10 - 10 -- 10 for mode and location, 10 for size
+    local lc   = location()
+    local gb   = git_branch()
+    local gd   = git_diff()
+    local fn   = filename()
+    local dd   = diagnostics()
+    local ls   = lsp_status()
+    local fs   = filesize() .. progress() .. " "
+
+    -- trim to cols
+    if gb.w + gd.w + fn.lw + dd.w + ls.w < cols then
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
+    elseif gb.w + gd.w + fn.w + dd.w + ls.w < cols then
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
+    elseif fn.w + dd.w < cols then
+      return mode .. " " .. fn.s .. "%=" .. dd.s .. fs .. lc
+    else
+      return mode .. " " .. fn.s .. "%=" .. lc
+    end
   end
 end
 
