@@ -79,17 +79,23 @@ local function git_branch()
   end
   table.insert(parts, staged_str)
 
-  -- Ahead/behind counts
-  local ahead_behind = vim.fn.systemlist(
-    "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
-  )[1]
-  if ahead_behind then
-    local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
-    behind, ahead = tonumber(behind), tonumber(ahead)
-    local div = ""
-    if behind and behind > 0 then div = div .. "%#StGitConflict#↓" .. behind .. "%*" end
-    if ahead and ahead > 0 then div = div .. "%#StGitConflict#↑" .. ahead .. "%*" end
-    if div ~= "" then table.insert(parts, div) end
+  -- Ahead/behind upstream
+  local upstream_exists = vim.fn.system("git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
+  if vim.v.shell_error ~= 0 or upstream_exists == "" then
+    table.insert(parts, "%#StGitConflict#↑?%*")
+  else
+    local ahead_behind = vim.fn.systemlist(
+      "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
+    )[1]
+
+    if ahead_behind then
+      local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
+      behind, ahead = tonumber(behind), tonumber(ahead)
+      local div = ""
+      if behind and behind > 0 then div = div .. "%#StGitConflict#↓" .. behind .. "%*" end
+      if ahead and ahead > 0 then div = div .. "%#StGitConflict#↑" .. ahead .. "%*" end
+      if div ~= "" then table.insert(parts, div) end
+    end
   end
 
   -- Branch name
