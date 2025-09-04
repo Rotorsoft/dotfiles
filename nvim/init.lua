@@ -1,5 +1,6 @@
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
+vim.o.wrap           = false
 vim.o.number         = true
 vim.o.relativenumber = true
 vim.o.mouse          = "a"
@@ -23,12 +24,12 @@ vim.o.expandtab      = true
 vim.o.winborder      = "rounded"
 vim.o.clipboard      = "unnamedplus"
 vim.o.list           = true
+vim.o.foldexpr       = 'v:lua.vim.treesitter.foldexpr()'
+vim.o.indentexpr     = "v:lua.require'nvim-treesitter'.indentexpr()"
+vim.o.foldmethod     = 'expr'
+vim.o.foldlevel      = 99
 vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
 vim.opt.fillchars    = "fold:·,eob: "
-vim.wo.foldexpr      = 'v:lua.vim.treesitter.foldexpr()'
-vim.bo.indentexpr    = "v:lua.require'nvim-treesitter'.indentexpr()"
-vim.wo.foldmethod    = 'expr'
-vim.wo.foldlevel     = 99
 
 vim.pack.add({
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
