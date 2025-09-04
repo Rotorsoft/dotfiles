@@ -49,18 +49,12 @@ local function git_branch()
 
   local dict = vim.b.gitsigns_status_dict or {}
   local parts = {}
-
-  -- Determine branch highlight (dirty if unstaged)
-  local group = "StGitClean"
-  if (dict.added or 0) > 0 or (dict.changed or 0) > 0 or (dict.removed or 0) > 0 then
-    group = "StGitDirty"
-  end
+  local w = #branch + 2
 
   -- Staged changes (use git diff --cached)
   local staged_str = ""
   local staged = vim.fn.systemlist("git diff --cached --numstat 2>/dev/null")
   local staged_added, staged_changed, staged_removed = 0, 0, 0
-
   for _, line in ipairs(staged) do
     local added, removed = line:match("(%d+)%s+(%d+)%s+")
     added, removed = tonumber(added), tonumber(removed)
@@ -68,50 +62,53 @@ local function git_branch()
     if removed and removed > 0 then staged_removed = staged_removed + removed end
     if added and removed and added > 0 and removed > 0 then staged_changed = staged_changed + 1 end
   end
-
-  local w = #branch + 2
   if staged_added > 0 then
-    staged_str = staged_str .. "%#StGitAdd# +" .. staged_added .. "%*"
-    w = w + 3
+    staged_str = staged_str .. "%#StGitAdd#+" .. staged_added .. "%*"
+    w = w + 2
   end
   if staged_changed > 0 then
-    staged_str = staged_str .. "%#StGitChange# ~" .. staged_changed .. "%*"
-    w = w + 3
+    staged_str = staged_str .. "%#StGitChange#~" .. staged_changed .. "%*"
+    w = w + 2
   end
   if staged_removed > 0 then
-    staged_str = staged_str .. "%#StGitDelete# -" .. staged_removed .. "%*"
-    w = w + 3
+    staged_str = staged_str .. "%#StGitDelete#-" .. staged_removed .. "%*"
+    w = w + 2
   end
   table.insert(parts, staged_str)
 
   -- Ahead/behind upstream
+  local conflicts_str = ""
   local upstream_exists = vim.fn.system("git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
   if vim.v.shell_error ~= 0 or upstream_exists == "" then
-    table.insert(parts, "%#StGitConflict#↑?%*")
+    conflicts_str = "↑?"
     w = w + 2
   else
     local ahead_behind = vim.fn.systemlist(
       "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
     )[1]
-
     if ahead_behind then
       local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
       behind, ahead = tonumber(behind), tonumber(ahead)
-      local div = ""
       if behind and behind > 0 then
-        div = div .. "%#StGitConflict#↓" .. behind .. "%*"
+        conflicts_str = conflicts_str .. "↓" .. behind
         w = w + 2
       end
       if ahead and ahead > 0 then
-        div = div .. "%#StGitConflict#↑" .. ahead .. "%*"
+        conflicts_str = conflicts_str .. "↑" .. ahead
         w = w + 2
       end
-      if div ~= "" then table.insert(parts, div) end
     end
   end
 
-  -- Branch name
-  table.insert(parts, "%#" .. group .. "# " .. branch .. "%*")
+  -- Determine branch highlight
+  local group = "StGitClean"
+  if conflicts_str ~= "" then
+    group = "StGitConflict"
+  elseif (dict.added or 0) + (dict.changed or 0) + (dict.removed or 0) > 0 then
+    group = "StGitDirty"
+  end
+  -- Branch name with conflicts prepended and icon
+  table.insert(parts, "%#" .. group .. "#" .. conflicts_str .. " " .. branch .. "%*")
 
   return { s = table.concat(parts, ""), w = w }
 end
