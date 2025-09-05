@@ -3,9 +3,22 @@ local function mapn(lhs, rhs, desc, buffer)
   map("n", lhs, rhs, { desc = desc, buffer = buffer, silent = true, noremap = true })
 end
 
-mapn("<leader>w", function() vim.cmd.w() end, "Write")
+mapn("<leader>w", function()
+  local name = vim.api.nvim_buf_get_name(0)
+  if name == "" then
+    vim.notify("Buffer has no name, use :w filename", vim.log.levels.ERROR)
+  else
+    vim.cmd.write()
+  end
+end, "Write")
+mapn("<leader>x", function()
+  if vim.api.nvim_buf_get_name(0) ~= "" then
+    vim.cmd.bdelete()
+  else
+    vim.notify("No buffer to delete", vim.log.levels.WARN)
+  end
+end, "Close")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
-mapn("<leader>x", function() vim.cmd.bd() end, "Close")
 
 mapn("<C-j>", "<C-d>", "Scroll Down")
 mapn("<C-k>", "<C-u>", "Scroll Up")
