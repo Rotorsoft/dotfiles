@@ -16,10 +16,7 @@ brew bundle
 
 ## Terminal
 
-Brew bundle should have included `iTerm2`, `zsh`, `powerlevel10k`.
-
-- Open iTerm2 -> Make iTerm2 Default Terminal
-- Set font in settings
+Brew bundle should have included `zsh` and other terminal stuff
 
 ```bash
 # list shells
@@ -27,14 +24,15 @@ cat /etc/shells
 echo $SHELL
 ```
 
-- Configure zsh as the default shell: `chsh -s $(which zsh)`
+- Set zsh as the default shell: `chsh -s $(which zsh)`
+- Install oh-my-zsh, or use starship
 
 ```bash
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ```
 
-## Symlink .dotfiles
+## Configure
 
 ```bash
-./.dotfiles/link_dot_files.sh
+./.dotfiles/scripts/config.sh
 ```

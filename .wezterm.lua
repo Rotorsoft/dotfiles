@@ -1,4 +1,9 @@
+---@diagnostic disable: unused-local
+---@diagnostic disable-next-line: unused-local
+---@diagnostic disable: unused-local
+---@diagnostic disable-next-line: unused-local
 local wezterm = require("wezterm")
+
 return {
   adjust_window_size_when_changing_font_size = false,
   color_scheme = "Catppuccin Mocha",

@@ -2,6 +2,8 @@
 
 # Remove all existing links
 find $HOME -maxdepth 1 -type l -exec rm {} \;
+rm -rf $HOME/.config/nvim
+rm -rf $HOME/.config/starship.toml
 
 # Link dotfiles
 ln -s $HOME/.dotfiles/.gitconfig "${HOME}/.gitconfig"
