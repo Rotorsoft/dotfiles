@@ -45,30 +45,62 @@ local sessions = require("mini.sessions")
 mapn("<leader>ss", sessions.select, "Select")
 mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim") end, "Write")
 
-mapn("<F2>", vim.lsp.buf.rename, "Rename")
-mapn("<F4>", function()
-  vim.lsp.buf.code_action({
-    apply = false,
-    filter = function(action)
-      return not action.disabled
-    end,
-  })
-end, "Code Actions")
-mapn("<F12>", vim.lsp.buf.definition, "Goto Definition")
-
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyLspGroup", { clear = true }),
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     local bufnr = args.buf
+
     if client then
-      -- Format on save
-      if client:supports_method("textDocument/formatting") then
-        vim.api.nvim_create_autocmd("BufWritePre", {
-          buffer = bufnr,
-          callback = function() vim.lsp.buf.format { bufnr = bufnr, id = client.id, async = false, } end
+      -- Show all supported code actions
+      local code_actions = function()
+        vim.lsp.buf.code_action({
+          apply = false,
+          context = {
+            only = client.server_capabilities.codeActionProvider.codeActionKinds,
+            diagnostics = vim.diagnostic.get(bufnr),
+          },
+          filter = function(action)
+            return not action.disabled
+          end,
         })
       end
+
+      -- Organize imports and format buffer
+      local function organize_and_format()
+        local params = {
+          textDocument = vim.lsp.util.make_text_document_params(bufnr),
+          range = {
+            start = { line = 0, character = 0 },
+            ["end"] = { line = vim.api.nvim_buf_line_count(bufnr), character = 0 },
+          },
+          context = {
+            only = { "source.organizeImports" },
+            diagnostics = vim.diagnostic.get(bufnr),
+            triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
+          },
+        }
+        -- Make sync request so it completes before write
+        local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 1000)
+        for _, res in pairs(results or {}) do
+          for _, action in ipairs(res.result or {}) do
+            -- Apply edits first (respect client offset encoding)
+            if action.edit then
+              vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
+            end
+            -- Then execute any command
+            if action.command then
+              client:exec_cmd(action.command, { bufnr = bufnr })
+            end
+          end
+        end
+
+        -- format buffer
+        if client:supports_method("textDocument/formatting") then
+          vim.lsp.buf.format { bufnr = bufnr, async = false }
+        end
+      end
+
       -- Completion
       if client:supports_method("textDocument/completion") then
         vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
@@ -85,17 +117,25 @@ vim.api.nvim_create_autocmd("LspAttach", {
       if client:supports_method('textDocument/signatureHelp') then
         map('n', '<C-s>', function() vim.lsp.buf.signature_help() end, { desc = "Trigger Lsp Signature Help" })
       end
-    end
 
-    local p = require("mini.extra").pickers
-    mapn("<leader>ld", function() p.diagnostic() end, "Diagnostics", bufnr)
-    mapn("<leader>lf", function() vim.lsp.buf.format { bufnr = bufnr, async = true } end, "Format Buffer")
-    mapn("<leader>le", function() p.lsp({ scope = "declaration" }) end, "Declaration", bufnr)
-    mapn("<leader>li", function() p.lsp({ scope = "implementation" }) end, "Implementation", bufnr)
-    mapn("<leader>lr", function() p.lsp({ scope = "references" }) end, "References", bufnr)
-    mapn("<leader>lt", function() p.lsp({ scope = "type_definition" }) end, "Type Definition", bufnr)
-    mapn("<leader>ls", function() p.lsp({ scope = "document_symbol" }) end, "Document Symbols", bufnr)
-    mapn("<leader>lw", function() p.lsp({ scope = "workspace_symbol" }) end, "Workspace Symbols", bufnr)
+      -- Organize imports and format on save
+      if client:supports_method("textDocument/formatting") then
+        vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = organize_and_format })
+      end
+
+      local p = require("mini.extra").pickers
+      mapn("<F2>", vim.lsp.buf.rename, "Rename")
+      mapn("<F4>", code_actions, "Code Actions")
+      mapn("<F12>", vim.lsp.buf.definition, "Goto Definition")
+      mapn("<leader>lf", organize_and_format, "Organize Imports/Format Buffer")
+      mapn("<leader>ld", function() p.diagnostic() end, "Diagnostics", bufnr)
+      mapn("<leader>le", function() p.lsp({ scope = "declaration" }) end, "Declaration", bufnr)
+      mapn("<leader>li", function() p.lsp({ scope = "implementation" }) end, "Implementation", bufnr)
+      mapn("<leader>lr", function() p.lsp({ scope = "references" }) end, "References", bufnr)
+      mapn("<leader>lt", function() p.lsp({ scope = "type_definition" }) end, "Type Definition", bufnr)
+      mapn("<leader>ls", function() p.lsp({ scope = "document_symbol" }) end, "Document Symbols", bufnr)
+      mapn("<leader>lw", function() p.lsp({ scope = "workspace_symbol" }) end, "Workspace Symbols", bufnr)
+    end
   end,
 })
 
