@@ -76,8 +76,8 @@ vim.api.nvim_create_autocmd('VimEnter', {
     require("mini.pick").setup({
       mappings = {
         move_start = "<C-g>",
-        move_down = "<C-j>",
-        move_up = "<C-k>",
+        move_down = "<C-n>",
+        move_up = "<C-p>",
         scroll_down = "<C-M-j>",
         scroll_up = "<C-M-k>",
         toggle_info = "<C-i>",
