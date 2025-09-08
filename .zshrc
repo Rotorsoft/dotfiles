@@ -6,8 +6,8 @@
 plugins=(git docker docker-compose colored-man-pages colorize)
 
 # oh-my-zsh
-# export ZSH="$HOME/.oh-my-zsh"
-# source $ZSH/oh-my-zsh.sh
+export ZSH="$HOME/.oh-my-zsh"
+source $ZSH/oh-my-zsh.sh
 
 # zsh completions
 fpath=($HOME/.docker/completions $fpath)
@@ -23,8 +23,11 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh 
 
 # aliases
-alias la='lsd -la'
-alias lat='lsd -la --tree --depth 3 --ignore-glob node_modules --ignore-glob .git --ignore-glob .postgres --ignore-glob .rabbitmq'
+alias ls='eza -la --icons=auto --sort=name'
+alias lt='eza -la --icons=auto --sort=time'
+alias ld='eza -laD --icons=auto --sort=name'
+alias lf='eza -laf --icons=auto --git --sort=size'
+alias la='eza -laT -L2 --git-ignore --icons=auto'
 alias g=git
 alias p=pnpm
 alias v=nvim
