@@ -12,20 +12,13 @@ mapn("<leader>w", function()
   end
 end, "Write")
 mapn("<leader>x", function()
-  if vim.api.nvim_buf_get_name(0) ~= "" then
+  if vim.api.nvim_get_current_buf() > 0 then
     vim.cmd.bdelete()
   else
     vim.notify("No buffer to delete", vim.log.levels.WARN)
   end
 end, "Close")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
-
-mapn("<C-j>", "<C-d>", "Scroll Down")
-mapn("<C-k>", "<C-u>", "Scroll Up")
-mapn("<Up>", function() vim.cmd("resize +4") end, "Increase Height")
-mapn("<Down>", function() vim.cmd("resize -4") end, "Decrease Height")
-mapn("<Left>", function() vim.cmd("vertical resize -4") end, "Decrease Width")
-mapn("<Right>", function() vim.cmd("vertical resize +4") end, "Increase Width")
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 mapn("<Esc>", function() vim.cmd.nohlsearch() end)
@@ -40,8 +33,8 @@ mapn("<leader>b", pick.builtin.buffers, "Buffers")
 mapn("<leader>d", vim.diagnostic.open_float, "Diagnostic")
 mapn("<leader>e", function() require("mini.files").open(vim.fn.expand("%:p:h")) end, "Explore Here")
 mapn("<leader>E", function() require("mini.files").open() end, "Explore All")
-mapn("<leader>F", function() pick.builtin.cli({ command = { 'rg', '--files', '--hidden', '--no-ignore' }, }) end,
-  "Ripgrep All")
+mapn("<leader>G", function() pick.builtin.cli({ command = { 'rg', '--files', '--hidden', '--no-ignore' }, }) end,
+  "Grep All")
 mapn("<leader>g", pick.builtin.grep_live, "Grep")
 mapn("<leader>h", extra.pickers.history, "History")
 mapn("<leader>k", extra.pickers.keymaps, "Keymaps")

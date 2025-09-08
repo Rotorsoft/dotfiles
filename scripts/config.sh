@@ -14,6 +14,7 @@ ln -s $HOME/.dotfiles/.tmux.conf "${HOME}/.tmux.conf"
 ln -s $HOME/.dotfiles/.wezterm.lua "${HOME}/.wezterm.lua"
 ln -s $HOME/.dotfiles/starship.toml "${HOME}/.config/starship.toml"
 ln -s $HOME/.dotfiles/nvim "${HOME}/.config/nvim"
+ln -s $HOME/.dotfiles/ghostty.config "${HOME}/.config/ghostty/config"
 
 # Link vscode settings.json 
 rm "${HOME}/Library/Application Support/Code/User/settings.json"
