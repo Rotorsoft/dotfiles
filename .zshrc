@@ -6,8 +6,8 @@
 plugins=(git docker docker-compose colored-man-pages colorize)
 
 # oh-my-zsh
-export ZSH="$HOME/.oh-my-zsh"
-source $ZSH/oh-my-zsh.sh
+# export ZSH="$HOME/.oh-my-zsh"
+# source $ZSH/oh-my-zsh.sh
 
 # zsh completions
 fpath=($HOME/.docker/completions $fpath)
@@ -37,4 +37,7 @@ eval "$(zoxide init zsh)"
 
 # starship
 eval "$(starship init zsh)"
+
+# fzf
+source <(fzf --zsh)
 
