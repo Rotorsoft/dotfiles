@@ -57,7 +57,7 @@ vim.diagnostic.config({
 ---@diagnostic disable-next-line: param-type-mismatch
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
-    local languages = { "javascript", "typescript", "tsx", "html", "json", "css" }
+    local languages = { "javascript", "typescript", "typescriptreact", "html", "json", "css" }
     require("nvim-treesitter").setup()
     require("nvim-treesitter").install(languages)
     vim.api.nvim_create_autocmd('FileType', {
