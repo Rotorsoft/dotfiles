@@ -27,7 +27,6 @@ mapn("<Esc>", function() vim.cmd.nohlsearch() end)
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode", silent = true, noremap = true })
 
 local pick = require("mini.pick")
-local extra = require("mini.extra")
 mapn("<leader><leader>", pick.builtin.files, "Files")
 mapn("<leader>b", pick.builtin.buffers, "Buffers")
 mapn("<leader>d", vim.diagnostic.open_float, "Diagnostic")
@@ -36,16 +35,23 @@ mapn("<leader>E", function() require("mini.files").open() end, "Explore All")
 mapn("<leader>G", function() pick.builtin.cli({ command = { 'rg', '--files', '--hidden', '--no-ignore' }, }) end,
   "Grep All")
 mapn("<leader>g", pick.builtin.grep_live, "Grep")
-mapn("<leader>h", extra.pickers.history, "History")
-mapn("<leader>k", extra.pickers.keymaps, "Keymaps")
-mapn("<leader>m", extra.pickers.marks, "Marks")
-mapn("<leader>o", extra.pickers.oldfiles, "Old Files")
-mapn("<leader>r", extra.pickers.registers, "Registers")
-mapn("<leader>T", extra.pickers.treesitter, "Treesitter")
-mapn("<leader>:", extra.pickers.commands, "Commands")
 mapn("<leader>.", pick.builtin.resume, "Resume")
 mapn("<leader>/", pick.builtin.grep, "Grep Pattern")
 mapn("<leader>?", pick.builtin.help, "Help")
+
+local extra = require("mini.extra")
+mapn("<leader>fb", extra.pickers.git_branches, "Git Branches")
+mapn("<leader>fh", extra.pickers.history, "History")
+mapn("<leader>fk", extra.pickers.keymaps, "Keymaps")
+mapn("<leader>fm", extra.pickers.marks, "Marks")
+mapn("<leader>fo", extra.pickers.oldfiles, "Old Files")
+mapn("<leader>fr", extra.pickers.registers, "Registers")
+mapn("<leader>fT", extra.pickers.treesitter, "Treesitter")
+mapn("<leader>f:", extra.pickers.commands, "Commands")
+mapn("<leader>fq", function() extra.pickers.list({ scope = 'quickfix' }) end, "Quickfix List")
+mapn("<leader>fl", function() extra.pickers.list({ scope = 'location' }) end, "Location List")
+mapn("<leader>fj", function() extra.pickers.list({ scope = 'jump' }) end, "Jump List")
+mapn("<leader>fc", function() extra.pickers.list({ scope = 'change' }) end, "Change List")
 
 local sessions = require("mini.sessions")
 mapn("<leader>ss", sessions.select, "Select")
@@ -213,6 +219,7 @@ clue.setup({
     clue.gen_clues.registers(),
     clue.gen_clues.z(),
     -- Groups
+    { mode = "n", keys = "<leader>f", desc = " Find" },
     { mode = "n", keys = "<leader>l", desc = " LSP" },
     { mode = "n", keys = "<leader>s", desc = " Session" },
   },
