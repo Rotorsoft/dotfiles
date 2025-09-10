@@ -1,5 +1,11 @@
 local M = {}
 
+local cache = {
+  git_branch = nil,
+  diagnostics = nil,
+  lsp = nil,
+}
+
 local modes = {
   n = { "N", "StModeNormal" },
   i = { "I", "StModeInsert" },
@@ -46,6 +52,8 @@ local function git_branch()
   if not branch or branch == "" then
     return { s = "", w = 0 }
   end
+
+  if cache.git_branch then return cache.git_branch end
 
   local dict = vim.b.gitsigns_status_dict or {}
   local parts = {}
@@ -110,7 +118,8 @@ local function git_branch()
   -- Branch name with conflicts prepended and icon
   table.insert(parts, "%#" .. group .. "#" .. conflicts_str .. " " .. branch .. "%*")
 
-  return { s = table.concat(parts, ""), w = w }
+  cache.git_branch = { s = table.concat(parts, ""), w = w }
+  return cache.git_branch
 end
 
 -- Git diff counts
@@ -152,41 +161,53 @@ local function filename()
   }
 end
 
+local diagnostic_hl_groups = {
+  { vim.diagnostic.severity.ERROR, "StDiagError" },
+  { vim.diagnostic.severity.WARN,  "StDiagWarn" },
+  { vim.diagnostic.severity.INFO,  "StDiagInfo" },
+  { vim.diagnostic.severity.HINT,  "StDiagHint" },
+}
+local diagnostic_signs = {
+  [vim.diagnostic.severity.ERROR] = "E",
+  [vim.diagnostic.severity.WARN] = "W",
+  [vim.diagnostic.severity.INFO] = "I",
+  [vim.diagnostic.severity.HINT] = "H",
+}
+
 -- Diagnostics (only show if > 0)
 local function diagnostics()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local parts = {}
-  local groups = {
-    { vim.diagnostic.severity.ERROR, "StDiagError" },
-    { vim.diagnostic.severity.WARN,  "StDiagWarn" },
-    { vim.diagnostic.severity.INFO,  "StDiagInfo" },
-    { vim.diagnostic.severity.HINT,  "StDiagHint" },
-  }
-  local signs = vim.diagnostic.config().signs.text or {}
-  local w = 0
+  if cache.diagnostics then return cache.diagnostics end
 
-  for _, item in ipairs(groups) do
+  local counts = vim.diagnostic.count(0)
+  local w = 0
+  local parts = {}
+  for _, item in pairs(diagnostic_hl_groups) do
     local severity, hl_group = item[1], item[2]
-    local n = #vim.diagnostic.get(bufnr, { severity = severity })
+    local n = counts[severity] or 0
     if n > 0 then
-      table.insert(parts, "%#" .. hl_group .. "#" .. (signs[severity] or "") .. n .. "%*")
-      w = w + 2
+      table.insert(parts, "%#" .. hl_group .. "#" .. diagnostic_signs[severity] .. n .. "%* ")
+      w = w + 3
     end
   end
-  return { s = table.concat(parts), w = w }
+
+  cache.diagnostics = { s = table.concat(parts), w = w }
+  return cache.diagnostics
 end
 
 -- LSP client names
 local function lsp_status()
-  local clients = vim.lsp.get_clients({ bufnr = 0 })
-  if #clients == 0 then return { s = "", w = 0 } end
+  if cache.lsp then return cache.lsp end
+
   local names = {}
   local w = 0
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
   for _, c in ipairs(clients) do
     table.insert(names, c.name)
     w = w + #c.name + 2
   end
-  return { s = "%#StInfo#" .. table.concat(names, ",") .. "%*", w = w }
+
+  cache.lsp = { s = "%#StInfo#" .. table.concat(names, ",") .. "%*", w = w }
+  return cache.lsp
 end
 
 -- Filesize
@@ -217,6 +238,17 @@ local function location()
   return "%#StInfo#" .. vim.fn.line(".") .. ":" .. vim.fn.col(".") .. "%*"
 end
 
+-- Invalidate caches
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "CursorHold" }, {
+  callback = function() cache.git_branch = nil end
+})
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+  callback = function() cache.diagnostics = nil end
+})
+vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
+  callback = function() cache.lsp = nil end
+})
+
 -- Assemble statusline
 function M.statusline()
   local winid             = vim.g.statusline_winid
@@ -239,11 +271,11 @@ function M.statusline()
 
     -- trim to cols
     if gb.w + gd.w + fn.lw + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. " " .. ls.s .. " " .. fs .. lc
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
     elseif gb.w + gd.w + fn.w + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. " " .. ls.s .. " " .. fs .. lc
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
     elseif fn.w + dd.w < cols then
-      return mode .. " " .. fn.s .. "%=" .. dd.s .. " " .. fs .. lc
+      return mode .. " " .. fn.s .. "%=" .. dd.s .. fs .. lc
     else
       return mode .. " " .. fn.s .. "%=" .. lc
     end

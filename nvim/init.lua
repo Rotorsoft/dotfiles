@@ -40,20 +40,6 @@ vim.pack.add({
 
 vim.lsp.enable({ "lua_ls", "ts_ls" })
 
-vim.diagnostic.config({
-  severity_sort = true,
-  underline = { severity = vim.diagnostic.severity.ERROR },
-  virtual_text = { source = true, spacing = 4 },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚",
-      [vim.diagnostic.severity.WARN] = "󰀪",
-      [vim.diagnostic.severity.INFO] = "󰋽",
-      [vim.diagnostic.severity.HINT] = "󰌶",
-    },
-  },
-})
-
 ---@diagnostic disable-next-line: param-type-mismatch
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
