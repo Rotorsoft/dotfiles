@@ -169,8 +169,8 @@ local function diagnostics()
     local severity, hl_group = item[1], item[2]
     local n = #vim.diagnostic.get(bufnr, { severity = severity })
     if n > 0 then
-      table.insert(parts, "%#" .. hl_group .. "#" .. (signs[severity] or "") .. n .. "%* ")
-      w = w + 3
+      table.insert(parts, "%#" .. hl_group .. "#" .. (signs[severity] or "") .. n .. "%*")
+      w = w + 2
     end
   end
   return { s = table.concat(parts), w = w }
@@ -239,11 +239,11 @@ function M.statusline()
 
     -- trim to cols
     if gb.w + gd.w + fn.lw + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. " " .. ls.s .. " " .. fs .. lc
     elseif gb.w + gd.w + fn.w + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
+      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. " " .. ls.s .. " " .. fs .. lc
     elseif fn.w + dd.w < cols then
-      return mode .. " " .. fn.s .. "%=" .. dd.s .. fs .. lc
+      return mode .. " " .. fn.s .. "%=" .. dd.s .. " " .. fs .. lc
     else
       return mode .. " " .. fn.s .. "%=" .. lc
     end
