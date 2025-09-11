@@ -239,14 +239,31 @@ local function location()
 end
 
 -- Invalidate caches
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "CursorHold" }, {
-  callback = function() cache.git_branch = nil end
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+  callback = function()
+    cache.git_branch = nil
+    cache.diagnostics = nil
+  end
 })
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
   callback = function() cache.diagnostics = nil end
 })
 vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
   callback = function() cache.lsp = nil end
+})
+local debounce = nil
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+  callback = function()
+    if debounce then
+      debounce:close()
+      debounce = nil
+    end
+    debounce = vim.defer_fn(function()
+      cache.git_branch = nil
+      cache.diagnostics = nil
+      debounce = nil
+    end, 10000)
+  end
 })
 
 -- Assemble statusline
