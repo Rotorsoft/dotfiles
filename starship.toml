@@ -6,6 +6,7 @@ right_format = """$python$nodejs$golang$docker_context"""
 [character]
 success_symbol = "[❱](green)"
 error_symbol = "[❱](red)"
+vimcmd_symbol = "[❰](blue)"
 
 [directory]
 truncation_length = 3
