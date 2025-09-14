@@ -1,6 +1,6 @@
 {
     "diagnostics.disable": [
-        "trailing-space",
+        "cast-local-type",
         "need-check-nil",
         "param-type-mismatch",
         "assign-type-mismatch"

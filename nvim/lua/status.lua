@@ -1,7 +1,8 @@
 local M = {}
 
 local cache = {
-  git_branch = nil,
+  git = nil,
+  file = nil,
   diagnostics = nil,
   lsp = nil,
 }
@@ -46,119 +47,92 @@ local function setup_highlights()
   hl("StInfoModified", { fg = "#7d8197", bg = "NONE", bold = false, italic = true })
 end
 
--- Git branch
-local function git_branch()
-  local branch = vim.b.gitsigns_head
+local function git()
+  local branch = vim.b.gitsigns_head or ""
   if not branch or branch == "" then
     return { s = "", w = 0 }
   end
 
-  if cache.git_branch then return cache.git_branch end
+  if cache.git then return cache.git end
 
   local dict = vim.b.gitsigns_status_dict or {}
   local parts = {}
   local w = #branch + 2
 
-  -- Staged changes (use git diff --cached)
-  local staged_str = ""
-  local staged = vim.fn.systemlist("git diff --cached --numstat 2>/dev/null")
-  local staged_added, staged_changed, staged_removed = 0, 0, 0
-  for _, line in ipairs(staged) do
-    local added, removed = line:match("(%d+)%s+(%d+)%s+")
-    added, removed = tonumber(added), tonumber(removed)
-    if added and added > 0 then staged_added = staged_added + added end
-    if removed and removed > 0 then staged_removed = staged_removed + removed end
-    if added and removed and added > 0 and removed > 0 then staged_changed = staged_changed + 1 end
-  end
-  if staged_added > 0 then
-    staged_str = staged_str .. "%#StGitAdd#+" .. staged_added .. "%*"
-    w = w + 2
-  end
-  if staged_changed > 0 then
-    staged_str = staged_str .. "%#StGitChange#~" .. staged_changed .. "%*"
-    w = w + 2
-  end
-  if staged_removed > 0 then
-    staged_str = staged_str .. "%#StGitDelete#-" .. staged_removed .. "%*"
-    w = w + 2
-  end
-  table.insert(parts, staged_str)
-
-  -- Ahead/behind upstream
-  local conflicts_str = ""
-  local upstream_exists = vim.fn.system("git rev-parse --abbrev-ref --symbolic-full-name @{upstream} 2>/dev/null")
-  if vim.v.shell_error ~= 0 or upstream_exists == "" then
-    conflicts_str = "↑?"
-    w = w + 2
-  else
-    local ahead_behind = vim.fn.systemlist(
-      "git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null"
-    )[1]
-    if ahead_behind then
-      local behind, ahead = ahead_behind:match("(%d+)%s+(%d+)")
-      behind, ahead = tonumber(behind), tonumber(ahead)
-      if behind and behind > 0 then
-        conflicts_str = conflicts_str .. "↓" .. behind
-        w = w + 2
-      end
-      if ahead and ahead > 0 then
-        conflicts_str = conflicts_str .. "↑" .. ahead
-        w = w + 2
+  local status = ""
+  local group = "StGitClean"
+  local staged, ahead, behind = 0, 0, 0
+  local output = vim.fn.systemlist("git status --porcelain=2 --branch 2>/dev/null")
+  if not (vim.v.shell_error ~= 0 or #output == 0) then
+    for _, line in ipairs(output) do
+      local a, b = line:match("# branch%.ab %+([0-9]+) %+%-([0-9]+)")
+      if a and b then
+        ahead, behind = tonumber(a), tonumber(b)
+      elseif line:match("^1 ") or line:match("^2 ") then
+        local xy = line:sub(3, 4) -- the XY status code
+        if xy:sub(1, 1) ~= "." then
+          staged = staged + 1
+        end
       end
     end
+    if staged > 0 then
+      status = "*" .. staged
+      w = w + 2
+    end
+    if behind > 0 then
+      status = status .. "↓" .. behind
+      w = w + 2
+    end
+    if ahead > 0 then
+      status = status .. "↑" .. ahead
+      w = w + 2
+    end
   end
-
-  -- Determine branch highlight
-  local group = "StGitClean"
-  if conflicts_str ~= "" then
+  if ahead + behind > 0 then
     group = "StGitConflict"
-  elseif (dict.added or 0) + (dict.changed or 0) + (dict.removed or 0) > 0 then
+  elseif staged + (dict.added or 0) + (dict.changed or 0) + (dict.removed or 0) > 0 then
     group = "StGitDirty"
   end
-  -- Branch name with conflicts prepended and icon
-  table.insert(parts, "%#" .. group .. "#" .. conflicts_str .. " " .. branch .. "%*")
+  table.insert(parts, "%#" .. group .. "#" .. status .. " " .. branch .. "%*")
 
-  cache.git_branch = { s = table.concat(parts, ""), w = w }
-  return cache.git_branch
+  -- Gitsigns
+  local signs = ""
+  if dict.added and dict.added > 0 then
+    signs = signs .. "%#StGitAdd#+" .. dict.added .. "%*"
+    w = w + 3
+  end
+  if dict.changed and dict.changed > 0 then
+    signs = signs .. "%#StGitChange#~" .. dict.changed .. "%*"
+    w = w + 3
+  end
+  if dict.removed and dict.removed > 0 then
+    signs = signs .. "%#StGitDelete#-" .. dict.removed .. "%*"
+    w = w + 3
+  end
+  table.insert(parts, signs)
+
+  cache.git = { s = table.concat(parts, ""), w = w }
+  return cache.git
 end
 
--- Git diff counts
-local function git_diff()
-  local gitsigns = vim.b.gitsigns_status_dict
-  if not gitsigns then return { s = "", w = 0 } end
+local function file()
+  if cache.file then return cache.file end
 
-  local out = ""
-  local w = 0
-  if gitsigns.added and gitsigns.added > 0 then
-    out = out .. "%#StGitAdd#+" .. gitsigns.added .. "%*"
-    w = w + 3
-  end
-  if gitsigns.changed and gitsigns.changed > 0 then
-    out = out .. "%#StGitChange#~" .. gitsigns.changed .. "%*"
-    w = w + 3
-  end
-  if gitsigns.removed and gitsigns.removed > 0 then
-    out = out .. "%#StGitDelete#-" .. gitsigns.removed .. "%*"
-    w = w + 3
-  end
-  return { s = out, w = w }
-end
-
--- Filename with status
-local function filename()
   local name = vim.fn.expand("%:t")
   if name == "" then
-    return { s = "", ls = "", w = 0, lw = 0 }
+    cache.file = { s = "", ls = "", w = 0, lw = 0 }
+  else
+    local path = vim.fn.expand("%:~:.")
+    local group = "StInfo"
+    if vim.bo.modified then group = "StInfoModified" end
+    cache.file = {
+      s = "%#" .. group .. "#" .. name .. "%*",
+      ls = "%#" .. group .. "#" .. path .. "%*",
+      w = #name,
+      lw = #path
+    }
   end
-  local path = vim.fn.expand("%:~:.")
-  local group = "StInfo"
-  if vim.bo.modified then group = "StInfoModified" end
-  return {
-    s = "%#" .. group .. "#" .. name .. "%*",
-    ls = "%#" .. group .. "#" .. path .. "%*",
-    w = #name,
-    lw = #path
-  }
+  return cache.file
 end
 
 local diagnostic_hl_groups = {
@@ -210,43 +184,19 @@ local function lsp_status()
   return cache.lsp
 end
 
--- Filesize
-local function filesize()
-  local size = vim.fn.getfsize(vim.fn.expand("%:p"))
-  if size < 0 then return "" end
-  local sizestr
-  if size < 1024 then
-    sizestr = size .. "B"
-  elseif size < 1024 * 1024 then
-    sizestr = string.format("%.1fK", size / 1024)
-  else
-    sizestr = string.format("%.1fM", size / (1024 * 1024))
-  end
-  return "%#StInfo#" .. sizestr .. "%*"
-end
-
--- Progress (% through file)
-local function progress()
-  local cur = vim.fn.line(".")
-  local total = vim.fn.line("$")
-  local p = total > 0 and math.floor(cur / total * 100) or 0
-  return "%#StInfo#/" .. p .. "%%" .. "%*"
-end
-
--- Cursor location
-local function location()
-  return "%#StInfo#" .. vim.fn.line(".") .. ":" .. vim.fn.col(".") .. "%*"
-end
-
 -- Invalidate caches
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "DirChanged" }, {
   callback = function()
-    cache.git_branch = nil
+    cache.file = nil
+    cache.git = nil
     cache.diagnostics = nil
   end
 })
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  callback = function() cache.diagnostics = nil end
+  callback = function()
+    cache.file = nil
+    cache.diagnostics = nil
+  end
 })
 vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
   callback = function() cache.lsp = nil end
@@ -259,7 +209,8 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TextChanged", "TextChangedI" }, {
       debounce = nil
     end
     debounce = vim.defer_fn(function()
-      cache.git_branch = nil
+      cache.file = nil
+      cache.git = nil
       cache.diagnostics = nil
       debounce = nil
     end, 10000)
@@ -277,24 +228,25 @@ function M.statusline()
   if not active or mode_str == "T" then
     return mode
   else
-    local cols = vim.o.columns - 10 - 10 -- 10 for mode and location, 10 for size
-    local lc   = location()
-    local gb   = git_branch()
-    local gd   = git_diff()
-    local fn   = filename()
-    local dd   = diagnostics()
-    local ls   = lsp_status()
-    local fs   = filesize() .. progress() .. " "
+    local cl   = vim.fn.line(".")
+    local lt   = vim.fn.line("$")
+    local lp   = lt > 0 and math.floor(cl / lt * 100) or 0
+    local lc   = "%#StInfo#" .. lp .. "%% " .. cl .. ":" .. vim.fn.col(".") .. "%*"
+    local g    = git()
+    local f    = file()
+    local d    = diagnostics()
+    local l    = lsp_status()
 
     -- trim to cols
-    if gb.w + gd.w + fn.lw + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.ls .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
-    elseif gb.w + gd.w + fn.w + dd.w + ls.w < cols then
-      return mode .. " " .. gb.s .. gd.s .. " " .. fn.s .. "%=" .. dd.s .. ls.s .. " " .. fs .. lc
-    elseif fn.w + dd.w < cols then
-      return mode .. " " .. fn.s .. "%=" .. dd.s .. fs .. lc
+    local cols = vim.o.columns - 10 - 4 -- 10 for mode and location, 4 for progress
+    if g.w + f.lw + d.w + l.w < cols then
+      return mode .. " " .. g.s .. " " .. f.ls .. "%=" .. d.s .. l.s .. " " .. lc
+    elseif g.w + f.w + d.w + l.w < cols then
+      return mode .. " " .. g.s .. " " .. f.s .. "%=" .. d.s .. l.s .. " " .. lc
+    elseif f.w + d.w < cols then
+      return mode .. " " .. f.s .. "%=" .. d.s .. lc
     else
-      return mode .. " " .. fn.s .. "%=" .. lc
+      return mode .. " " .. f.s .. "%=" .. lc
     end
   end
 end
