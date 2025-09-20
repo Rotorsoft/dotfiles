@@ -48,65 +48,84 @@ local function setup_highlights()
 end
 
 local function git()
-  local branch = vim.b.gitsigns_head or ""
-  if not branch or branch == "" then
-    return { s = "", w = 0 }
-  end
-
   if cache.git then return cache.git end
 
-  local dict = vim.b.gitsigns_status_dict or {}
+  local output = vim.fn.systemlist('git -C "$(git rev-parse --show-toplevel)" status --porcelain=2 --branch 2>/dev/null')
+  if vim.v.shell_error ~= 0 or #output == 0 then
+    cache.git = { s = "", w = 0 }
+    return cache.git
+  end
+
+  local buf_changes = vim.b.gitsigns_status_dict or {}
   local parts = {}
-  local w = #branch + 2
+  local branch = ""
+  local w = 0
 
   local status = ""
   local group = "StGitClean"
-  local staged, ahead, behind = 0, 0, 0
-  local output = vim.fn.systemlist("git status --porcelain=2 --branch 2>/dev/null")
-  if not (vim.v.shell_error ~= 0 or #output == 0) then
-    for _, line in ipairs(output) do
+  local unstaged, staged, ahead, behind = 0, 0, 0, 0
+  local abfound = false
+  for _, line in ipairs(output) do
+    if line:match("^[12u] ") then
+      local xy = line:sub(3, 4) -- the XY status code
+      local x, y = xy:sub(1, 1), xy:sub(2, 2)
+      if x ~= "." then
+        staged = staged + 1
+      end
+      if y ~= "." then
+        unstaged = unstaged + 1
+      end
+    elseif branch == "" then
+      local b = line:match("^# branch.head")
+      if b then
+        branch = line:match("head%s+(%S+)")
+        w = #branch + 2
+      end
+    elseif not abfound then
       local a, b = line:match("# branch%.ab %+([0-9]+) %+%-([0-9]+)")
       if a and b then
-        ahead, behind = tonumber(a), tonumber(b)
-      elseif line:match("^1 ") or line:match("^2 ") then
-        local xy = line:sub(3, 4) -- the XY status code
-        if xy:sub(1, 1) ~= "." then
-          staged = staged + 1
-        end
+        abfound = true
+        ahead = tonumber(a)
+        behind = tonumber(b)
       end
     end
-    if staged > 0 then
-      status = "*" .. staged
-      w = w + 2
-    end
-    if behind > 0 then
-      status = status .. "↓" .. behind
-      w = w + 2
-    end
-    if ahead > 0 then
-      status = status .. "↑" .. ahead
-      w = w + 2
-    end
+  end
+
+  if unstaged > 0 then
+    status = status .. "!" .. unstaged
+    w = w + 2
+  end
+  if staged > 0 then
+    status = status .. "*" .. staged
+    w = w + 2
+  end
+  if behind > 0 then
+    status = status .. "↓" .. behind
+    w = w + 2
+  end
+  if ahead > 0 then
+    status = status .. "↑" .. ahead
+    w = w + 2
   end
   if ahead + behind > 0 then
     group = "StGitConflict"
-  elseif staged + (dict.added or 0) + (dict.changed or 0) + (dict.removed or 0) > 0 then
+  elseif unstaged + staged + (buf_changes.added or 0) + (buf_changes.changed or 0) + (buf_changes.removed or 0) > 0 then
     group = "StGitDirty"
   end
   table.insert(parts, "%#" .. group .. "#" .. status .. " " .. branch .. "%*")
 
   -- Gitsigns
   local signs = ""
-  if dict.added and dict.added > 0 then
-    signs = signs .. "%#StGitAdd#+" .. dict.added .. "%*"
+  if buf_changes.added and buf_changes.added > 0 then
+    signs = signs .. "%#StGitAdd#+" .. buf_changes.added .. "%*"
     w = w + 3
   end
-  if dict.changed and dict.changed > 0 then
-    signs = signs .. "%#StGitChange#~" .. dict.changed .. "%*"
+  if buf_changes.changed and buf_changes.changed > 0 then
+    signs = signs .. "%#StGitChange#~" .. buf_changes.changed .. "%*"
     w = w + 3
   end
-  if dict.removed and dict.removed > 0 then
-    signs = signs .. "%#StGitDelete#-" .. dict.removed .. "%*"
+  if buf_changes.removed and buf_changes.removed > 0 then
+    signs = signs .. "%#StGitDelete#-" .. buf_changes.removed .. "%*"
     w = w + 3
   end
   table.insert(parts, signs)
@@ -185,13 +204,22 @@ local function lsp_status()
 end
 
 -- Invalidate caches
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "DirChanged" }, {
+vim.api.nvim_create_autocmd("User", {
+  pattern = "GitSignsChanged",
   callback = function()
-    cache.file = nil
     cache.git = nil
-    cache.diagnostics = nil
+    vim.cmd("redrawstatus")
   end
 })
+vim.api.nvim_create_autocmd(
+  { "VimEnter", "BufWinEnter", "BufEnter", "BufNewFile", "BufReadPost", "BufWritePost", "DirChanged", "FocusGained" }, {
+    callback = function()
+      cache.file = nil
+      cache.git = nil
+      cache.diagnostics = nil
+      vim.cmd("redrawstatus")
+    end
+  })
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
   callback = function()
     cache.file = nil
@@ -202,7 +230,7 @@ vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
   callback = function() cache.lsp = nil end
 })
 local debounce = nil
-vim.api.nvim_create_autocmd({ "FocusGained", "TextChanged", "TextChangedI" }, {
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
   callback = function()
     if debounce then
       debounce:close()
@@ -213,6 +241,7 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TextChanged", "TextChangedI" }, {
       cache.git = nil
       cache.diagnostics = nil
       debounce = nil
+      vim.cmd("redrawstatus")
     end, 10000)
   end
 })

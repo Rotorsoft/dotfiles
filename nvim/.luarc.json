@@ -3,6 +3,10 @@
         "cast-local-type",
         "need-check-nil",
         "param-type-mismatch",
-        "assign-type-mismatch"
+        "assign-type-mismatch",
+        "unused-local",
+        "unused-function",
+        "trailing-space",
+        "redefined-local"
     ]
 }
