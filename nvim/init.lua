@@ -34,7 +34,6 @@ vim.opt.fillchars    = "fold:·,eob: "
 vim.pack.add({
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
-  { src = "https://github.com/lewis6991/gitsigns.nvim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 

@@ -151,37 +151,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-require("gitsigns").setup({
-  preview_config = {
-    border = "rounded",
-  },
-  diff_opts = {
-    internal = true,
-    algorithm = "histogram",
-    indent_heuristic = true,
-    vertical = true,
-  },
-  on_attach = function(bufnr)
-    local gs = require("gitsigns")
-
-    ---@diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-j>", function() gs.nav_hunk("next", { target = "unstaged" }) end, "Next Unstaged Hunk", bufnr)
-    ---@diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-k>", function() gs.nav_hunk("prev", { target = "unstaged" }) end, "Prev Unstaged Hunk", bufnr)
-    ---@diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-i>", function() gs.nav_hunk("next", { target = "staged" }) end, "Next Staged Hunk", bufnr)
-    ---@diagnostic disable-next-line: param-type-mismatch
-    mapn("<C-M-o>", function() gs.nav_hunk("prev", { target = "staged" }) end, "Prev Staged Hunk", bufnr)
-
-    mapn("<C-M-Space>", gs.stage_hunk, "Toggle Stage", bufnr)
-    mapn("<C-M-p>", gs.preview_hunk, "Preview Hunk", bufnr)
-    mapn("<C-M-r>", gs.reset_hunk, "Reset Hunk", bufnr)
-    mapn("<C-M-b>", gs.blame_line, "Show Line Blame", bufnr)
-    mapn("<C-M-l>", gs.toggle_current_line_blame, "Toggle Line Blame", bufnr)
-    mapn("<C-M-g>", extra.pickers.git_hunks, "Status")
-  end,
-})
-
 -- Clues
 local clue = require("mini.clue")
 clue.setup({

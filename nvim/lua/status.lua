@@ -56,7 +56,6 @@ local function git()
     return cache.git
   end
 
-  local buf_changes = vim.b.gitsigns_status_dict or {}
   local parts = {}
   local branch = ""
   local w = 0
@@ -91,14 +90,6 @@ local function git()
     end
   end
 
-  if unstaged > 0 then
-    status = status .. "!" .. unstaged
-    w = w + 2
-  end
-  if staged > 0 then
-    status = status .. "*" .. staged
-    w = w + 2
-  end
   if behind > 0 then
     status = status .. "↓" .. behind
     w = w + 2
@@ -107,28 +98,42 @@ local function git()
     status = status .. "↑" .. ahead
     w = w + 2
   end
+  if staged + unstaged > 0 then
+    status = status .. "[" .. staged .. "/" .. staged + unstaged .. "]"
+    w = w + 6
+  end
+
+  local added, removed = 0, 0
+  local buf_path = vim.api.nvim_buf_get_name(0)
+  if buf_path ~= "" then
+    local changes = vim.fn.systemlist("git diff --numstat " .. vim.fn.shellescape(buf_path))
+    for _, line in ipairs(changes) do
+      local a, r = line:match("(%d+)%s+(%d+)")
+      if a and r then
+        added = tonumber(a)
+        removed = tonumber(r)
+        break
+      end
+    end
+  end
+
   if ahead + behind > 0 then
     group = "StGitConflict"
-  elseif unstaged + staged + (buf_changes.added or 0) + (buf_changes.changed or 0) + (buf_changes.removed or 0) > 0 then
+  elseif unstaged + staged + added + removed > 0 then
     group = "StGitDirty"
   end
   table.insert(parts, "%#" .. group .. "#" .. status .. " " .. branch .. "%*")
 
-  -- Gitsigns
-  local signs = ""
-  if buf_changes.added and buf_changes.added > 0 then
-    signs = signs .. "%#StGitAdd#+" .. buf_changes.added .. "%*"
+  local changes = ""
+  if added > 0 then
+    changes = changes .. "%#StGitAdd#+" .. added .. "%*"
     w = w + 3
   end
-  if buf_changes.changed and buf_changes.changed > 0 then
-    signs = signs .. "%#StGitChange#~" .. buf_changes.changed .. "%*"
+  if removed > 0 then
+    changes = changes .. "%#StGitDelete#-" .. removed .. "%*"
     w = w + 3
   end
-  if buf_changes.removed and buf_changes.removed > 0 then
-    signs = signs .. "%#StGitDelete#-" .. buf_changes.removed .. "%*"
-    w = w + 3
-  end
-  table.insert(parts, signs)
+  table.insert(parts, changes)
 
   cache.git = { s = table.concat(parts, ""), w = w }
   return cache.git
@@ -204,13 +209,6 @@ local function lsp_status()
 end
 
 -- Invalidate caches
-vim.api.nvim_create_autocmd("User", {
-  pattern = "GitSignsChanged",
-  callback = function()
-    cache.git = nil
-    vim.cmd("redrawstatus")
-  end
-})
 vim.api.nvim_create_autocmd(
   { "VimEnter", "BufWinEnter", "BufEnter", "BufNewFile", "BufReadPost", "BufWritePost", "DirChanged", "FocusGained" }, {
     callback = function()
