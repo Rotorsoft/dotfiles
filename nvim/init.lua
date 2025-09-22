@@ -32,15 +32,15 @@ vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
 vim.opt.fillchars    = "fold:·,eob: "
 
 vim.pack.add({
-  { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-  { src = "https://github.com/echasnovski/mini.nvim" },
+  "https://github.com/supermaven-inc/supermaven-nvim",
+  "https://github.com/echasnovski/mini.nvim",
+  "https://github.com/tpope/vim-fugitive",
+  "https://github.com/prettier/vim-prettier",
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-  { src = "https://github.com/tpope/vim-fugitive" },
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls" })
 
----@diagnostic disable-next-line: param-type-mismatch
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
     local languages = { "javascript", "typescript", "typescriptreact", "html", "json", "css" }
