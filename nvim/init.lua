@@ -35,6 +35,7 @@ vim.pack.add({
   { src = "https://github.com/supermaven-inc/supermaven-nvim" },
   { src = "https://github.com/echasnovski/mini.nvim" },
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+  { src = "https://github.com/tpope/vim-fugitive" },
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls" })
