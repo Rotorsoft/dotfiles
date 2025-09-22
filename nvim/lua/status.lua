@@ -59,9 +59,6 @@ local function git()
   local parts = {}
   local branch = ""
   local w = 0
-
-  local status = ""
-  local group = "StGitClean"
   local unstaged, staged, ahead, behind = 0, 0, 0, 0
   local abfound = false
   for _, line in ipairs(output) do
@@ -81,7 +78,7 @@ local function git()
         w = #branch + 2
       end
     elseif not abfound then
-      local a, b = line:match("# branch%.ab %+([0-9]+) %+%-([0-9]+)")
+      local a, b = line:match("^# branch%.ab%s%+(%d+)%s%-(%d+)")
       if a and b then
         abfound = true
         ahead = tonumber(a)
@@ -90,16 +87,21 @@ local function git()
     end
   end
 
-  if behind > 0 then
-    status = status .. "↓" .. behind
-    w = w + 2
-  end
-  if ahead > 0 then
-    status = status .. "↑" .. ahead
-    w = w + 2
+  local status = ""
+  if ahead + behind > 0 then
+    status = status .. "%#StGitConflict#"
+    if behind > 0 then
+      status = status .. "↓" .. behind
+      w = w + 2
+    end
+    if ahead > 0 then
+      status = status .. "↑" .. ahead
+      w = w + 2
+    end
+    status = status .. "%*"
   end
   if staged + unstaged > 0 then
-    status = status .. "[" .. staged .. "/" .. staged + unstaged .. "]"
+    status = status .. "%#StGitDirty#[" .. staged .. "/" .. staged + unstaged .. "]%*"
     w = w + 6
   end
 
@@ -117,12 +119,11 @@ local function git()
     end
   end
 
-  if ahead + behind > 0 then
-    group = "StGitConflict"
-  elseif unstaged + staged + added + removed > 0 then
-    group = "StGitDirty"
+  if staged + unstaged + added + removed > 0 then
+    table.insert(parts, status .. "%#StGitDirty# " .. branch .. "%*")
+  else
+    table.insert(parts, status .. "%#StGitClean# " .. branch .. "%*")
   end
-  table.insert(parts, "%#" .. group .. "#" .. status .. " " .. branch .. "%*")
 
   local changes = ""
   if added > 0 then
