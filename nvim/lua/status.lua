@@ -211,7 +211,7 @@ end
 
 -- Invalidate caches
 vim.api.nvim_create_autocmd(
-  { "VimEnter", "BufWinEnter", "BufEnter", "BufNewFile", "BufReadPost", "BufWritePost", "DirChanged", "FocusGained" }, {
+  { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained" }, {
     callback = function()
       cache.file = nil
       cache.git = nil
@@ -242,6 +242,15 @@ vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
       debounce = nil
       vim.cmd("redrawstatus")
     end, 10000)
+  end
+})
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufEnter", "DirChanged" }, {
+  callback = function()
+    vim.fn.system('git -C "$(git rev-parse --show-toplevel)" fetch --quiet')
+    cache.file = nil
+    cache.git = nil
+    cache.diagnostics = nil
+    vim.cmd("redrawstatus")
   end
 })
 
