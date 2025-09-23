@@ -59,10 +59,12 @@ local function git()
   local parts = {}
   local branch = ""
   local w = 0
-  local unstaged, staged, ahead, behind = 0, 0, 0, 0
+  local untracked, unstaged, staged, ahead, behind = 0, 0, 0, 0, 0
   local abfound = false
   for _, line in ipairs(output) do
-    if line:match("^[12u] ") then
+    if line:match("^? ") then
+      untracked = untracked + 1
+    elseif line:match("^[12] ") then
       local xy = line:sub(3, 4) -- the XY status code
       local x, y = xy:sub(1, 1), xy:sub(2, 2)
       if x ~= "." then
@@ -88,8 +90,12 @@ local function git()
   end
 
   local status = ""
-  if ahead + behind > 0 then
+  if untracked + ahead + behind > 0 then
     status = status .. "%#StGitConflict#"
+    if untracked > 0 then
+      status = status .. "?" .. untracked
+      w = w + 2
+    end
     if behind > 0 then
       status = status .. "↓" .. behind
       w = w + 2

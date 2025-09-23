@@ -42,7 +42,15 @@ vim.lsp.enable({ "lua_ls", "ts_ls" })
 
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
-    local languages = { "javascript", "typescript", "typescriptreact", "html", "json", "css" }
+    local languages = {
+      "javascript",
+      "typescript",
+      "typescriptreact",
+      "html",
+      "json",
+      "css",
+      "zig"
+    }
     require("nvim-treesitter").setup()
     require("nvim-treesitter").install(languages)
     vim.api.nvim_create_autocmd('FileType', {
