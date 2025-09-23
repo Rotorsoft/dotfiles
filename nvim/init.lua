@@ -35,7 +35,6 @@ vim.pack.add({
   "https://github.com/supermaven-inc/supermaven-nvim",
   "https://github.com/echasnovski/mini.nvim",
   "https://github.com/tpope/vim-fugitive",
-  "https://github.com/prettier/vim-prettier",
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
