@@ -38,7 +38,7 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
-vim.lsp.enable({ "lua_ls", "ts_ls" })
+vim.lsp.enable({ "lua_ls", "ts_ls", "zls" })
 
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
