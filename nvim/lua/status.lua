@@ -210,49 +210,40 @@ local function lsp_status()
 end
 
 -- Invalidate caches
-vim.api.nvim_create_autocmd(
-  { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained" }, {
-    callback = function()
-      cache.file = nil
-      cache.git = nil
-      cache.diagnostics = nil
-      vim.cmd("redrawstatus")
-    end
-  })
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-  callback = function()
-    cache.file = nil
-    cache.diagnostics = nil
-  end
-})
-vim.api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
-  callback = function() cache.lsp = nil end
-})
 local debounce = nil
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-  callback = function()
-    if debounce then
-      debounce:close()
-      debounce = nil
+local fetch_next = false
+local last_fetched = 0
+local redrawn, fetched = 0, 0
+local function invalidate()
+  if fetch_next then
+    fetch_next = false
+    local now = os.time()
+    if now - last_fetched > 300 then -- fetch in 5 minute intervals
+      vim.fn.system('git -C "$(git rev-parse --show-toplevel)" fetch --quiet')
+      fetched = fetched + 1
+      last_fetched = now
     end
-    debounce = vim.defer_fn(function()
-      cache.file = nil
-      cache.git = nil
-      cache.diagnostics = nil
-      debounce = nil
-      vim.cmd("redrawstatus")
-    end, 10000)
   end
-})
-vim.api.nvim_create_autocmd({ "BufWinEnter", "BufEnter", "DirChanged" }, {
-  callback = function()
-    vim.fn.system('git -C "$(git rev-parse --show-toplevel)" fetch --quiet')
-    cache.file = nil
-    cache.git = nil
-    cache.diagnostics = nil
-    vim.cmd("redrawstatus")
+  cache.file = nil
+  cache.git = nil
+  cache.diagnostics = nil
+  debounce = nil
+  redrawn = redrawn + 1
+  vim.cmd("redrawstatus")
+end
+local function schedule(timeout, fetch)
+  if fetch then fetch_next = true end
+  if debounce then
+    debounce:close()
+    debounce = nil
   end
-})
+  debounce = vim.defer_fn(invalidate, timeout)
+end
+vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() schedule(500, true) end })
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() schedule(5000, false) end })
+vim.api.nvim_create_autocmd(
+  { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach", },
+  { callback = function() schedule(1000, false) end })
 
 -- Assemble statusline
 function M.statusline()
@@ -261,6 +252,7 @@ function M.statusline()
   local m                 = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
   local mode              = "%#" .. mode_hl .. "# " .. mode_str .. " %*"
+  --local mode              = "%#" .. mode_hl .. "# " .. mode_str .. "/" .. redrawn .. "/" .. fetched .. " %*"
 
   if not active or mode_str == "T" then
     return mode

@@ -7,6 +7,7 @@
         "unused-local",
         "unused-function",
         "trailing-space",
-        "redefined-local"
+        "redefined-local",
+        "redundant-parameter"
     ]
 }
