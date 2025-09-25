@@ -12,3 +12,7 @@
 [push]
 	autoSetupRemote = true
 	default = current
+[merge]
+	tool = vimdiff
+[mergetool]
+	keepBackup = false
