@@ -230,7 +230,6 @@ local function invalidate()
       last_fetched = now
     end
   end
-  cache.file = nil
   cache.git = nil
   cache.diagnostics = nil
   debounce = nil
@@ -238,6 +237,7 @@ local function invalidate()
   vim.cmd("redrawstatus")
 end
 local function schedule(timeout, fetch)
+  cache.file = nil
   if fetch then fetch_next = true end
   if debounce then
     debounce:close()
