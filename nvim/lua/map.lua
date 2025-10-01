@@ -20,6 +20,9 @@ mapn("<leader>x", function()
 end, "Close")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
 
+mapn("<Tab>", function() vim.cmd.bn() end, "Next Buffer")
+mapn("<S-Tab>", function() vim.cmd.bp() end, "Previous Buffer")
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 mapn("<Esc>", function() vim.cmd.nohlsearch() end)
 
