@@ -16,3 +16,5 @@
 	tool = vimdiff
 [mergetool]
 	keepBackup = false
+[alias]
+	lg = log --decorate=short --abbrev-commit   --pretty=format:'%C(auto)%h %Cgreen%>(12)%ad%Creset %Cblue%>(8)%aN%Creset %C(auto)%d %<(20,trunc)%s'   --date=auto --graph
