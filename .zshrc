@@ -38,6 +38,7 @@ alias lt='eza -la --icons=auto --sort=time'
 alias ld='eza -laD --icons=auto --sort=name'
 alias lf='eza -laf --icons=auto --git --sort=size'
 alias la='eza -laT -L2 --git-ignore --icons=auto'
+alias c=container
 alias g=git
 alias p=pnpm
 alias v=nvim
