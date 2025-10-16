@@ -35,14 +35,14 @@ mapn("<leader>b", pick.builtin.buffers, "Buffers")
 mapn("<leader>d", vim.diagnostic.open_float, "Diagnostic")
 mapn("<leader>e", function() require("mini.files").open(vim.fn.expand("%:p:h")) end, "Explore Here")
 mapn("<leader>E", function() require("mini.files").open() end, "Explore All")
-mapn("<leader>G", function() pick.builtin.cli({ command = { 'rg', '--files', '--hidden', '--no-ignore' }, }) end,
-  "Grep All")
-mapn("<leader>g", pick.builtin.grep_live, "Grep")
 mapn("<leader>.", pick.builtin.resume, "Resume")
 mapn("<leader>/", pick.builtin.grep, "Grep Pattern")
 mapn("<leader>?", pick.builtin.help, "Help")
 
 local extra = require("mini.extra")
+mapn("<leader>fG", function() pick.builtin.cli({ command = { 'rg', '--files', '--hidden', '--no-ignore' }, }) end,
+  "Grep All (Hidden, No Ignore)")
+mapn("<leader>fg", pick.builtin.grep_live, "Grep Tracked Files")
 mapn("<leader>fb", extra.pickers.git_branches, "Git Branches")
 mapn("<leader>fh", extra.pickers.history, "History")
 mapn("<leader>fk", extra.pickers.keymaps, "Keymaps")
@@ -61,8 +61,10 @@ mapn("<leader>ss", sessions.select, "Select")
 mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim") end, "Write")
 
 local diff = require("mini.diff")
-mapn("<leader>ht", function() diff.toggle(0) end, "Toggle Diff")
-mapn("<leader>ho", function() diff.toggle_overlay(0) end, "Toggle Overlay")
+mapn("<leader>gd", function() diff.toggle(0) end, "Toggle Diff")
+mapn("<leader>go", function() diff.toggle_overlay(0) end, "Toggle Overlay")
+mapn("<C-j>", function() diff.goto_hunk('next', { wrap = true }) end, "Next Hunk")
+mapn("<C-k>", function() diff.goto_hunk('prev', { wrap = true }) end, "Prev Hunk")
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyLspGroup", { clear = true }),
@@ -198,7 +200,7 @@ clue.setup({
     { mode = "n", keys = "<leader>f", desc = " Find" },
     { mode = "n", keys = "<leader>l", desc = " LSP" },
     { mode = "n", keys = "<leader>s", desc = " Session" },
-    { mode = "n", keys = "<leader>h", desc = " Git" },
+    { mode = "n", keys = "<leader>g", desc = " Git" },
   },
   window = { config = { width = "auto" }, delay = 0 },
 })
