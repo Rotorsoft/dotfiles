@@ -60,6 +60,10 @@ local sessions = require("mini.sessions")
 mapn("<leader>ss", sessions.select, "Select")
 mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim") end, "Write")
 
+local diff = require("mini.diff")
+mapn("<leader>ht", function() diff.toggle(0) end, "Toggle Diff")
+mapn("<leader>ho", function() diff.toggle_overlay(0) end, "Toggle Overlay")
+
 vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("MyLspGroup", { clear = true }),
   callback = function(args)
@@ -194,6 +198,7 @@ clue.setup({
     { mode = "n", keys = "<leader>f", desc = " Find" },
     { mode = "n", keys = "<leader>l", desc = " LSP" },
     { mode = "n", keys = "<leader>s", desc = " Session" },
+    { mode = "n", keys = "<leader>h", desc = " Git" },
   },
   window = { config = { width = "auto" }, delay = 0 },
 })

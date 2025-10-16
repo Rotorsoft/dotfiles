@@ -79,6 +79,9 @@ vim.api.nvim_create_autocmd('VimEnter', {
     })
     require("mini.extra").setup()
     require("mini.notify").setup()
+    require("mini.diff").setup({
+      view = { style = "sign" }
+    })
     require("mini.hipatterns").setup({
       highlighters = {
         fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
