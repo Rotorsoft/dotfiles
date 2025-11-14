@@ -1,10 +1,10 @@
 {
   "plugins": {
     "mini.nvim": {
-      "rev": "429e5f9"
+      "rev": "dce9bc4"
     },
     "nvim-treesitter": {
-      "rev": "65a266bf",
+      "rev": "2696fb83",
       "version": "'main'"
     },
     "supermaven-nvim": [],
