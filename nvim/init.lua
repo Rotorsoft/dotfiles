@@ -31,7 +31,10 @@ vim.o.foldlevel      = 99
 vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
 vim.opt.fillchars    = "fold:·,eob: "
 
+vim.diagnostic.config({ virtual_text = true })
+
 vim.pack.add({
+  "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/supermaven-inc/supermaven-nvim",
   "https://github.com/echasnovski/mini.nvim",
   "https://github.com/tpope/vim-fugitive",
@@ -39,6 +42,7 @@ vim.pack.add({
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "clangd", "zls" })
+vim.lsp.config["lua_ls"] = { settings = { Lua = { workspace = { library = vim.api.nvim_get_runtime_file("", true), } } } }
 
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()

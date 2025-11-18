@@ -3,8 +3,12 @@
     "mini.nvim": {
       "rev": "dce9bc4"
     },
+    "nvim-lspconfig": {
+      "rev": "d4f77e7",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
     "nvim-treesitter": {
-      "rev": "2696fb83",
+      "rev": "c682a239",
       "version": "'main'"
     },
     "supermaven-nvim": [],
