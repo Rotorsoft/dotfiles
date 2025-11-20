@@ -4,6 +4,10 @@
 find $HOME -maxdepth 1 -type l -exec rm {} \;
 rm -rf $HOME/.config/nvim
 rm -rf $HOME/.config/starship.toml
+rm -rf $HOME/.config/yazi
+
+# Create directories
+mkdir -p $HOME/.config/yazi
 
 # Link dotfiles
 ln -s $HOME/.dotfiles/.gitconfig "${HOME}/.gitconfig"
@@ -13,6 +17,7 @@ ln -s $HOME/.dotfiles/.zshrc "${HOME}/.zshrc"
 ln -s $HOME/.dotfiles/.tmux.conf "${HOME}/.tmux.conf"
 ln -s $HOME/.dotfiles/.wezterm.lua "${HOME}/.wezterm.lua"
 ln -s $HOME/.dotfiles/starship.toml "${HOME}/.config/starship.toml"
+ln -s $HOME/.dotfiles/yazi.toml "${HOME}/.config/yazi/yazi.toml"
 ln -s $HOME/.dotfiles/nvim "${HOME}/.config/nvim"
 ln -s $HOME/.dotfiles/ghostty.config "${HOME}/.config/ghostty/config"
 

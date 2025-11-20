@@ -1,0 +1,9 @@
+[mgr]
+prepend_rules = [
+	{ name = "*", use = "edit" },
+]
+
+[opener]
+edit = [
+	{ run = "nvim \"$@\"", block = true },
+]
