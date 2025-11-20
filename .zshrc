@@ -42,6 +42,7 @@ alias c=container
 alias g=git
 alias p=pnpm
 alias v=nvim
+alias y=yazi
 alias py=python3
 alias pip=pip3
 alias use=use_tool
