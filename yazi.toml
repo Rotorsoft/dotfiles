@@ -1,4 +1,5 @@
 [mgr]
+ratio = [1,2,5]
 prepend_rules = [
 	{ name = "*", use = "edit" },
 ]
@@ -7,3 +8,4 @@ prepend_rules = [
 edit = [
 	{ run = "nvim \"$@\"", block = true },
 ]
+
