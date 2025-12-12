@@ -46,4 +46,4 @@ alias y=yazi
 alias py=python3
 alias pip=pip3
 alias use=use_tool
-alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(4,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
+alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
