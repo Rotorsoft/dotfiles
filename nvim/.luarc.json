@@ -8,6 +8,8 @@
         "unused-function",
         "trailing-space",
         "redefined-local",
-        "redundant-parameter"
+        "redundant-parameter",
+        "undefined-doc-name",
+        "undefined-field"
     ]
 }

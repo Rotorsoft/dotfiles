@@ -1,12 +1,3 @@
-local M = {}
-
-local cache = {
-  git = nil,
-  file = nil,
-  diagnostics = nil,
-  lsp = nil,
-}
-
 local modes = {
   n = { "N", "StModeNormal" },
   i = { "I", "StModeInsert" },
@@ -17,6 +8,7 @@ local modes = {
   R = { "R", "StModeReplace" },
   t = { "T", "StModeTerminal" },
 }
+
 local fg = "#1e1e2e"
 
 local function setup_highlights()
@@ -47,131 +39,13 @@ local function setup_highlights()
   hl("StInfoModified", { fg = "#7d8197", bg = "NONE", bold = false, italic = true })
 end
 
-local function git()
-  if cache.git then return cache.git end
-
-  local output = vim.fn.systemlist('git -C "$(git rev-parse --show-toplevel)" status --porcelain=2 --branch 2>/dev/null')
-  if vim.v.shell_error ~= 0 or #output == 0 then
-    cache.git = { s = "", w = 0 }
-    return cache.git
-  end
-
-  local parts = {}
-  local branch = ""
-  local w = 0
-  local untracked, unstaged, staged, ahead, behind = 0, 0, 0, 0, 0
-  local abfound = false
-  for _, line in ipairs(output) do
-    if line:match("^? ") then
-      untracked = untracked + 1
-    elseif line:match("^[12] ") then
-      local xy = line:sub(3, 4) -- the XY status code
-      local x, y = xy:sub(1, 1), xy:sub(2, 2)
-      if x ~= "." then
-        staged = staged + 1
-      end
-      if y ~= "." then
-        unstaged = unstaged + 1
-      end
-    elseif branch == "" then
-      local b = line:match("^# branch.head")
-      if b then
-        branch = line:match("head%s+(%S+)")
-        w = #branch + 2
-      end
-    elseif not abfound then
-      local a, b = line:match("^# branch%.ab%s%+(%d+)%s%-(%d+)")
-      if a and b then
-        abfound = true
-        ahead = tonumber(a)
-        behind = tonumber(b)
-      end
-    end
-  end
-
-  local status = ""
-  if untracked + ahead + behind > 0 then
-    status = status .. "%#StGitConflict#"
-    if untracked > 0 then
-      status = status .. "?" .. untracked
-      w = w + 2
-    end
-    if behind > 0 then
-      status = status .. "↓" .. behind
-      w = w + 2
-    end
-    if ahead > 0 then
-      status = status .. "↑" .. ahead
-      w = w + 2
-    end
-    status = status .. "%*"
-  end
-  if staged + unstaged > 0 then
-    status = status .. "%#StGitDirty#[" .. staged .. "/" .. staged + unstaged .. "]%*"
-    w = w + 6
-  end
-
-  local added, removed = 0, 0
-  local buf_path = vim.api.nvim_buf_get_name(0)
-  if buf_path ~= "" then
-    local changes = vim.fn.systemlist("git diff --numstat " .. vim.fn.shellescape(buf_path))
-    for _, line in ipairs(changes) do
-      local a, r = line:match("(%d+)%s+(%d+)")
-      if a and r then
-        added = tonumber(a)
-        removed = tonumber(r)
-        break
-      end
-    end
-  end
-
-  if staged + unstaged + added + removed > 0 then
-    table.insert(parts, status .. "%#StGitDirty# " .. branch .. "%*")
-  else
-    table.insert(parts, status .. "%#StGitClean# " .. branch .. "%*")
-  end
-
-  local changes = ""
-  if added > 0 then
-    changes = changes .. "%#StGitAdd#+" .. added .. "%*"
-    w = w + 3
-  end
-  if removed > 0 then
-    changes = changes .. "%#StGitDelete#-" .. removed .. "%*"
-    w = w + 3
-  end
-  table.insert(parts, changes)
-
-  cache.git = { s = table.concat(parts, ""), w = w }
-  return cache.git
-end
-
-local function file()
-  if cache.file then return cache.file end
-
-  local name = vim.fn.expand("%:t")
-  if name == "" then
-    cache.file = { s = "", ls = "", w = 0, lw = 0 }
-  else
-    local path = vim.fn.expand("%:~:.")
-    local group = "StInfo"
-    if vim.bo.modified then group = "StInfoModified" end
-    cache.file = {
-      s = "%#" .. group .. "#" .. name .. "%*",
-      ls = "%#" .. group .. "#" .. path .. "%*",
-      w = #name,
-      lw = #path
-    }
-  end
-  return cache.file
-end
-
 local diagnostic_hl_groups = {
   { vim.diagnostic.severity.ERROR, "StDiagError" },
   { vim.diagnostic.severity.WARN,  "StDiagWarn" },
   { vim.diagnostic.severity.INFO,  "StDiagInfo" },
   { vim.diagnostic.severity.HINT,  "StDiagHint" },
 }
+
 local diagnostic_signs = {
   [vim.diagnostic.severity.ERROR] = "E",
   [vim.diagnostic.severity.WARN] = "W",
@@ -179,10 +53,35 @@ local diagnostic_signs = {
   [vim.diagnostic.severity.HINT] = "H",
 }
 
--- Diagnostics (only show if > 0)
-local function diagnostics()
-  if cache.diagnostics then return cache.diagnostics end
+local M = {}
+local async = require('async')
+local cache = require('cache')
+local gitutils = require('git')
 
+local status_cache = cache.new()
+
+local git = status_cache:async_wrap("git", gitutils.git_status, { s = "%#StInfo#[...]%*", w = 7 }, 30, function()
+  vim.cmd("redrawstatus")
+end)
+
+local file = status_cache:wrap("file", function()
+  local name = vim.fn.expand("%:t")
+  if name == "" then
+    return { s = "", ls = "", w = 0, lw = 0 }
+  else
+    local path = vim.fn.expand("%:~:.")
+    local group = "StInfo"
+    if vim.bo.modified then group = "StInfoModified" end
+    return {
+      s = "%#" .. group .. "#" .. name .. "%*",
+      ls = "%#" .. group .. "#" .. path .. "%*",
+      w = #name,
+      lw = #path
+    }
+  end
+end)
+
+local diagnostics = status_cache:wrap("diagnostics", function()
   local counts = vim.diagnostic.count(0)
   local w = 0
   local parts = {}
@@ -194,15 +93,10 @@ local function diagnostics()
       w = w + 3
     end
   end
+  return { s = table.concat(parts), w = w }
+end)
 
-  cache.diagnostics = { s = table.concat(parts), w = w }
-  return cache.diagnostics
-end
-
--- LSP client names
-local function lsp_status()
-  if cache.lsp then return cache.lsp end
-
+local lsp_status = status_cache:wrap("lsp", function()
   local names = {}
   local w = 0
   local clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -210,46 +104,29 @@ local function lsp_status()
     table.insert(names, c.name)
     w = w + #c.name + 2
   end
-
-  cache.lsp = { s = "%#StInfo#" .. table.concat(names, ",") .. "%*", w = w }
-  return cache.lsp
+  return { s = "%#StInfo#" .. table.concat(names, ",") .. "%*", w = w }
 end
+)
 
--- Invalidate caches
-local debounce = nil
-local fetch_next = false
-local last_fetched = 0
-local redrawn, fetched = 0, 0
-local function invalidate()
-  if fetch_next then
-    fetch_next = false
-    local now = os.time()
-    if now - last_fetched > 300 then -- fetch in 5 minute intervals
-      vim.fn.system('git -C "$(git rev-parse --show-toplevel)" fetch --quiet')
-      fetched = fetched + 1
-      last_fetched = now
+local debounce_redraw_status = async.debounce()
+local function redraw_status(timeout, fetch)
+  debounce_redraw_status(timeout, function()
+    status_cache:invalidate('git')
+    status_cache:invalidate('file')
+    status_cache:invalidate('diagnostics')
+    status_cache:invalidate('lsp')
+    if fetch then
+      gitutils.git_fetch(function() vim.cmd("redrawstatus") end)
     end
-  end
-  cache.git = nil
-  cache.diagnostics = nil
-  debounce = nil
-  redrawn = redrawn + 1
-  vim.cmd("redrawstatus")
+    vim.cmd("redrawstatus")
+  end)
 end
-local function schedule(timeout, fetch)
-  cache.file = nil
-  if fetch then fetch_next = true end
-  if debounce then
-    debounce:close()
-    debounce = nil
-  end
-  debounce = vim.defer_fn(invalidate, timeout)
-end
-vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() schedule(500, true) end })
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() schedule(5000, false) end })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() redraw_status(500, true) end })
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(5000, false) end })
 vim.api.nvim_create_autocmd(
   { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach", },
-  { callback = function() schedule(1000, false) end })
+  { callback = function() redraw_status(1000, false) end })
 
 -- Assemble statusline
 function M.statusline()
@@ -258,7 +135,6 @@ function M.statusline()
   local m                 = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
   local mode              = "%#" .. mode_hl .. "# " .. mode_str .. " %*"
-  --local mode              = "%#" .. mode_hl .. "# " .. mode_str .. "/" .. redrawn .. "/" .. fetched .. " %*"
 
   if not active or mode_str == "T" then
     return mode

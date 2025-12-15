@@ -35,10 +35,10 @@ vim.diagnostic.config({ virtual_text = true })
 
 vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/supermaven-inc/supermaven-nvim",
   "https://github.com/echasnovski/mini.nvim",
   "https://github.com/tpope/vim-fugitive",
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 })
 
 vim.lsp.enable({ "lua_ls", "ts_ls", "clangd", "zls" })
@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
       "c",
     }
     require("nvim-treesitter").setup()
-    require("nvim-treesitter").install(languages)
+    --require("nvim-treesitter").install(languages)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = languages,
       callback = function() vim.treesitter.start() end,
