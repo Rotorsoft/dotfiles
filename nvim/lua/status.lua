@@ -24,8 +24,8 @@ local function setup_highlights()
   hl("StModeTerminal", { fg = fg, bg = "#94e2d5", bold = true })
 
   hl("StGitClean", { fg = "#a6e3a1", })
-  hl("StGitDirty", { fg = "#f9e2af", })
-  hl("StGitConflict", { fg = "#f38ba8", })
+  hl("StGitUncommitted", { fg = "#f9e2af", })
+  hl("StGitDirty", { fg = "#f38ba8", })
   hl("StGitAdd", { fg = "#a6e3a1" })
   hl("StGitChange", { fg = "#fab387" })
   hl("StGitDelete", { fg = "#f38ba8" })
@@ -53,14 +53,12 @@ local diagnostic_signs = {
   [vim.diagnostic.severity.HINT] = "H",
 }
 
-local M = {}
-local async = require('async')
 local cache = require('cache')
-local gitutils = require('git')
+local utils = require('utils')
 
 local status_cache = cache.new()
 
-local git = status_cache:async_wrap("git", gitutils.git_status, { s = "%#StInfo#[...]%*", w = 7 }, 30, function()
+local git = status_cache:async_wrap("git", utils.git_status, 30, { s = "%#StInfo#...%*", w = 7 }, function()
   vim.cmd("redrawstatus")
 end)
 
@@ -108,7 +106,7 @@ local lsp_status = status_cache:wrap("lsp", function()
 end
 )
 
-local debounce_redraw_status = async.debounce()
+local debounce_redraw_status = utils.debounce()
 local function redraw_status(timeout, fetch)
   debounce_redraw_status(timeout, function()
     status_cache:invalidate('git')
@@ -116,19 +114,20 @@ local function redraw_status(timeout, fetch)
     status_cache:invalidate('diagnostics')
     status_cache:invalidate('lsp')
     if fetch then
-      gitutils.git_fetch(function() vim.cmd("redrawstatus") end)
+      utils.git_fetch(function() vim.cmd("redrawstatus") end)
     end
     vim.cmd("redrawstatus")
   end)
 end
 
 vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() redraw_status(500, true) end })
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(5000, false) end })
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(3000, false) end })
 vim.api.nvim_create_autocmd(
   { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach", },
   { callback = function() redraw_status(1000, false) end })
 
 -- Assemble statusline
+local M = {}
 function M.statusline()
   local winid             = vim.g.statusline_winid
   local active            = (winid == vim.api.nvim_get_current_win())
@@ -139,14 +138,16 @@ function M.statusline()
   if not active or mode_str == "T" then
     return mode
   else
-    local cl   = vim.fn.line(".")
-    local lt   = vim.fn.line("$")
-    local lp   = lt > 0 and math.floor(cl / lt * 100) or 0
-    local lc   = "%#StInfo#" .. lp .. "%% " .. cl .. ":" .. vim.fn.col(".") .. "%*"
-    local g    = git()
-    local f    = file()
-    local d    = diagnostics()
-    local l    = lsp_status()
+    local cl = vim.fn.line(".")
+    local lt = vim.fn.line("$")
+    local lp = lt > 0 and math.floor(cl / lt * 100) or 0
+    local lc = "%#StInfo#" .. lp .. "%% " .. cl .. ":" .. vim.fn.col(".") .. "%*"
+    local f  = file()
+    local d  = diagnostics()
+    local l  = lsp_status()
+    -- async status
+    git()
+    local g = status_cache:get('git') or { s = "...", w = 3 }
 
     -- trim to cols
     local cols = vim.o.columns - 10 - 4 -- 10 for mode and location, 4 for progress

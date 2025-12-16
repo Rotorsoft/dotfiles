@@ -13,7 +13,7 @@
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "f3979663c9c8cd9ad258344b9cfb5ad83cff61c1",
+      "rev": "ad95655ec5d13ff7c728d731eb9fd39f34395a03",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {

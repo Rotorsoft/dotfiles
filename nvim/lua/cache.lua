@@ -33,14 +33,7 @@ function M:invalidate(key)
   end
 end
 
---- Wraps a function with caching logic.
---- The wrapped function will first check the cache for a result.
---- If found, it returns the cached result.
---- If not found, it executes the original function, caches its result, and then returns it.
---- @param self The Cache object.
---- @param key The cache key to use.
---- @param fn function The function to wrap.
---- @return function The wrapped function.
+--- Wraps a function with caching logic
 function M:wrap(key, fn, ttl)
   local self = self
   return function(...)
@@ -48,19 +41,14 @@ function M:wrap(key, fn, ttl)
     if cached_value then
       return cached_value
     end
-
     local result = fn(...)
     self:set(key, result, ttl)
     return result
   end
 end
 
---- Wraps an async function with caching and state management.
---- @param self The Cache object.
---- @param key The cache key to use.
---- @param fn function An async function that takes a callback `done(result)`.
---- @return function A function that returns the cached value or a loading state.
-function M:async_wrap(key, fn, loading_value, ttl, done)
+--- Wraps an async function with caching logic
+function M:async_wrap(key, fn, ttl, loading_value, done)
   local self = self
   local is_running = false
 
@@ -71,7 +59,8 @@ function M:async_wrap(key, fn, loading_value, ttl, done)
     end
 
     if is_running then
-      return loading_value
+      self:set(key, loading_value, ttl)
+      return
     end
 
     is_running = true
@@ -80,8 +69,6 @@ function M:async_wrap(key, fn, loading_value, ttl, done)
       is_running = false
       done()
     end, ...)
-
-    return loading_value
   end
 end
 
