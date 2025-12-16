@@ -77,8 +77,11 @@ function M.git_status(done)
           abfound = true
           ahead = tonumber(a)
           behind = tonumber(b)
-          if behind > 0 then dirty = true end
-          if ahead > 0 then uncommitted = true end
+          if behind > 0 then
+            dirty = true
+          elseif ahead > 0 then
+            uncommitted = true
+          end
         end
       end
     end
@@ -88,10 +91,6 @@ function M.git_status(done)
       status = status .. "%#StGitDirty#"
       if behind > 0 then
         status = status .. "󰜮" .. behind .. " "
-        w = w + 3
-      end
-      if ahead > 0 then
-        status = status .. "󰜷" .. ahead .. " "
         w = w + 3
       end
       if changes.A.unstaged > 0 then
@@ -117,7 +116,12 @@ function M.git_status(done)
       status = status .. "%*"
     end
     if uncommitted then
+      if dirty then status = status .. " " end
       status = status .. "%#StGitUncommitted#"
+      if ahead > 0 then
+        status = status .. "󰜷" .. ahead .. " "
+        w = w + 3
+      end
       if changes.A.staged > 0 then
         status = status .. "+" .. changes.A.staged
         w = w + 2
