@@ -1,12 +1,12 @@
 local modes = {
-  n = { "N", "StModeNormal" },
-  i = { "I", "StModeInsert" },
-  v = { "V", "StModeVisual" },
-  V = { "V-L", "StModeVisual" },
-  [""] = { "V-B", "StModeVisual" },
-  c = { "C", "StModeCommand" },
-  R = { "R", "StModeReplace" },
-  t = { "T", "StModeTerminal" },
+  n = { "n", "StModeNormal" },
+  i = { "i", "StModeInsert" },
+  v = { "v", "StModeVisual" },
+  V = { "v-l", "StModeVisual" },
+  [""] = { "v-b", "StModeVisual" },
+  c = { "c", "StModeCommand" },
+  R = { "r", "StModeReplace" },
+  t = { "t", "StModeTerminal" },
 }
 
 local fg = "#1e1e2e"
