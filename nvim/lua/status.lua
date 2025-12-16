@@ -22,6 +22,12 @@ local function setup_highlights()
   hl("StModeCommand", { fg = fg, bg = "#f9e2af", bold = true })
   hl("StModeReplace", { fg = fg, bg = "#f38ba8", bold = true })
   hl("StModeTerminal", { fg = fg, bg = "#94e2d5", bold = true })
+  hl("StModeNormalPill", { fg = "#89b4fa", })
+  hl("StModeInsertPill", { fg = "#a6e3a1", })
+  hl("StModeVisualPill", { fg = "#fab387", })
+  hl("StModeCommandPill", { fg = "#f9e2af", })
+  hl("StModeReplacePill", { fg = "#f38ba8", })
+  hl("StModeTerminalPill", { fg = "#94e2d5", })
 
   hl("StGitClean", { fg = "#a6e3a1", })
   hl("StGitUncommitted", { fg = "#f9e2af", })
@@ -133,7 +139,7 @@ function M.statusline()
   local active            = (winid == vim.api.nvim_get_current_win())
   local m                 = modes[vim.fn.mode()]
   local mode_str, mode_hl = m and m[1] or vim.fn.mode(), m and m[2] or "StModeNormal"
-  local mode              = "%#" .. mode_hl .. "# " .. mode_str .. " %*"
+  local mode              = "%#" .. mode_hl .. "Pill#%#" .. mode_hl .. "#" .. mode_str .. "%#" .. mode_hl .. "Pill#%*"
 
   if not active or mode_str == "T" then
     return mode
