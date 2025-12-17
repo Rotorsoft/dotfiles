@@ -1,12 +1,12 @@
 local modes = {
-  n = { "n", "StModeNormal" },
-  i = { "i", "StModeInsert" },
-  v = { "v", "StModeVisual" },
-  V = { "v-l", "StModeVisual" },
-  [""] = { "v-b", "StModeVisual" },
-  c = { "c", "StModeCommand" },
-  R = { "r", "StModeReplace" },
-  t = { "t", "StModeTerminal" },
+  n = { "N", "StModeNormal" },
+  i = { "I", "StModeInsert" },
+  v = { "V", "StModeVisual" },
+  V = { "VL", "StModeVisual" },
+  [""] = { "VB", "StModeVisual" },
+  c = { "C", "StModeCommand" },
+  R = { "R", "StModeReplace" },
+  t = { "T", "StModeTerminal" },
 }
 
 local fg = "#1e1e2e"
@@ -127,10 +127,10 @@ local function redraw_status(timeout, fetch)
 end
 
 vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() redraw_status(500, true) end })
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(3000, false) end })
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(2000, false) end })
 vim.api.nvim_create_autocmd(
   { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach", },
-  { callback = function() redraw_status(1000, false) end })
+  { callback = function() redraw_status(500, false) end })
 
 -- Assemble statusline
 local M = {}
