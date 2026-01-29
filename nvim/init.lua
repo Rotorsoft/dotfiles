@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd('VimEnter', {
       "c",
     }
     require("nvim-treesitter").setup()
-    --require("nvim-treesitter").install(languages)
+    require("nvim-treesitter").install(languages)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = languages,
       callback = function() vim.treesitter.start() end,

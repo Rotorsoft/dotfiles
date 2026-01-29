@@ -1,6 +1,7 @@
 [user]
 	name = rotorsoft
 	email = rotorsoft@outlook.com
+	initials = ro
 [init]
 	defaultBranch = master
 [core]
