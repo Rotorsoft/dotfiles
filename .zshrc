@@ -33,11 +33,7 @@ eval "$(starship init zsh)"
 bindkey -v
 
 # aliases
-alias ls='eza -la --icons=auto --sort=name'
-alias lt='eza -la --icons=auto --sort=time'
-alias ld='eza -laD --icons=auto --sort=name'
-alias lf='eza -laf --icons=auto --git --sort=size'
-alias la='eza -laT -L2 --git-ignore --icons=auto'
+alias b=brew
 alias c=container
 alias g=git
 alias p=pnpm
@@ -46,4 +42,12 @@ alias y=yazi
 alias py=python3
 alias pip=pip3
 alias use=use_tool
+alias bup='brew update && brew upgrade' 
+alias buc='brew cleanup && brew doctor'
+alias ls='eza -la --icons=auto --sort=name'
+alias lt='eza -la --icons=auto --sort=time'
+alias ld='eza -laD --icons=auto --sort=name'
+alias lf='eza -laf --icons=auto --sort=size'
+alias lg='eza -laf --icons=auto --git --sort=size'
+alias la='eza -laT -L3 --icons=auto'
 alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
