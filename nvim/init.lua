@@ -55,8 +55,12 @@ vim.api.nvim_create_autocmd('VimEnter', {
       "css",
       "zig",
       "c",
+      "markdown",
+      "markdown_inline",
     }
-    require("nvim-treesitter").setup()
+    require("nvim-treesitter").setup({
+      highlight = { enable = true },
+    })
     require("nvim-treesitter").install(languages)
     vim.api.nvim_create_autocmd('FileType', {
       pattern = languages,
