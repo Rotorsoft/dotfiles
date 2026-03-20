@@ -49,7 +49,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
     local languages = {
       "javascript",
       "typescript",
-      "typescriptreact",
       "html",
       "json",
       "css",
