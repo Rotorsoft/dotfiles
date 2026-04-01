@@ -10,6 +10,7 @@
         "redefined-local",
         "redundant-parameter",
         "undefined-doc-name",
-        "undefined-field"
+        "undefined-field",
+        "undefined-global"
     ]
 }

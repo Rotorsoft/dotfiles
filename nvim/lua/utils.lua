@@ -26,8 +26,6 @@ function M.syscmd(cmd, done)
     on_exit = function(_, code)
       done(stdout_lines, code)
     end,
-    -- Make sure stderr is not printed to the user
-    stderr_piped = true,
     on_stderr = function() end,
   })
 end
@@ -57,11 +55,11 @@ function M.git_status(done)
       elseif line:match("^[12] ") then
         local xy = line:sub(3, 4) -- the XY status code
         local x, y = xy:sub(1, 1), xy:sub(2, 2)
-        if x ~= "." then
+        if x ~= "." and changes[x] then
           uncommitted = true
           changes[x].staged = changes[x].staged + 1
         end
-        if y ~= "." then
+        if y ~= "." and changes[y] then
           dirty = true
           changes[y].unstaged = changes[y].unstaged + 1
         end

@@ -35,7 +35,6 @@ end
 
 --- Wraps a function with caching logic
 function M:wrap(key, fn, ttl)
-  local self = self
   return function(...)
     local cached_value = self:get(key)
     if cached_value then
@@ -49,7 +48,6 @@ end
 
 --- Wraps an async function with caching logic
 function M:async_wrap(key, fn, ttl, loading_value, done)
-  local self = self
   local is_running = false
 
   return function(...)

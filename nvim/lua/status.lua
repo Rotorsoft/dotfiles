@@ -126,11 +126,13 @@ local function redraw_status(timeout, fetch)
   end)
 end
 
-vim.api.nvim_create_autocmd({ "BufEnter", "DirChanged" }, { callback = function() redraw_status(500, true) end })
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(2000, false) end })
 vim.api.nvim_create_autocmd(
-  { "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach", },
-  { callback = function() redraw_status(500, false) end })
+  { "BufEnter", "DirChanged", "BufNewFile", "BufReadPost", "BufWritePost", "FocusGained", "DiagnosticChanged", "LspAttach", "LspDetach" },
+  { callback = function(args)
+    local fetch = args.event == "BufEnter" or args.event == "DirChanged"
+    redraw_status(500, fetch)
+  end })
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, { callback = function() redraw_status(2000, false) end })
 
 -- Assemble statusline
 local M = {}

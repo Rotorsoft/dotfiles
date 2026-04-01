@@ -1,6 +1,6 @@
 local map = vim.keymap.set
-local function mapn(lhs, rhs, desc, buffer)
-  map("n", lhs, rhs, { desc = desc, buffer = buffer, silent = true, noremap = true })
+local function mapn(lhs, rhs, desc, buf)
+  map("n", lhs, rhs, { desc = desc, buf = buf, silent = true })
 end
 
 mapn("<leader>w", function()
@@ -11,23 +11,14 @@ mapn("<leader>w", function()
     vim.cmd.write()
   end
 end, "Write")
-mapn("<leader>x", function()
-  if vim.api.nvim_get_current_buf() > 0 then
-    vim.cmd.bdelete()
-  else
-    vim.notify("No buffer to delete", vim.log.levels.WARN)
-  end
-end, "Close")
+mapn("<leader>x", vim.cmd.bdelete, "Close")
 mapn("<leader>q", function() vim.cmd.qa() end, "Quit")
 
 mapn("<Tab>", function() vim.cmd.bn() end, "Next Buffer")
 mapn("<S-Tab>", function() vim.cmd.bp() end, "Previous Buffer")
 
--- Clear highlights on search when pressing <Esc> in normal mode
-mapn("<Esc>", function() vim.cmd.nohlsearch() end)
-
 -- Easy terminal escape
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode", silent = true, noremap = true })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode", silent = true })
 
 local pick = require("mini.pick")
 mapn("<leader><leader>", pick.builtin.files, "Files")
@@ -73,7 +64,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local bufnr = args.buf
 
     if client then
-      -- Show all supported code actions
       local code_actions = function()
         vim.lsp.buf.code_action({
           apply = false,
@@ -87,7 +77,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         })
       end
 
-      -- Organize imports and format buffer
       local function organize_and_format()
         local params = {
           textDocument = vim.lsp.util.make_text_document_params(bufnr),
@@ -101,22 +90,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
             triggerKind = vim.lsp.protocol.CodeActionTriggerKind.Invoked,
           },
         }
-        -- Make sync request so it completes before write
         local results = vim.lsp.buf_request_sync(bufnr, "textDocument/codeAction", params, 1000)
         for _, res in pairs(results or {}) do
           for _, action in ipairs(res.result or {}) do
-            -- Apply edits first (respect client offset encoding)
             if action.edit then
               vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
             end
-            -- Then execute any command
             if action.command then
               client:exec_cmd(action.command, { bufnr = bufnr })
             end
           end
         end
-
-        -- format buffer
         if client:supports_method("textDocument/formatting") then
           vim.lsp.buf.format { bufnr = bufnr, async = false }
         end
@@ -124,22 +108,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
       -- Completion
       if client:supports_method("textDocument/completion") then
-        vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
         vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
-        map("i", "<C-Space>", function() vim.lsp.completion.get() end, { desc = "Trigger LSP Completion" })
       end
       if client:supports_method("textDocument/inlineCompletion") then
-        vim.opt.completeopt = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
         vim.lsp.inline_completion.enable(true)
-        map("i", "<Tab>", function()
-          if not vim.lsp.inline_completion.get() then return "<Tab>" end
-        end, { expr = true, replace_keycodes = true, desc = "Accept Inline Completion" })
-      end
-      if client:supports_method('textDocument/signatureHelp') then
-        map('n', '<C-s>', function() vim.lsp.buf.signature_help() end, { desc = "Trigger Lsp Signature Help" })
       end
 
-      -- Organize imports and format on save
+      -- Format on save
       if client:supports_method("textDocument/formatting") then
         vim.api.nvim_create_autocmd("BufWritePre", { buffer = bufnr, callback = organize_and_format })
       end
@@ -196,11 +171,14 @@ clue.setup({
     clue.gen_clues.marks(),
     clue.gen_clues.registers(),
     clue.gen_clues.z(),
-    -- Groups
     { mode = "n", keys = "<leader>f", desc = " Find" },
     { mode = "n", keys = "<leader>l", desc = " LSP" },
     { mode = "n", keys = "<leader>s", desc = " Session" },
     { mode = "n", keys = "<leader>g", desc = " Git" },
   },
   window = { config = { width = "auto" }, delay = 0 },
+})
+-- Enable triggers on all buffers (BufEnter doesn't fire for the startup buffer)
+vim.api.nvim_create_autocmd({ "BufWinEnter", "BufEnter", "WinEnter" }, {
+  callback = function() clue.ensure_buf_triggers(0) end,
 })
