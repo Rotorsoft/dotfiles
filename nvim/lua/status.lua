@@ -120,7 +120,10 @@ local function redraw_status(timeout, fetch)
     status_cache:invalidate('diagnostics')
     status_cache:invalidate('lsp')
     if fetch then
-      utils.git_fetch(function() vim.cmd("redrawstatus") end)
+      utils.git_fetch(function()
+        status_cache:invalidate('git')
+        vim.cmd("redrawstatus")
+      end)
     end
     vim.cmd("redrawstatus")
   end)

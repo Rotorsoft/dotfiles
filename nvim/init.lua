@@ -8,7 +8,6 @@ vim.o.number         = true
 vim.o.relativenumber = true
 vim.o.showmode       = false
 vim.o.breakindent    = true
-vim.o.undofile       = true
 vim.o.swapfile       = false
 vim.o.ignorecase     = true
 vim.o.smartcase      = true
@@ -63,13 +62,14 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- Mini
-require("mini.sessions").setup({ autoread = true, autowrite = true })
 require("mini.ai").setup({ n_lines = 500 })
 require("mini.surround").setup()
 require("mini.pairs").setup()
 require("mini.icons").setup()
-require("mini.move").setup()
-require("mini.files").setup({ mappings = { close = "<Esc>" }, windows = { preview = true, width_preview = 80 } })
+require("mini.files").setup({
+  mappings = { close = "<Esc>" },
+  windows = { preview = true, width_preview = math.max(20, math.floor(vim.o.columns * 0.4)) },
+})
 require("mini.pick").setup({
   mappings = {
     move_start = "<C-g>",
@@ -80,7 +80,6 @@ require("mini.pick").setup({
   },
 })
 require("mini.extra").setup()
-require("mini.notify").setup()
 require("mini.diff").setup({ view = { style = "sign" } })
 require("mini.hipatterns").setup({
   highlighters = {

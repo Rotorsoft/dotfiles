@@ -47,10 +47,6 @@ mapn("<leader>fl", function() extra.pickers.list({ scope = 'location' }) end, "L
 mapn("<leader>fj", function() extra.pickers.list({ scope = 'jump' }) end, "Jump List")
 mapn("<leader>fc", function() extra.pickers.list({ scope = 'change' }) end, "Change List")
 
-local sessions = require("mini.sessions")
-mapn("<leader>ss", sessions.select, "Select")
-mapn("<leader>sw", function() sessions.write(vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".vim") end, "Write")
-
 local diff = require("mini.diff")
 mapn("<leader>gd", function() diff.toggle(0) end, "Toggle Diff")
 mapn("<leader>go", function() diff.toggle_overlay(0) end, "Toggle Overlay")
@@ -173,12 +169,11 @@ clue.setup({
     clue.gen_clues.z(),
     { mode = "n", keys = "<leader>f", desc = " Find" },
     { mode = "n", keys = "<leader>l", desc = " LSP" },
-    { mode = "n", keys = "<leader>s", desc = " Session" },
     { mode = "n", keys = "<leader>g", desc = " Git" },
   },
   window = { config = { width = "auto" }, delay = 0 },
 })
--- Enable triggers on all buffers (BufEnter doesn't fire for the startup buffer)
-vim.api.nvim_create_autocmd({ "BufWinEnter", "BufEnter", "WinEnter" }, {
+-- Ensure triggers on unlisted buffers (e.g. nvim .)
+vim.api.nvim_create_autocmd("BufWinEnter", {
   callback = function() clue.ensure_buf_triggers(0) end,
 })
