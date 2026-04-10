@@ -47,11 +47,11 @@ vim.pack.add({
 })
 
 -- LSP
-vim.lsp.enable({ "lua_ls", "ts_ls", "clangd", "zls" })
+vim.lsp.enable({ "lua_ls", "ts_ls" })
 vim.lsp.config["lua_ls"] = { settings = { Lua = { workspace = { library = vim.api.nvim_get_runtime_file("", true) } } } }
 
 -- Treesitter
-local languages = { "javascript", "typescript", "html", "json", "css", "zig", "c" }
+local languages = { "javascript", "typescript", "html", "json", "css" }
 require("nvim-treesitter").setup({ highlight = { enable = true } })
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function() require("nvim-treesitter").install(languages) end,
