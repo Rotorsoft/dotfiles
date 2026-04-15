@@ -44,6 +44,7 @@ vim.pack.add({
   "https://github.com/echasnovski/mini.nvim",
   "https://github.com/tpope/vim-fugitive",
   "https://github.com/rotorsoft/act-nvim",
+  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
 })
 
 -- LSP
@@ -56,7 +57,7 @@ vim.lsp.config["ts_ls"] = {
 }
 
 -- Treesitter
-local languages = { "javascript", "typescript", "html", "json", "css" }
+local languages = { "javascript", "typescript", "html", "json", "css", "markdown", "markdown_inline" }
 require("nvim-treesitter").setup({ highlight = { enable = true } })
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function() require("nvim-treesitter").install(languages) end,
@@ -64,6 +65,13 @@ vim.api.nvim_create_autocmd('VimEnter', {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = languages,
   callback = function() vim.treesitter.start() end,
+})
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
 })
 
 -- Mini
@@ -100,6 +108,7 @@ vim.ui.select = require("mini.pick").ui_select
 -- Plugins
 require("supermaven-nvim").setup({})
 require("act-nvim").setup({ auto_open = true, browser = "Brave Browser" })
+require("render-markdown").setup({})
 
 -- Local
 require("theme").setup()
