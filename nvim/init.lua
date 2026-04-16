@@ -114,3 +114,15 @@ require("render-markdown").setup({})
 require("theme").setup()
 require("status").setup()
 require("map")
+
+-- vim ui2
+require('vim._core.ui2').enable({
+  enable = true,
+  msg = {
+    target = "cmd",
+    pager = { height = 0.5 },
+    dialog = { height = 0.5 },
+    cmd = { height = 0.5 },
+    msg = { height = 0.5, timeout = 4500 },
+  }
+})
