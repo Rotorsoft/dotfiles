@@ -5,11 +5,11 @@
       "src": "https://github.com/rotorsoft/act-nvim"
     },
     "mini.nvim": {
-      "rev": "29447d7b0e1fc9bc9d0384953e63be3fae816736",
+      "rev": "5849ef04c32a6a8e55957b946c0a275801d87530",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nvim-lspconfig": {
-      "rev": "4b7fbaa239c5db6b36f424a4521ca9f1a401be33",
+      "rev": "e146efacbafed3789ac568abcc5a981c5decaa58",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
@@ -17,7 +17,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "render-markdown.nvim": {
-      "rev": "0fd43fb4b1f073931c4b481f5f3b7cea3749e190",
+      "rev": "d67113f11384c0dad96fced2f7b91f1fc811e97f",
       "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
     },
     "supermaven-nvim": {
