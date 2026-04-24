@@ -111,8 +111,8 @@ require("act-nvim").setup({ auto_open = true, browser = "Brave Browser" })
 require("render-markdown").setup({})
 
 -- Local
---vim.cmd.colorscheme("catppuccin")
-require("theme").setup()
+vim.cmd.colorscheme("grapevine")
+require("ui").setup()
 require("status").setup()
 require("map")
 

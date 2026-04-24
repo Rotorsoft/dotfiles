@@ -9,40 +9,59 @@ local modes = {
   t = { "T", "StModeTerminal" },
 }
 
-local fg = "#1e1e2e"
+local function get_fg(group)
+  local h = vim.api.nvim_get_hl(0, { name = group, link = false })
+  return h.fg and string.format("#%06x", h.fg) or nil
+end
+
+local function get_bg(group)
+  local h = vim.api.nvim_get_hl(0, { name = group, link = false })
+  return h.bg and string.format("#%06x", h.bg) or nil
+end
 
 local function setup_highlights()
   local hl = function(group, opts)
     vim.api.nvim_set_hl(0, group, opts)
   end
 
-  hl("StModeNormal", { fg = fg, bg = "#89b4fa", bold = true })
-  hl("StModeInsert", { fg = fg, bg = "#a6e3a1", bold = true })
-  hl("StModeVisual", { fg = fg, bg = "#fab387", bold = true })
-  hl("StModeCommand", { fg = fg, bg = "#f9e2af", bold = true })
-  hl("StModeReplace", { fg = fg, bg = "#f38ba8", bold = true })
-  hl("StModeTerminal", { fg = fg, bg = "#94e2d5", bold = true })
-  hl("StModeNormalPill", { fg = "#89b4fa", })
-  hl("StModeInsertPill", { fg = "#a6e3a1", })
-  hl("StModeVisualPill", { fg = "#fab387", })
-  hl("StModeCommandPill", { fg = "#f9e2af", })
-  hl("StModeReplacePill", { fg = "#f38ba8", })
-  hl("StModeTerminalPill", { fg = "#94e2d5", })
+  local bg = get_bg("Normal") or "#1e1e2e"
+  local dim = get_fg("Comment") or "#6c7086"
 
-  hl("StGitClean", { fg = "#a6e3a1", })
-  hl("StGitUncommitted", { fg = "#f9e2af", })
-  hl("StGitDirty", { fg = "#f38ba8", })
-  hl("StGitAdd", { fg = "#a6e3a1" })
-  hl("StGitChange", { fg = "#fab387" })
-  hl("StGitDelete", { fg = "#f38ba8" })
+  -- Fixed mode / status colors (scheme-independent)
+  local normal = "#89b4fa"
+  local insert = "#a6e3a1"
+  local visual = "#fab387"
+  local command = "#f9e2af"
+  local replace = "#f38ba8"
+  local terminal = "#94e2d5"
 
-  hl("StDiagError", { fg = "#f38ba8" })
-  hl("StDiagWarn", { fg = "#f9e2af" })
-  hl("StDiagInfo", { fg = "#89b4fa" })
-  hl("StDiagHint", { fg = "#94e2d5" })
+  hl("StModeNormal", { fg = bg, bg = normal, bold = true })
+  hl("StModeInsert", { fg = bg, bg = insert, bold = true })
+  hl("StModeVisual", { fg = bg, bg = visual, bold = true })
+  hl("StModeCommand", { fg = bg, bg = command, bold = true })
+  hl("StModeReplace", { fg = bg, bg = replace, bold = true })
+  hl("StModeTerminal", { fg = bg, bg = terminal, bold = true })
+  hl("StModeNormalPill", { fg = normal })
+  hl("StModeInsertPill", { fg = insert })
+  hl("StModeVisualPill", { fg = visual })
+  hl("StModeCommandPill", { fg = command })
+  hl("StModeReplacePill", { fg = replace })
+  hl("StModeTerminalPill", { fg = terminal })
 
-  hl("StInfo", { fg = "#6c7086", bg = "NONE", bold = false })
-  hl("StInfoModified", { fg = "#7d8197", bg = "NONE", bold = false, italic = true })
+  hl("StGitClean", { fg = insert })
+  hl("StGitUncommitted", { fg = command })
+  hl("StGitDirty", { fg = replace })
+  hl("StGitAdd", { fg = insert })
+  hl("StGitChange", { fg = visual })
+  hl("StGitDelete", { fg = replace })
+
+  hl("StDiagError", { fg = replace })
+  hl("StDiagWarn", { fg = command })
+  hl("StDiagInfo", { fg = normal })
+  hl("StDiagHint", { fg = terminal })
+
+  hl("StInfo", { fg = dim, bg = "NONE", bold = false })
+  hl("StInfoModified", { fg = dim, bg = "NONE", bold = false, italic = true })
 end
 
 local diagnostic_hl_groups = {
@@ -176,6 +195,7 @@ end
 
 function M.setup()
   setup_highlights()
+  vim.api.nvim_create_autocmd("ColorScheme", { callback = setup_highlights })
   vim.o.laststatus = 3 -- globalstatus
   vim.o.statusline = "%!v:lua.require'status'.statusline()"
 end
