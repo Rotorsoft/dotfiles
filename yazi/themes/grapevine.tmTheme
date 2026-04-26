@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>name</key>
+  <string>Grapevine</string>
+  <key>settings</key>
+  <array>
+
+    <dict>
+      <key>settings</key>
+      <dict>
+        <key>background</key><string>#1c1e1a</string>
+        <key>foreground</key><string>#d4d0c8</string>
+        <key>caret</key><string>#ffd166</string>
+        <key>lineHighlight</key><string>#1c1e1a</string>
+        <key>selection</key><string>#4a704c</string>
+        <key>invisibles</key><string>#555549</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Comment</string>
+      <key>scope</key><string>comment, punctuation.definition.comment</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key><string>#555549</string>
+        <key>fontStyle</key><string>italic</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>String</string>
+      <key>scope</key><string>string, string.quoted, punctuation.definition.string</string>
+      <key>settings</key><dict><key>foreground</key><string>#8cc4b0</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Template string</string>
+      <key>scope</key><string>string.template, string.interpolated, meta.template.expression</string>
+      <key>settings</key><dict><key>foreground</key><string>#fab387</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Escape character</string>
+      <key>scope</key><string>constant.character.escape</string>
+      <key>settings</key><dict><key>foreground</key><string>#fab387</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Number</string>
+      <key>scope</key><string>constant.numeric</string>
+      <key>settings</key><dict><key>foreground</key><string>#c9b896</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Boolean / null / undefined</string>
+      <key>scope</key><string>constant.language</string>
+      <key>settings</key><dict><key>foreground</key><string>#e8cc99</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Other constants</string>
+      <key>scope</key><string>constant.other, variable.other.constant</string>
+      <key>settings</key><dict><key>foreground</key><string>#e8cc99</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Variable</string>
+      <key>scope</key><string>variable, variable.other, variable.other.readwrite</string>
+      <key>settings</key><dict><key>foreground</key><string>#7cc47f</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Parameter</string>
+      <key>scope</key><string>variable.parameter</string>
+      <key>settings</key><dict><key>foreground</key><string>#7cc47f</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>this / super</string>
+      <key>scope</key><string>variable.language</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Object property</string>
+      <key>scope</key><string>variable.other.property, variable.other.object.property, meta.object-literal.key, support.type.property-name</string>
+      <key>settings</key><dict><key>foreground</key><string>#7cc47f</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Keyword</string>
+      <key>scope</key><string>keyword, keyword.control, keyword.operator.expression, storage.modifier, storage.type.modifier</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Operator</string>
+      <key>scope</key><string>keyword.operator</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Function/return keywords</string>
+      <key>scope</key><string>keyword.control.flow, keyword.control.flow.return, keyword.control.flow.yield, keyword.control.flow.await, keyword.control.async, storage.type.function, storage.type.arrow</string>
+      <key>settings</key><dict><key>foreground</key><string>#9787b0</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Import / export</string>
+      <key>scope</key><string>keyword.control.import, keyword.control.export, keyword.control.from, keyword.control.as</string>
+      <key>settings</key><dict><key>foreground</key><string>#cba6f7</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Type keyword (type/interface/enum)</string>
+      <key>scope</key><string>storage.type.type, storage.type.interface, storage.type.enum, storage.type.namespace, keyword.type</string>
+      <key>settings</key><dict><key>foreground</key><string>#52e0c4</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Storage (let/const/var/function)</string>
+      <key>scope</key><string>storage.type</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Built-in / primitive types</string>
+      <key>scope</key><string>support.type.primitive, support.type.builtin, support.type.object.console</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Type / class names</string>
+      <key>scope</key><string>entity.name.type, entity.name.class, entity.other.inherited-class, support.class, support.type</string>
+      <key>settings</key><dict><key>foreground</key><string>#52e0c4</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Interface</string>
+      <key>scope</key><string>entity.name.type.interface, entity.name.type.alias, entity.name.type.parameter</string>
+      <key>settings</key><dict><key>foreground</key><string>#52e0c4</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Enum member</string>
+      <key>scope</key><string>variable.other.enummember, entity.name.type.enum</string>
+      <key>settings</key><dict><key>foreground</key><string>#fab387</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Function name</string>
+      <key>scope</key><string>entity.name.function, meta.function-call entity.name.function, meta.definition.method entity.name.function, support.function</string>
+      <key>settings</key><dict><key>foreground</key><string>#ffd166</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Constructor</string>
+      <key>scope</key><string>entity.name.function.constructor, meta.class entity.name.function</string>
+      <key>settings</key><dict><key>foreground</key><string>#ffd166</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Decorator</string>
+      <key>scope</key><string>meta.decorator, punctuation.decorator, entity.name.function.decorator</string>
+      <key>settings</key><dict><key>foreground</key><string>#cba6f7</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Tag (JSX/HTML)</string>
+      <key>scope</key><string>entity.name.tag</string>
+      <key>settings</key><dict><key>foreground</key><string>#c678dd</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Attribute (JSX/HTML)</string>
+      <key>scope</key><string>entity.other.attribute-name</string>
+      <key>settings</key><dict><key>foreground</key><string>#cba6f7</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>JSON property</string>
+      <key>scope</key><string>support.type.property-name.json, meta.structure.dictionary.json string.quoted.double.json</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a8a6c</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Punctuation</string>
+      <key>scope</key><string>punctuation, meta.brace, punctuation.separator, punctuation.terminator, punctuation.section</string>
+      <key>settings</key><dict><key>foreground</key><string>#6a6a5e</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Label</string>
+      <key>scope</key><string>entity.name.label</string>
+      <key>settings</key><dict><key>foreground</key><string>#ffd166</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Invalid / error</string>
+      <key>scope</key><string>invalid, invalid.illegal</string>
+      <key>settings</key><dict><key>foreground</key><string>#e06c75</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Markdown heading</string>
+      <key>scope</key><string>markup.heading, entity.name.section</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key><string>#52e0c4</string>
+        <key>fontStyle</key><string>bold</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Markdown link</string>
+      <key>scope</key><string>markup.underline.link, string.other.link</string>
+      <key>settings</key>
+      <dict>
+        <key>foreground</key><string>#52e0c4</string>
+        <key>fontStyle</key><string>underline</string>
+      </dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Diff added</string>
+      <key>scope</key><string>markup.inserted</string>
+      <key>settings</key><dict><key>foreground</key><string>#7cc47f</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Diff removed</string>
+      <key>scope</key><string>markup.deleted</string>
+      <key>settings</key><dict><key>foreground</key><string>#e06c75</string></dict>
+    </dict>
+
+    <dict>
+      <key>name</key><string>Diff changed</string>
+      <key>scope</key><string>markup.changed</string>
+      <key>settings</key><dict><key>foreground</key><string>#ffd166</string></dict>
+    </dict>
+
+  </array>
+  <key>uuid</key>
+  <string>5b6a4f3a-2c2c-4f1e-9a30-grapevine</string>
+</dict>
+</plist>

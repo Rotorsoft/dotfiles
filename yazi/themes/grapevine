@@ -1,0 +1,118 @@
+# Grapevine theme for yazi
+
+[mgr]
+cwd = { fg = "#52e0c4" }
+
+hovered         = { fg = "#1c1e1a", bg = "#ffd166" }
+preview_hovered = { underline = true }
+
+find_keyword  = { fg = "#ffd166", italic = true }
+find_position = { fg = "#fab387", bg = "reset", italic = true }
+
+marker_copied   = { fg = "#7cc47f", bg = "#7cc47f" }
+marker_cut      = { fg = "#e06c75", bg = "#e06c75" }
+marker_marked   = { fg = "#52e0c4", bg = "#52e0c4" }
+marker_selected = { fg = "#ffd166", bg = "#ffd166" }
+
+tab_active   = { fg = "#1c1e1a", bg = "#ffd166" }
+tab_inactive = { fg = "#d4d0c8", bg = "#4a704c" }
+tab_width    = 1
+
+border_symbol = "│"
+border_style  = { fg = "#555549" }
+
+syntect_theme = "/Users/roger/.dotfiles/yazi/themes/grapevine.tmTheme"
+
+[mode]
+normal_main = { fg = "#1c1e1a", bg = "#ffd166", bold = true }
+normal_alt  = { fg = "#ffd166", bg = "#4a704c" }
+
+select_main = { fg = "#1c1e1a", bg = "#7cc47f", bold = true }
+select_alt  = { fg = "#7cc47f", bg = "#4a704c" }
+
+unset_main = { fg = "#1c1e1a", bg = "#9787b0", bold = true }
+unset_alt  = { fg = "#9787b0", bg = "#4a704c" }
+
+[status]
+separator_open  = ""
+separator_close = ""
+separator_style = { fg = "#4a704c", bg = "#4a704c" }
+
+progress_label  = { fg = "#d4d0c8", bold = true }
+progress_normal = { fg = "#ffd166", bg = "#4a704c" }
+progress_error  = { fg = "#e06c75", bg = "#4a704c" }
+
+permissions_t = { fg = "#52e0c4" }
+permissions_r = { fg = "#e8cc99" }
+permissions_w = { fg = "#fab387" }
+permissions_x = { fg = "#7cc47f" }
+permissions_s = { fg = "#555549" }
+
+[select]
+border   = { fg = "#ffd166" }
+active   = { fg = "#fab387" }
+inactive = {}
+
+[input]
+border   = { fg = "#ffd166" }
+title    = {}
+value    = {}
+selected = { reversed = true }
+
+[completion]
+border   = { fg = "#ffd166" }
+active   = { bg = "#4a704c" }
+inactive = {}
+
+[tasks]
+border  = { fg = "#ffd166" }
+title   = {}
+hovered = { fg = "#52e0c4", underline = true }
+
+[which]
+mask            = { bg = "#1c1e1a" }
+cand            = { fg = "#52e0c4" }
+rest            = { fg = "#9787b0" }
+desc            = { fg = "#fab387" }
+separator       = "  "
+separator_style = { fg = "#555549" }
+
+[help]
+on      = { fg = "#52e0c4" }
+exec    = { fg = "#fab387" }
+desc    = { fg = "#9787b0" }
+hovered = { bg = "#4a704c", bold = true }
+footer  = { fg = "#1c1e1a", bg = "#d4d0c8" }
+
+[notify]
+title_info  = { fg = "#52e0c4" }
+title_warn  = { fg = "#ffd166" }
+title_error = { fg = "#e06c75" }
+
+[filetype]
+
+rules = [
+    # Images
+    { mime = "image/*", fg = "#fab387" },
+
+    # Media
+    { mime = "{audio,video}/*", fg = "#c678dd" },
+
+    # Archives
+    { mime = "application/{,g}zip",                 fg = "#cba6f7" },
+    { mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#cba6f7" },
+
+    # Documents
+    { mime = "application/{pdf,doc,rtf,vnd.*}",  fg = "#8cc4b0" },
+
+    # Special files
+    { name = "*",  is = "orphan", bg = "#e06c75" },
+    { name = "*/", is = "orphan", bg = "#e06c75" },
+
+    # Executable
+    { name = "*", is = "exec", fg = "#7cc47f" },
+
+    # Fallback
+    { name = "*",  fg = "#d4d0c8" },
+    { name = "*/", fg = "#52e0c4" },
+]
