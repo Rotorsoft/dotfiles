@@ -5,6 +5,7 @@ find $HOME -maxdepth 1 -type l -exec rm {} \;
 rm -rf $HOME/.config/nvim
 rm -rf $HOME/.config/starship.toml
 rm -rf $HOME/.config/yazi
+rm -rf $HOME/.config/ghostty/themes
 
 # Create directories
 mkdir -p $HOME/.config/yazi
@@ -20,6 +21,7 @@ ln -s $HOME/.dotfiles/starship.toml "${HOME}/.config/starship.toml"
 ln -s $HOME/.dotfiles/yazi.toml "${HOME}/.config/yazi/yazi.toml"
 ln -s $HOME/.dotfiles/nvim "${HOME}/.config/nvim"
 ln -s $HOME/.dotfiles/ghostty.config "${HOME}/.config/ghostty/config"
+ln -s $HOME/.dotfiles/ghostty/themes "${HOME}/.config/ghostty/themes"
 
 # Link vscode settings.json 
 rm "${HOME}/Library/Application Support/Code/User/settings.json"
