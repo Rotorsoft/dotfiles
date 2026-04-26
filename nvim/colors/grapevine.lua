@@ -12,11 +12,12 @@ local c = {
   shade0    = "#4a704c",
 
   -- Syntax / treesitter
-  keyword   = "#6bb36d",
-  string    = "#7cc47f",
+  keyword   = "#6a8a6c",
+  keyword_fn = "#9787b0",
+  string    = "#8cc4b0",
   function_ = "#ffd166",
-  variable  = "#8cc4b0",
-  constant  = "#c9b896",
+  variable  = "#7cc47f",
+  constant  = "#e8cc99",
   type_     = "#52e0c4",
   tag       = "#c678dd",
   label     = "#ffd166",
@@ -101,6 +102,9 @@ hl(0, "@constructor", { fg = c.function_ })
 hl(0, "@operator", { fg = c.keyword })
 hl(0, "@keyword", { fg = c.keyword })
 hl(0, "@keyword.import", { fg = c.attribute })
+hl(0, "@keyword.function", { fg = c.keyword_fn })
+hl(0, "@keyword.return", { fg = c.keyword_fn })
+hl(0, "@keyword.coroutine", { fg = c.keyword_fn })
 hl(0, "@keyword.type", { fg = c.type_ })
 hl(0, "@keyword.ts", { fg = c.heading })
 
