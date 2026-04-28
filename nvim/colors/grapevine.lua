@@ -31,6 +31,7 @@ local c = {
   template  = "#fab387",
   heading   = "#52e0c4",
   link      = "#52e0c4",
+  lime      = "#b8d97a",
 }
 
 -- Editor syntax-related highlights
@@ -135,5 +136,8 @@ hl(0, "@diff.minus", { fg = c.error })
 -- HTML / JSON enhancements
 hl(0, "@tag", { fg = c.tag })
 hl(0, "@tag.attribute", { fg = c.attribute })
-hl(0, "@property.json", { fg = c.keyword })
-hl(0, "@null.json", { fg = c.constant })
+hl(0, "@property.json", { fg = c.tag })
+hl(0, "@string.json", { fg = c.variable })
+hl(0, "@number.json", { fg = c.lime })
+hl(0, "@boolean.json", { fg = c.string })
+hl(0, "@null.json", { fg = c.keyword, italic = true })
