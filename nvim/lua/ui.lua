@@ -2,17 +2,25 @@ local M = {}
 
 local function apply()
   local hl = vim.api.nvim_set_hl
-  local function get_fg(group)
+  local function attr(group, key)
     local h = vim.api.nvim_get_hl(0, { name = group, link = false })
-    return h.fg and string.format("#%06x", h.fg) or nil
+    return h[key] and string.format("#%06x", h[key]) or nil
+  end
+  local function lighten(hex, amount)
+    local r = math.min(255, tonumber(hex:sub(2, 3), 16) + amount)
+    local g = math.min(255, tonumber(hex:sub(4, 5), 16) + amount)
+    local b = math.min(255, tonumber(hex:sub(6, 7), 16) + amount)
+    return string.format("#%02x%02x%02x", r, g, b)
   end
 
-  local text = get_fg("Normal")
-  local dim = get_fg("Comment")
-  local sel_bg = get_fg("Visual") or dim
+  local text = attr("Normal", "fg")
+  local dim = attr("Comment", "fg")
+  local bg = attr("Normal", "bg")
+  local sel_bg = attr("Visual", "bg") or dim
+  local cursor_bg = bg and lighten(bg, 12) or "none"
 
   -- Transparent / minimal chrome
-  hl(0, "CursorLine", { bg = "none" })
+  hl(0, "CursorLine", { bg = cursor_bg })
   hl(0, "CursorColumn", { bg = "none" })
   hl(0, "ColorColumn", { bg = "none" })
   hl(0, "SignColumn", { fg = text, bg = "none" })
@@ -23,9 +31,9 @@ local function apply()
   hl(0, "TabLineSel", { fg = text, bg = "none" })
   hl(0, "WinSeparator", { fg = dim, bg = "none" })
 
-  -- Plugin UI highlights
-  hl(0, "MiniPickMatchCurrent", { fg = text, bg = sel_bg })
-  hl(0, "MiniFilesCursorLine", { fg = text, bg = sel_bg })
+  -- Plugin UI highlights (bg only — preserve syntax fg in selected row)
+  hl(0, "MiniPickMatchCurrent", { bg = sel_bg })
+  hl(0, "MiniFilesCursorLine", { bg = sel_bg })
 end
 
 function M.setup()
