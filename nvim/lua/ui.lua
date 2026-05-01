@@ -42,11 +42,8 @@ function M.setup()
   -- Re-apply after any colorscheme change
   vim.api.nvim_create_autocmd("ColorScheme", { callback = apply })
 
-  -- Hide command line when not in command mode
+  -- Hide command line when not in command mode (ui2 shows/hides its float automatically)
   vim.o.cmdheight = 0
-  vim.api.nvim_create_autocmd({ "CmdlineEnter", "CmdlineLeave" }, {
-    callback = function(args) vim.o.cmdheight = args.event == "CmdlineEnter" and 1 or 0 end,
-  })
 end
 
 return M
