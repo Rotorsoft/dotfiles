@@ -1,0 +1,33 @@
+# Brewfile.nice-to-have — broadly useful, not day-1 critical
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.nice-to-have
+
+# CLI extras
+brew "micro"
+brew "sevenzip"
+brew "telnet"
+
+# Other AI CLIs
+brew "gemini-cli"
+
+# Casks
+cask "obsidian"
+cask "miro"
+cask "telegram"
+cask "codex"
+
+# VS Code extensions — broadly useful
+vscode "aaron-bond.better-comments"
+vscode "alefragnani.bookmarks"
+vscode "donjayamanne.githistory"
+vscode "github.copilot-chat"
+vscode "github.vscode-github-actions"
+vscode "gruntfuggly.todo-tree"
+vscode "humao.rest-client"
+vscode "mhutchie.git-graph"
+vscode "ms-vscode.live-server"
+vscode "ms-vsliveshare.vsliveshare"
+vscode "quicktype.quicktype"
+vscode "ritwickdey.liveserver"
+vscode "wayou.vscode-todo-highlight"
+vscode "wix.vscode-import-cost"
+vscode "nextnav.nextnav"

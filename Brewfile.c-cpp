@@ -1,0 +1,9 @@
+# Brewfile.c-cpp — C/C++ build chain
+# Needed for: building Node native packages, compiling containers, native deps
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.c-cpp
+
+brew "llvm@17"
+brew "clang-format"
+brew "cling"
+brew "cmake"
+brew "protobuf"

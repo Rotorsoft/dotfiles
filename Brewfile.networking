@@ -1,0 +1,6 @@
+# Brewfile.networking — networking / scanning utilities
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.networking
+
+brew "arp-scan"
+brew "nmap"
+brew "nghttp2"

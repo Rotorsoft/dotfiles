@@ -1,0 +1,45 @@
+# Brewfile.special-cases — leftovers to review / occasional use
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.special-cases
+#
+# Grouped so you can copy a subset rather than installing the whole file.
+
+# --- Geospatial ---
+brew "geos"
+
+# --- Cloud / deploy targets ---
+brew "flyctl"
+brew "railway"
+brew "neonctl"
+
+# --- Kubernetes ---
+brew "k9s"
+
+# --- Redis ---
+cask "redis-insight"
+vscode "dunn.redis"
+
+# --- Yarn PnP projects ---
+brew "yarn"
+vscode "arcanis.vscode-zipfs"
+
+# --- Procfile / dotenv-style projects ---
+vscode "benspaulding.procfile"
+
+# --- JSON5 projects ---
+vscode "mrmlnc.vscode-json5"
+
+# --- Remote / SSH dev ---
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode-remote.vscode-remote-extensionpack"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-server"
+
+# --- Prisma ORM ---
+vscode "prisma.prisma"
+
+# --- Alt prompt (if you go back to powerlevel10k) ---
+brew "powerlevel10k"
+
+# --- Gemini IDE companion ---
+vscode "google.gemini-cli-vscode-ide-companion"

@@ -1,0 +1,17 @@
+# Brewfile.python-ml — Python + Jupyter / ML
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.python-ml
+
+brew "pyenv"
+brew "python@3.12"
+brew "python@3.13"
+brew "poetry"
+
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"

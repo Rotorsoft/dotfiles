@@ -1,0 +1,27 @@
+# Brewfile.creators — content creation toolchain
+# Writing, typesetting, image / video / audio, PDFs, diagrams.
+# Install with: brew bundle --file=~/.dotfiles/Brewfile.creators
+
+# Document / typesetting
+brew "pandoc"
+brew "ghostscript"
+brew "poppler"
+brew "poppler-qt5"
+brew "tectonic"
+brew "typst"
+
+# Image / video / audio
+brew "imagemagick"
+brew "ffmpeg"
+
+# Fonts
+cask "font-eb-garamond"
+
+# VS Code extensions
+vscode "bierner.markdown-mermaid"
+vscode "davidanson.vscode-markdownlint"
+vscode "mintlify.document"
+vscode "tomoki1207.pdf"
+vscode "yzane.markdown-pdf"
+vscode "jock.svg"
+vscode "adpyke.codesnap"
