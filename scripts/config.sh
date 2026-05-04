@@ -51,9 +51,9 @@ link "$DOTFILES_DIR/keychron_q6_max_ansi_knob.layout.json" \
 # ~/.config
 link "$DOTFILES_DIR/starship.toml"          "$HOME/.config/starship.toml"
 link "$DOTFILES_DIR/nvim"                   "$HOME/.config/nvim"
-link "$DOTFILES_DIR/yazi.toml"              "$HOME/.config/yazi/yazi.toml"
+link "$DOTFILES_DIR/yazi/yazi.toml"         "$HOME/.config/yazi/yazi.toml"
 link "$DOTFILES_DIR/yazi/themes/grapevine"  "$HOME/.config/yazi/theme.toml"
-link "$DOTFILES_DIR/ghostty.config"         "$HOME/.config/ghostty/config"
+link "$DOTFILES_DIR/ghostty/config"         "$HOME/.config/ghostty/config"
 link "$DOTFILES_DIR/ghostty/themes"         "$HOME/.config/ghostty/themes"
 
 # VS Code
