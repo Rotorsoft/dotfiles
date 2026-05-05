@@ -1,16 +1,27 @@
+# Always run as native ARM64 (prevents Rosetta 2 shell sessions)
+[[ "$(uname -m)" != "arm64" ]] && exec arch -arm64 "$SHELL" "$@"
+
 # p10k
 # if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
 #   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 # fi
 
-export ZSH="$HOME/.oh-my-zsh"
-plugins=(git docker docker-compose colored-man-pages colorize)
-source $ZSH/oh-my-zsh.sh
-
 # completions
+# generate docker completion file on first run (replaces oh-my-zsh docker plugin)
+if command -v docker &>/dev/null; then
+  mkdir -p "$HOME/.docker/completions"
+  [[ -f "$HOME/.docker/completions/_docker" ]] || docker completion zsh > "$HOME/.docker/completions/_docker"
+fi
 fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit && compinit
 autoload -Uz colors && colors
+
+# docker-compose completions (replaces oh-my-zsh docker-compose plugin)
+[[ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion ]] && \
+  source /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion
+
+# colored man pages via bat (replaces oh-my-zsh colored-man-pages plugin)
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # homebrew plugins
 # source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme

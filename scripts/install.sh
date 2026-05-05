@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Re-exec under native ARM64 if running through Rosetta 2
+if [[ "$(uname -m)" != "arm64" ]]; then
+  exec arch -arm64 "$0" "$@"
+fi
+
 # Bootstrap a new Mac:
 #   1. Ensures Xcode Command Line Tools (clang/make/headers for node-gyp)
 #   2. Installs Homebrew if missing
@@ -108,13 +113,21 @@ for bundle in "${DOTFILES_DIR}"/Brewfile.*; do
   fi
 done
 
-# 4. Default shell
+# 4. npm globals (tree-sitter CLI needed by nvim-treesitter to compile parsers)
+if command -v npm >/dev/null 2>&1; then
+  echo "==> Installing npm globals"
+  npm install -g tree-sitter-cli
+else
+  echo "  skip npm globals (npm not found — run 'nvm install --lts' first, then: npm i -g tree-sitter-cli)"
+fi
+
+# 5. Default shell
 if [[ "${SHELL:-}" != *zsh ]]; then
   echo "==> Setting zsh as default shell"
   chsh -s "$(which zsh)"
 fi
 
-# 5. Symlink dotfiles
+# 6. Symlink dotfiles
 echo "==> Linking dotfiles"
 "${DOTFILES_DIR}/scripts/config.sh"
 
