@@ -60,7 +60,26 @@ if ! command -v brew >/dev/null 2>&1; then
   fi
 fi
 
-# 2. Essentials — always
+# 2b. Repair Homebrew git repo if corrupted (brew update fails without it)
+brew_repo="$(brew --prefix)/Homebrew"
+if [[ -d "$brew_repo" ]] && ! git -C "$brew_repo" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "==> Repairing Homebrew git repository"
+  git -C "$brew_repo" init
+  git -C "$brew_repo" remote add origin https://github.com/Homebrew/brew 2>/dev/null || true
+  git -C "$brew_repo" fetch origin
+  git -C "$brew_repo" reset --hard origin/master
+fi
+
+# 2c. Fix zsh completion dir ownership (Homebrew packages write there)
+for zsh_dir in /usr/local/share/zsh /usr/local/share/zsh/site-functions; do
+  if [[ -d "$zsh_dir" ]] && [[ ! -w "$zsh_dir" ]]; then
+    echo "==> Fixing ownership of $zsh_dir"
+    sudo chown -R "$(whoami)" "$zsh_dir"
+    chmod u+w "$zsh_dir"
+  fi
+done
+
+# 3. Essentials — always
 echo "==> Installing essentials (Brewfile)"
 brew bundle --file="${DOTFILES_DIR}/Brewfile"
 
