@@ -43,7 +43,7 @@ use_tool() {
       export COREPACK_ENABLE_STRICT=0 # to allow new versions
       alias p=pnpm
       # nvm
-      . "$HOME/.nvm/nvm.sh" || return
+      . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" || return
       echo "✓ node"
       ;;
     psql)

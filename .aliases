@@ -1,0 +1,113 @@
+# ~/.aliases — sourced by .zshrc after all formula tools are initialized
+# Sections are ordered to match install sequence: builtins → brew → tools
+
+# ── shortcuts ──────────────────────────────────────────────────────────────────
+alias b=brew
+alias c=container
+alias g=git
+alias p=pnpm
+alias v=nvim
+alias y=yazi
+alias py=python3
+alias pip=pip3
+alias use=use_tool
+
+# ── brew ───────────────────────────────────────────────────────────────────────
+alias bup='brew update && brew upgrade'
+alias buc='brew cleanup && brew doctor'
+
+# ── eza — requires: eza (Brewfile) ────────────────────────────────────────────
+alias ls='eza -la --icons=auto --sort=name'
+alias lt='eza -la --icons=auto --sort=time'
+alias ld='eza -laD --icons=auto --sort=name'
+alias lf='eza -laf --icons=auto --sort=size'
+alias lg='eza -laf --icons=auto --git --sort=size'
+alias la='eza -laT -L3 --icons=auto'
+
+# ── git — requires: git (Brewfile) ────────────────────────────────────────────
+# custom pretty log
+alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
+
+# status
+alias gst='git status'
+alias gss='git status --short'
+alias gsb='git status --short --branch'
+
+# staging
+alias ga='git add'
+alias gaa='git add --all'
+alias gapa='git add --patch'
+
+# commit
+alias gc='git commit --verbose'
+alias gcmsg='git commit --message'
+alias 'gc!'='git commit --verbose --amend'
+
+# diff
+alias gd='git diff'
+alias gds='git diff --staged'
+
+# checkout / switch
+alias gco='git checkout'
+alias gcb='git checkout -b'
+alias gsw='git switch'
+alias gswc='git switch --create'
+
+# branch
+alias gb='git branch'
+alias gba='git branch --all'
+alias gbd='git branch --delete'
+alias gbD='git branch --delete --force'
+
+# pull
+alias gl='git pull'
+alias gpr='git pull --rebase'
+alias ggpull='git pull origin "$(git rev-parse --abbrev-ref HEAD)"'
+
+# push
+alias gp='git push'
+alias gpf='git push --force-with-lease --force-if-includes'
+alias gpsup='git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD)'
+alias ggpush='git push origin "$(git rev-parse --abbrev-ref HEAD)"'
+
+# fetch
+alias gf='git fetch'
+alias gfa='git fetch --all --tags --prune --jobs=10'
+
+# merge
+alias gm='git merge'
+alias gma='git merge --abort'
+
+# rebase
+alias grb='git rebase'
+alias grba='git rebase --abort'
+alias grbc='git rebase --continue'
+alias grbi='git rebase --interactive'
+
+# reset / restore
+alias grh='git reset'
+alias grhh='git reset --hard'
+alias grhs='git reset --soft'
+alias grs='git restore'
+alias grst='git restore --staged'
+
+# stash
+alias gsta='git stash push'
+alias gstp='git stash pop'
+alias gstl='git stash list'
+alias gstd='git stash drop'
+
+# cherry-pick
+alias gcp='git cherry-pick'
+alias gcpa='git cherry-pick --abort'
+alias gcpc='git cherry-pick --continue'
+
+# log
+alias glo='git log --oneline --decorate'
+alias glog='git log --oneline --decorate --graph'
+alias gsh='git show'
+
+# remote
+alias gr='git remote'
+alias gra='git remote add'
+alias grf='git reflog'

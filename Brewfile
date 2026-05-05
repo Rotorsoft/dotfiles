@@ -15,6 +15,7 @@ brew "prettier"
 # Editor + terminal
 brew "neovim"
 brew "tmux"
+brew "tpm"
 brew "fzf"
 brew "fd"
 brew "ripgrep"

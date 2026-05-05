@@ -15,10 +15,7 @@ fi
 fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit && compinit
 autoload -Uz colors && colors
-
-# docker-compose completions (replaces oh-my-zsh docker-compose plugin)
-[[ -f /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion ]] && \
-  source /Applications/Docker.app/Contents/Resources/etc/docker-compose.zsh-completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 
 # colored man pages via bat (replaces oh-my-zsh colored-man-pages plugin)
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
@@ -40,28 +37,19 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
+# zsh options
+setopt AUTO_CD
+
 # set vi mode
 bindkey -v
+function vi-yank-pbcopy() { zle vi-yank; echo -n "$CUTBUFFER" | pbcopy }
+zle -N vi-yank-pbcopy
+bindkey -M vicmd 'y' vi-yank-pbcopy
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
-# aliases
-alias b=brew
-alias c=container
-alias g=git
-alias p=pnpm
-alias v=nvim
-alias y=yazi
-alias py=python3
-alias pip=pip3
-alias use=use_tool
-alias bup='brew update && brew upgrade' 
-alias buc='brew cleanup && brew doctor'
-alias ls='eza -la --icons=auto --sort=name'
-alias lt='eza -la --icons=auto --sort=time'
-alias ld='eza -laD --icons=auto --sort=name'
-alias lf='eza -laf --icons=auto --sort=size'
-alias lg='eza -laf --icons=auto --git --sort=size'
-alias la='eza -laT -L3 --icons=auto'
-alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
+# aliases — loaded after all formula tools are initialized above
+[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
