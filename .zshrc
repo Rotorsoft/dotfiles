@@ -1,11 +1,6 @@
 # Always run as native ARM64 (prevents Rosetta 2 shell sessions)
 [[ "$(uname -m)" != "arm64" ]] && exec arch -arm64 "$SHELL" "$@"
 
-# p10k
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
 # completions
 # generate docker completion file on first run (replaces oh-my-zsh docker plugin)
 if command -v docker &>/dev/null; then
@@ -21,12 +16,8 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # homebrew plugins
-# source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# to customize, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh 
 
 eval "$(zoxide init zsh)"
 source <(fzf --zsh)
@@ -37,8 +28,22 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
-# zsh options
-setopt AUTO_CD
+# history (replaces oh-my-zsh lib/history.zsh defaults)
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history       # timestamps in $HISTFILE
+setopt hist_expire_dups_first # drop dupes first when trimming
+setopt hist_ignore_dups       # don't record consecutive dupes
+setopt hist_ignore_space      # leading space hides command from history
+setopt hist_verify            # confirm `!!`/`!$` expansions before running
+setopt share_history          # sync history across live shells
+
+# directory navigation (replaces oh-my-zsh lib/directories.zsh)
+setopt auto_cd                # `foo` → `cd foo` if foo is a dir
+setopt auto_pushd             # every cd pushes to the dir stack
+setopt pushd_ignore_dups      # no dupes in the dir stack
+setopt pushdminus             # `cd -2` instead of `cd +2`
 
 # set vi mode
 bindkey -v

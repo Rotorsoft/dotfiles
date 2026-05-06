@@ -38,8 +38,5 @@ vscode "ms-vscode.remote-server"
 # --- Prisma ORM ---
 vscode "prisma.prisma"
 
-# --- Alt prompt (if you go back to powerlevel10k) ---
-brew "powerlevel10k"
-
 # --- Gemini IDE companion ---
 vscode "google.gemini-cli-vscode-ide-companion"

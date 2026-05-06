@@ -11,12 +11,14 @@ git clone https://github.com/<you>/.dotfiles.git ~/.dotfiles
 
 The installer:
 
-1. Ensures Xcode Command Line Tools (clang/make/headers for node-gyp builds)
-2. Installs Homebrew if missing
-3. Installs **`Brewfile`** (essentials) — always
-4. For every other `Brewfile.<group>` file, prompts y/n
-5. Sets `zsh` as default shell
-6. Runs `scripts/config.sh` to symlink dotfiles
+1. Re-execs under native ARM64 if running through Rosetta 2
+2. Ensures Xcode Command Line Tools (clang/make/headers for node-gyp builds)
+3. Installs Homebrew if missing; repairs the Homebrew git repo if corrupted; fixes ownership of `/usr/local/share/zsh*` so brew packages can write completions there
+4. Installs **`Brewfile`** (essentials) — always
+5. For every other `Brewfile.<group>` file, prompts y/n
+6. Installs npm globals (`tree-sitter-cli`, used by nvim-treesitter to compile parsers) — skipped with a hint if `npm` isn't on `PATH` yet
+7. Sets `zsh` as default shell
+8. Runs `scripts/config.sh` to symlink dotfiles
 
 Skip prompts with flags:
 
@@ -43,7 +45,7 @@ nvm install --lts
 | `Brewfile.c-cpp` | C/C++ build chain — required for some Node native packages and container builds |
 | `Brewfile.networking` | `arp-scan`, `nmap`, `nghttp2` |
 | `Brewfile.creators` | Content creation: writing, typesetting (`pandoc`, `tectonic`, `typst`, `ghostscript`, `poppler*`), image/video/audio (`imagemagick`, `ffmpeg`), markdown/PDF/SVG VS Code extensions |
-| `Brewfile.special-cases` | Leftovers grouped by section (Geo, Cloud, K8s, Redis, Yarn PnP, Procfile, JSON5, Remote/SSH, Prisma, Powerlevel10k, Gemini IDE) |
+| `Brewfile.special-cases` | Leftovers grouped by section (Geo, Cloud, K8s, Redis, Yarn PnP, Procfile, JSON5, Remote/SSH, Prisma, Gemini IDE) |
 
 Install a single one:
 
@@ -78,6 +80,16 @@ To install missing tracked entries on a stale machine:
 brew bundle install --file=~/.dotfiles/Brewfile
 ```
 
+## Shell config
+
+`.zshrc` is the interactive entry point. It loads in this order: completions → colored man pages (via `bat`) → homebrew zsh plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) → `zoxide` + `fzf` → `starship` prompt → history/directory `setopt`s → vi keybindings → aliases.
+
+`.aliases` is sourced last so its commands can reference any tool initialized above. It's a curated subset of the oh-my-zsh `git` plugin (status/staging/commit/diff/checkout/branch/pull/push/fetch/merge/rebase/reset/restore/stash/cherry-pick/log/remote) plus a handful of `brew`, `eza`, and one-letter shortcuts.
+
+`.zprofile` runs once per login and provides the `use_tool` helper (`use node`, `use psql`, etc.) for lazy-loading paths and aliases for tools that don't need to be in every shell.
+
+oh-my-zsh and Powerlevel10k were removed — `starship` is the prompt; the omz `git`/`docker`/`docker-compose`/`colored-man-pages`/`colorize` plugins are replaced inline (docker completion auto-generated on first run, man pages via `bat`, git aliases in `.aliases`).
+
 ## Configure links only
 
 If brew is already set up and you just want to relink:
@@ -101,7 +113,7 @@ Idempotent and safe to re-run. Uses atomic `ln -sfn`, backs up real files/dirs t
 ├── Brewfile.creators
 ├── Brewfile.special-cases
 ├── .gitconfig
-├── .zshrc / .zprofile / .p10k.zsh
+├── .zshrc / .zprofile / .aliases
 ├── .tmux.conf
 ├── starship.toml
 ├── ghostty.config / ghostty/
