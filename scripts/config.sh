@@ -43,8 +43,8 @@ echo "==> Linking dotfiles from $DOTFILES_DIR"
 link "$DOTFILES_DIR/.gitconfig"  "$HOME/.gitconfig"
 link "$DOTFILES_DIR/.zprofile"   "$HOME/.zprofile"
 link "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
+link "$DOTFILES_DIR/.aliases"    "$HOME/.aliases"
 link "$DOTFILES_DIR/.tmux.conf"  "$HOME/.tmux.conf"
-link "$DOTFILES_DIR/.p10k.zsh"   "$HOME/.p10k.zsh"
 link "$DOTFILES_DIR/keychron_q6_max_ansi_knob.layout.json" \
      "$HOME/keychron_q6_max_ansi_knob.layout.json"
 

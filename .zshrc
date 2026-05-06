@@ -1,24 +1,23 @@
-# p10k
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
-export ZSH="$HOME/.oh-my-zsh"
-plugins=(git docker docker-compose colored-man-pages colorize)
-source $ZSH/oh-my-zsh.sh
+# Always run as native ARM64 (prevents Rosetta 2 shell sessions)
+[[ "$(uname -m)" != "arm64" ]] && exec arch -arm64 "$SHELL" "$@"
 
 # completions
+# generate docker completion file on first run (replaces oh-my-zsh docker plugin)
+if command -v docker &>/dev/null; then
+  mkdir -p "$HOME/.docker/completions"
+  [[ -f "$HOME/.docker/completions/_docker" ]] || docker completion zsh > "$HOME/.docker/completions/_docker"
+fi
 fpath=($HOME/.docker/completions $fpath)
 autoload -Uz compinit && compinit
 autoload -Uz colors && colors
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+
+# colored man pages via bat (replaces oh-my-zsh colored-man-pages plugin)
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # homebrew plugins
-# source $HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# to customize, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f $HOME/.p10k.zsh ]] || source $HOME/.p10k.zsh 
 
 eval "$(zoxide init zsh)"
 source <(fzf --zsh)
@@ -29,28 +28,33 @@ if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
 fi
 eval "$(starship init zsh)"
 
+# history (replaces oh-my-zsh lib/history.zsh defaults)
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history       # timestamps in $HISTFILE
+setopt hist_expire_dups_first # drop dupes first when trimming
+setopt hist_ignore_dups       # don't record consecutive dupes
+setopt hist_ignore_space      # leading space hides command from history
+setopt hist_verify            # confirm `!!`/`!$` expansions before running
+setopt share_history          # sync history across live shells
+
+# directory navigation (replaces oh-my-zsh lib/directories.zsh)
+setopt auto_cd                # `foo` → `cd foo` if foo is a dir
+setopt auto_pushd             # every cd pushes to the dir stack
+setopt pushd_ignore_dups      # no dupes in the dir stack
+setopt pushdminus             # `cd -2` instead of `cd +2`
+
 # set vi mode
 bindkey -v
+function vi-yank-pbcopy() { zle vi-yank; echo -n "$CUTBUFFER" | pbcopy }
+zle -N vi-yank-pbcopy
+bindkey -M vicmd 'y' vi-yank-pbcopy
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
 
-# aliases
-alias b=brew
-alias c=container
-alias g=git
-alias p=pnpm
-alias v=nvim
-alias y=yazi
-alias py=python3
-alias pip=pip3
-alias use=use_tool
-alias bup='brew update && brew upgrade' 
-alias buc='brew cleanup && brew doctor'
-alias ls='eza -la --icons=auto --sort=name'
-alias lt='eza -la --icons=auto --sort=time'
-alias ld='eza -laD --icons=auto --sort=name'
-alias lf='eza -laf --icons=auto --sort=size'
-alias lg='eza -laf --icons=auto --git --sort=size'
-alias la='eza -laT -L3 --icons=auto'
-alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
+# aliases — loaded after all formula tools are initialized above
+[[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"

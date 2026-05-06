@@ -38,11 +38,12 @@ use_tool() {
     node)
       # pnpm 
       export PNPM_HOME="$HOME/Library/pnpm"
-      append_path "$PNPM_HOME" || return
+      mkdir -p "$PNPM_HOME"
+      append_path "$PNPM_HOME" || true
       export COREPACK_ENABLE_STRICT=0 # to allow new versions
       alias p=pnpm
       # nvm
-      . "$HOME/.nvm/nvm.sh" || return
+      . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" || return
       echo "✓ node"
       ;;
     psql)

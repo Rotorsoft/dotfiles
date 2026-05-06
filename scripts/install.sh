@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Re-exec under native ARM64 if running through Rosetta 2
+if [[ "$(uname -m)" != "arm64" ]]; then
+  exec arch -arm64 "$0" "$@"
+fi
+
 # Bootstrap a new Mac:
 #   1. Ensures Xcode Command Line Tools (clang/make/headers for node-gyp)
 #   2. Installs Homebrew if missing
@@ -60,7 +65,26 @@ if ! command -v brew >/dev/null 2>&1; then
   fi
 fi
 
-# 2. Essentials — always
+# 2b. Repair Homebrew git repo if corrupted (brew update fails without it)
+brew_repo="$(brew --prefix)/Homebrew"
+if [[ -d "$brew_repo" ]] && ! git -C "$brew_repo" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "==> Repairing Homebrew git repository"
+  git -C "$brew_repo" init
+  git -C "$brew_repo" remote add origin https://github.com/Homebrew/brew 2>/dev/null || true
+  git -C "$brew_repo" fetch origin
+  git -C "$brew_repo" reset --hard origin/master
+fi
+
+# 2c. Fix zsh completion dir ownership (Homebrew packages write there)
+for zsh_dir in /usr/local/share/zsh /usr/local/share/zsh/site-functions; do
+  if [[ -d "$zsh_dir" ]] && [[ ! -w "$zsh_dir" ]]; then
+    echo "==> Fixing ownership of $zsh_dir"
+    sudo chown -R "$(whoami)" "$zsh_dir"
+    chmod u+w "$zsh_dir"
+  fi
+done
+
+# 3. Essentials — always
 echo "==> Installing essentials (Brewfile)"
 brew bundle --file="${DOTFILES_DIR}/Brewfile"
 
@@ -89,13 +113,21 @@ for bundle in "${DOTFILES_DIR}"/Brewfile.*; do
   fi
 done
 
-# 4. Default shell
+# 4. npm globals (tree-sitter CLI needed by nvim-treesitter to compile parsers)
+if command -v npm >/dev/null 2>&1; then
+  echo "==> Installing npm globals"
+  npm install -g tree-sitter-cli
+else
+  echo "  skip npm globals (npm not found — run 'nvm install --lts' first, then: npm i -g tree-sitter-cli)"
+fi
+
+# 5. Default shell
 if [[ "${SHELL:-}" != *zsh ]]; then
   echo "==> Setting zsh as default shell"
   chsh -s "$(which zsh)"
 fi
 
-# 5. Symlink dotfiles
+# 6. Symlink dotfiles
 echo "==> Linking dotfiles"
 "${DOTFILES_DIR}/scripts/config.sh"
 
