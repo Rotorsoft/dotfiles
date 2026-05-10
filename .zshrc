@@ -50,8 +50,13 @@ bindkey -v
 function vi-yank-pbcopy() { zle vi-yank; echo -n "$CUTBUFFER" | pbcopy }
 zle -N vi-yank-pbcopy
 bindkey -M vicmd 'y' vi-yank-pbcopy
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey -M vicmd 'k' up-line-or-beginning-search
+bindkey -M vicmd 'j' down-line-or-beginning-search
 
 # aliases — loaded after all formula tools are initialized above
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
