@@ -71,3 +71,10 @@ esac
 
 export LOCAL_BIN="$HOME/.local/bin"
 export PATH="$LOCAL_BIN:$PATH"
+
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Machine-specific overrides (paths to tools that only live on some
+# hosts, work identities, secrets). Kept outside the dotfiles repo.
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
