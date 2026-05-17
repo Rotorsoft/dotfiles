@@ -15,7 +15,16 @@ fpath=($ZDOTDIR/completions $HOME/.docker/completions $fpath)
 
 # Cache compinit's dump under XDG_CACHE_HOME instead of $HOME/.zcompdump.
 mkdir -p "$XDG_CACHE_HOME/zsh"
-autoload -Uz compinit && compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+# Surface insecure fpath entries (so we know about them), then -i so compinit
+# silently skips them instead of blocking the shell with a y/n prompt.
+autoload -Uz compinit compaudit
+() {
+  local -a insecure=( ${(f)"$(compaudit 2>/dev/null)"} )
+  (( ${#insecure} )) || return
+  print -u2 "zsh: ignoring insecure fpath entries:"
+  printf '  %s\n' "${insecure[@]}" >&2
+}
+compinit -i -d "$XDG_CACHE_HOME/zsh/zcompdump"
 autoload -Uz colors && colors
 
 # case-insensitive + partial-word completion

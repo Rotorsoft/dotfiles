@@ -84,6 +84,13 @@ for zsh_dir in /usr/local/share/zsh /usr/local/share/zsh/site-functions; do
   fi
 done
 
+# 2d. zsh's compaudit flags Homebrew's share/ as insecure because it's
+# group-writable (admin). Skipping it via `compinit -i` breaks completion —
+# zsh's core completion functions live under share/zsh/functions. Tighten
+# perms here; chmod is idempotent so this is safe to re-run.
+brew_share="$(brew --prefix)/share"
+[[ -d "$brew_share" ]] && chmod g-w,o-w "$brew_share"
+
 # 3. Essentials — always
 echo "==> Installing essentials (Brewfile)"
 brew bundle --file="${DOTFILES_DIR}/Brewfile"
