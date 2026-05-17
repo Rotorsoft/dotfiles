@@ -41,12 +41,16 @@ echo "==> Linking dotfiles from $DOTFILES_DIR"
 
 # $HOME
 link "$DOTFILES_DIR/.gitconfig"  "$HOME/.gitconfig"
-link "$DOTFILES_DIR/.zprofile"   "$HOME/.zprofile"
-link "$DOTFILES_DIR/.zshrc"      "$HOME/.zshrc"
-link "$DOTFILES_DIR/.aliases"    "$HOME/.aliases"
+link "$DOTFILES_DIR/.zshenv"     "$HOME/.zshenv"   # ZDOTDIR bootstrap stub
 link "$DOTFILES_DIR/.tmux.conf"  "$HOME/.tmux.conf"
 link "$DOTFILES_DIR/keychron_q6_max_ansi_knob.layout.json" \
      "$HOME/keychron_q6_max_ansi_knob.layout.json"
+
+# ~/.config/zsh — real zsh config, ZDOTDIR-based
+link "$DOTFILES_DIR/zsh/.zshenv"   "$HOME/.config/zsh/.zshenv"
+link "$DOTFILES_DIR/zsh/.zprofile" "$HOME/.config/zsh/.zprofile"
+link "$DOTFILES_DIR/zsh/.zshrc"    "$HOME/.config/zsh/.zshrc"
+link "$DOTFILES_DIR/zsh/.aliases"  "$HOME/.config/zsh/.aliases"
 
 # ~/.config
 link "$DOTFILES_DIR/starship.toml"          "$HOME/.config/starship.toml"
@@ -83,6 +87,7 @@ prune_dir() {
 echo "==> Pruning stale dotfile symlinks"
 prune_dir "$HOME"
 prune_dir "$HOME/.config"
+prune_dir "$HOME/.config/zsh"
 prune_dir "$HOME/.config/yazi"
 prune_dir "$HOME/.config/ghostty"
 

@@ -113,21 +113,29 @@ for bundle in "${DOTFILES_DIR}"/Brewfile.*; do
   fi
 done
 
-# 4. npm globals (tree-sitter CLI needed by nvim-treesitter to compile parsers)
+# 4. fzf-tab — no brew formula, install via git clone (one-time, idempotent)
+FZF_TAB_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/zsh/fzf-tab"
+if [[ ! -d "$FZF_TAB_DIR" ]]; then
+  echo "==> Installing fzf-tab"
+  mkdir -p "$(dirname "$FZF_TAB_DIR")"
+  git clone --depth=1 https://github.com/Aloxaf/fzf-tab "$FZF_TAB_DIR"
+fi
+
+# 5. npm globals (tree-sitter CLI needed by nvim-treesitter to compile parsers)
 if command -v npm >/dev/null 2>&1; then
   echo "==> Installing npm globals"
   npm install -g tree-sitter-cli
 else
-  echo "  skip npm globals (npm not found — run 'nvm install --lts' first, then: npm i -g tree-sitter-cli)"
+  echo "  skip npm globals (npm not found — run 'mise use --global node@lts' first, then: npm i -g tree-sitter-cli)"
 fi
 
-# 5. Default shell
+# 6. Default shell
 if [[ "${SHELL:-}" != *zsh ]]; then
   echo "==> Setting zsh as default shell"
   chsh -s "$(which zsh)"
 fi
 
-# 6. Symlink dotfiles
+# 7. Symlink dotfiles
 echo "==> Linking dotfiles"
 "${DOTFILES_DIR}/scripts/config.sh"
 
@@ -136,6 +144,7 @@ cat <<EOF
 ==> Done.
 Next steps:
   - Open a new terminal
-  - Install Node:        nvm install --lts
+  - Install Node:        mise use --global node@lts
+  - Import shell history into atuin (one-time): atuin import auto
   - Verify:              node -v && pnpm -v && bun -v
 EOF
