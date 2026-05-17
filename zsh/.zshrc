@@ -9,7 +9,9 @@ if command -v docker &>/dev/null; then
   mkdir -p "$HOME/.docker/completions"
   [[ -f "$HOME/.docker/completions/_docker" ]] || docker completion zsh > "$HOME/.docker/completions/_docker"
 fi
-fpath=($HOME/.docker/completions $fpath)
+# Prepend our own completions dir so it shadows Homebrew's site-functions
+# where needed (e.g. our colon-safe _pnpm).
+fpath=($ZDOTDIR/completions $HOME/.docker/completions $fpath)
 
 # Cache compinit's dump under XDG_CACHE_HOME instead of $HOME/.zcompdump.
 mkdir -p "$XDG_CACHE_HOME/zsh"
@@ -50,6 +52,18 @@ source <(fzf --zsh)
 # Rebind the fzf file picker from default ctrl-t to ctrl-f.
 bindkey -r '^t'
 bindkey '^f' fzf-file-widget
+
+# Tab: accept the inline autosuggestion if one is shown, else fall through
+# to fzf-tab's completion menu. `source <(fzf --zsh)` above rebinds ^I to
+# fzf-completion; this restores fzf-tab and layers autosuggest-accept on top.
+_tab-accept-or-fzf-tab() {
+  if [[ -n $POSTDISPLAY ]]; then
+    zle autosuggest-accept
+  else
+    zle fzf-tab-complete
+  fi
+}
+zle -N _tab-accept-or-fzf-tab
 
 # ── version manager (replaces nvm; reads .nvmrc / .tool-versions / .mise.toml) ─
 eval "$(mise activate zsh)"
@@ -103,6 +117,11 @@ bindkey '^[[A' up-line-or-beginning-search
 bindkey '^[[B' down-line-or-beginning-search
 bindkey -M vicmd 'k' up-line-or-beginning-search
 bindkey -M vicmd 'j' down-line-or-beginning-search
+
+# Bind Tab after vi mode is active so it lands in the right keymap.
+# Widget is defined above, right after fzf init.
+bindkey -M viins '^I' _tab-accept-or-fzf-tab
+bindkey -M emacs '^I' _tab-accept-or-fzf-tab
 
 # ── aliases ────────────────────────────────────────────────────────────────────
 [[ -f "$ZDOTDIR/.aliases" ]] && source "$ZDOTDIR/.aliases"

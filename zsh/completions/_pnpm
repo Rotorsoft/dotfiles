@@ -1,0 +1,24 @@
+#compdef pnpm
+# Colon-safe override of Homebrew's _pnpm.
+# Upstream feeds candidates into _describe, which parses `dev:calculator`
+# as value=dev / description=calculator and drops colon-style scripts.
+# This variant uses compadd, which treats each line literally.
+
+_pnpm_completion() {
+  local -a reply
+  local si=$IFS
+  IFS=$'\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" SHELL=zsh pnpm completion-server -- "${words[@]}"))
+  IFS=$si
+
+  if [[ "${reply[1]}" == "__tabtab_complete_files__" ]]; then
+    _files
+  else
+    compadd -- "${reply[@]}"
+  fi
+}
+
+if [[ $zsh_eval_context == *func ]]; then
+  _pnpm_completion "$@"
+else
+  compdef _pnpm_completion pnpm
+fi
