@@ -1,66 +1,58 @@
+# Runs once per login shell — the right place for one-time setup like
+# Homebrew shellenv (expensive) and tool initializations that don't need
+# to re-run for every subprocess.
+
 # appends existing directory or symlink to PATH
 append_path() {
   p=$(realpath "$1")
   if [ -d "$p" ] || [ -f "$p" ]; then
     case ":$PATH:" in
       *":$1:"*)
-        # do nothing when found 
-        ;; 
-      *) 
-        # otherwise append to path
-        export PATH="$PATH:$1" 
-        # echo "Appended $1 to PATH"
+        # do nothing when found
+        ;;
+      *)
+        export PATH="$PATH:$1"
         ;;
     esac
-    return 0 # success
+    return 0
   else
     echo "Path not found: $1"
-    return 1 # failure
+    return 1
   fi
 }
 
-# configs tool-specific environments
+# Optional, opt-in tool environments. Node versions are managed by mise
+# (see .zshrc) — the node branch here just sets up the pnpm/corepack
+# ecosystem and aliases.
 use_tool() {
   case $1 in
-    java)
-      append_path "$HOMEBREW_PREFIX/opt/openjdk/bin" || return
-      echo "✓ Java"
-      ;;
     dotnet)
       append_path "/usr/local/share/dotnet" || return
       echo "✓ .NET"
       ;;
-    modular)
-      export MODULAR_HOME="$HOMEBREW_PREFIX/bin/.modular"
-      append_path "$MODULAR_HOME/pkg/packages.modular.com_mojo/bin" || return
-      echo "✓ modular"
-      ;;
     node)
-      # pnpm 
       export PNPM_HOME="$HOME/Library/pnpm"
       mkdir -p "$PNPM_HOME"
       append_path "$PNPM_HOME" || true
-      export COREPACK_ENABLE_STRICT=0 # to allow new versions
+      export COREPACK_ENABLE_STRICT=0
       alias p=pnpm
-      # nvm
-      . "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" || return
       echo "✓ node"
       ;;
     psql)
       append_path "$HOMEBREW_PREFIX/opt/libpq/bin" || return
       echo "✓ psql"
       ;;
+    bun)
+      source "$HOME/.bun/_bun" || return
+      echo "✓ bun"
+      ;;
     gcloud)
       source $HOME/google-cloud-sdk/path.zsh.inc || return
       source $HOME/google-cloud-sdk/completion.zsh.inc || return
       echo "✓ gcloud"
       ;;
-    bun)
-      source "$HOME/.bun/_bun" || return
-      echo "✓ bun"
-      ;;
     *)
-      echo "Usage: use_tool [java|dotnet|modular|node|psql|gcloud|bun]"
+      echo "Usage: use_tool [dotnet|node|psql|bun|gcloud]"
       ;;
   esac
 }
@@ -71,7 +63,6 @@ append_path "$HOMEBREW_PREFIX/bin"
 append_path "$HOMEBREW_PREFIX/sbin"
 eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 
-# init my tools
+# init my tools (pnpm/corepack ecosystem + libpq psql on PATH)
 use_tool node
 use_tool psql
-
