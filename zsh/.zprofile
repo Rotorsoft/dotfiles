@@ -38,13 +38,21 @@ use_tool() {
       alias p=pnpm
       echo "✓ node"
       ;;
+    psql)
+      append_path "$HOMEBREW_PREFIX/opt/libpq/bin" || return
+      echo "✓ psql"
+      ;;
+    bun)
+      source "$HOME/.bun/_bun" || return
+      echo "✓ bun"
+      ;;
     gcloud)
       source $HOME/google-cloud-sdk/path.zsh.inc || return
       source $HOME/google-cloud-sdk/completion.zsh.inc || return
       echo "✓ gcloud"
       ;;
     *)
-      echo "Usage: use_tool [dotnet|node|gcloud]"
+      echo "Usage: use_tool [dotnet|node|psql|bun|gcloud]"
       ;;
   esac
 }
@@ -55,5 +63,6 @@ append_path "$HOMEBREW_PREFIX/bin"
 append_path "$HOMEBREW_PREFIX/sbin"
 eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 
-# init my tools (pnpm/corepack ecosystem)
+# init my tools (pnpm/corepack ecosystem + libpq psql on PATH)
 use_tool node
+use_tool psql

@@ -88,10 +88,12 @@ Full list in [`zsh/.aliases`](zsh/.aliases).
 ```bash
 use dotnet   # adds /usr/local/share/dotnet to PATH
 use node     # pnpm + corepack + p alias (node version is handled by mise)
+use psql     # adds libpq's psql client to PATH
+use bun      # sources bun completions
 use gcloud   # sources gcloud path + completions
 ```
 
-`use node` runs automatically on login (cheap, no nvm).
+`use node` and `use psql` run automatically on login (cheap; node uses mise, no nvm).
 
 ### Node version management (mise)
 
