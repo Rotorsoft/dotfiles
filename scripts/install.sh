@@ -128,21 +128,13 @@ if [[ ! -d "$FZF_TAB_DIR" ]]; then
   git clone --depth=1 https://github.com/Aloxaf/fzf-tab "$FZF_TAB_DIR"
 fi
 
-# 5. npm globals (tree-sitter CLI needed by nvim-treesitter to compile parsers)
-if command -v npm >/dev/null 2>&1; then
-  echo "==> Installing npm globals"
-  npm install -g tree-sitter-cli
-else
-  echo "  skip npm globals (npm not found — run 'mise use --global node@lts' first, then: npm i -g tree-sitter-cli)"
-fi
-
-# 6. Default shell
+# 5. Default shell
 if [[ "${SHELL:-}" != *zsh ]]; then
   echo "==> Setting zsh as default shell"
   chsh -s "$(which zsh)"
 fi
 
-# 7. Symlink dotfiles
+# 6. Symlink dotfiles
 echo "==> Linking dotfiles"
 "${DOTFILES_DIR}/scripts/config.sh"
 
