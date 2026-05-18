@@ -17,9 +17,8 @@ The installer:
 4. Installs **`Brewfile`** (essentials) — always
 5. For every other `Brewfile.<group>` file, prompts y/n
 6. Clones [`fzf-tab`](https://github.com/Aloxaf/fzf-tab) into `~/.local/share/zsh/fzf-tab` (no Homebrew formula exists for it)
-7. Installs npm globals (`tree-sitter-cli`, used by nvim-treesitter to compile parsers) — skipped with a hint if `npm` isn't on `PATH` yet
-8. Sets `zsh` as default shell
-9. Runs `scripts/config.sh` to symlink dotfiles
+7. Sets `zsh` as default shell
+8. Runs `scripts/config.sh` to symlink dotfiles
 
 Skip prompts with flags:
 
