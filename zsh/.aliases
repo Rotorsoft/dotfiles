@@ -26,8 +26,14 @@ alias lg='eza -laf --icons=auto --git --sort=size'
 alias la='eza -laT -L3 --icons=auto'
 
 # ── git — requires: git (Brewfile) ────────────────────────────────────────────
-# custom pretty log
-alias gll='git log --graph --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(7,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s" --branches'
+# Pretty log: hash + date + author(10) + decoration + subject(50). Any extra
+# args are forwarded to `git log`, so you opt into graph, all-branches, refs,
+# etc. directly:
+#   gll                              # current branch, linear
+#   gll --graph                      # current branch with graph
+#   gll --graph --branches           # every local branch with graph
+#   gll --graph origin/uat HEAD      # specific refs
+alias gll='git log --decorate --abbrev-commit --date=format:"%m-%d" --pretty=format:"%C(auto)%h %Cgreen%>(5)%ad%Creset %Cblue%<(10,trunc)%an%Creset %C(auto)%d %<(50,trunc)%s"'
 
 # status
 alias gst='git status'
@@ -103,9 +109,7 @@ alias gcp='git cherry-pick'
 alias gcpa='git cherry-pick --abort'
 alias gcpc='git cherry-pick --continue'
 
-# log
-alias glo='git log --oneline --decorate'
-alias glog='git log --oneline --decorate --graph'
+# log — gll is the single pretty-log; pass --graph / --branches / refs as needed.
 alias gsh='git show'
 
 # remote

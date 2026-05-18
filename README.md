@@ -74,11 +74,21 @@ atuin import auto            # one-time: import existing zsh history into atuin
 | `gco`  | `git checkout` · `gcb` for new branch             |
 | `gp`   | `git push` · `gpf` for safe force-push            |
 | `gl`   | `git pull` · `gpr` for `--rebase`                 |
-| `gll`  | Pretty graph log                                  |
-| `glog` | Oneline graph log                                 |
+| `gll`  | Pretty `git log` (see examples below)             |
 | `bup`  | `brew update && brew upgrade`                     |
 
 Full list in [`zsh/.aliases`](zsh/.aliases).
+
+`gll` forwards any extra args to `git log`, so you opt into graph, all-branches, refs, etc. directly:
+
+```sh
+gll                              # current branch, linear
+gll --graph                      # current branch with graph
+gll --graph --branches           # every local branch with graph
+gll --graph origin/uat HEAD      # specific refs
+gll -5                           # last 5 commits
+gll --since '1 week ago'         # any other git log flag
+```
 
 ### Opt-in tool environments
 
