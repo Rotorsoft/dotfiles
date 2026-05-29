@@ -48,13 +48,13 @@ vim.pack.add({
 })
 
 -- LSP
-vim.lsp.enable({ "lua_ls", "ts_ls", "biome" })
-vim.lsp.config["lua_ls"] = { settings = { Lua = { workspace = { library = vim.api.nvim_get_runtime_file("", true) } } } }
-vim.lsp.config["ts_ls"] = {
+vim.lsp.enable({ "lua_ls", "ts_ls", "denols", "biome" })
+vim.lsp.config("lua_ls", { settings = { Lua = { workspace = { library = vim.api.nvim_get_runtime_file("", true) } } } })
+vim.lsp.config("ts_ls", {
   on_attach = function(client)
     client.server_capabilities.documentFormattingProvider = false
   end,
-}
+})
 
 -- Treesitter
 local languages = { "javascript", "typescript", "html", "json", "css", "markdown", "markdown_inline" }
