@@ -5,9 +5,11 @@
 brew "micro"
 brew "sevenzip"
 brew "telnet"
+brew "vercel-cli"
 
 # Other AI CLIs
 brew "gemini-cli"
+brew "openspec"
 
 # Casks
 cask "obsidian"
