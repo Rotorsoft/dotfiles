@@ -5,7 +5,7 @@
       "src": "https://github.com/rotorsoft/act-nvim"
     },
     "mini.nvim": {
-      "rev": "15abccbe23525ee0502d2efe620c77db00bfb93c",
+      "rev": "9d0b9b7188d5c24b5a87f0d8b383ec8bda7a0de4",
       "src": "https://github.com/echasnovski/mini.nvim"
     },
     "nvim-lspconfig": {
