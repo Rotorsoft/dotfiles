@@ -29,6 +29,9 @@ vim.o.foldexpr       = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.indentexpr     = "v:lua.require'nvim-treesitter'.indentexpr()"
 vim.o.foldmethod     = 'expr'
 vim.o.foldlevel      = 99
+--vim.opt.autocomplete = true
+--vim.opt.complete     = "w,b,u,t"
+vim.opt.pumheight    = 10
 vim.opt.completeopt  = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
 vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
 vim.opt.fillchars    = "fold:·,eob: "
