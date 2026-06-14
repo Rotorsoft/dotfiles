@@ -59,6 +59,7 @@ link "$DOTFILES_DIR/yazi/yazi.toml"         "$HOME/.config/yazi/yazi.toml"
 link "$DOTFILES_DIR/yazi/themes/grapevine"  "$HOME/.config/yazi/theme.toml"
 link "$DOTFILES_DIR/ghostty/config"         "$HOME/.config/ghostty/config"
 link "$DOTFILES_DIR/ghostty/themes"         "$HOME/.config/ghostty/themes"
+link "$DOTFILES_DIR/wgetrc"                 "$HOME/.config/wget/wgetrc"
 
 # VS Code
 link "$DOTFILES_DIR/vscode/settings.json" \

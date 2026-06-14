@@ -4,14 +4,17 @@
 [[ "$(uname -m)" != "arm64" ]] && exec arch -arm64 "$SHELL" "$@"
 
 # ── completions ────────────────────────────────────────────────────────────────
-# generate docker completion file on first run (replaces oh-my-zsh docker plugin)
+# generate docker completion file on first run (replaces oh-my-zsh docker plugin).
+# Honors $DOCKER_CONFIG (set in .zshenv to $XDG_CONFIG_HOME/docker), falling back
+# to ~/.docker on hosts that don't have it set.
 if command -v docker &>/dev/null; then
-  mkdir -p "$HOME/.docker/completions"
-  [[ -f "$HOME/.docker/completions/_docker" ]] || docker completion zsh > "$HOME/.docker/completions/_docker"
+  mkdir -p "${DOCKER_CONFIG:-$HOME/.docker}/completions"
+  [[ -f "${DOCKER_CONFIG:-$HOME/.docker}/completions/_docker" ]] || \
+    docker completion zsh > "${DOCKER_CONFIG:-$HOME/.docker}/completions/_docker"
 fi
 # Prepend our own completions dir so it shadows Homebrew's site-functions
 # where needed (e.g. our colon-safe _pnpm).
-fpath=($ZDOTDIR/completions $HOME/.docker/completions $fpath)
+fpath=($ZDOTDIR/completions "${DOCKER_CONFIG:-$HOME/.docker}/completions" $fpath)
 
 # Cache compinit's dump under XDG_CACHE_HOME instead of $HOME/.zcompdump.
 mkdir -p "$XDG_CACHE_HOME/zsh"
