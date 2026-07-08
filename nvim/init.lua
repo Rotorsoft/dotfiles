@@ -29,8 +29,10 @@ vim.o.foldexpr       = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.indentexpr     = "v:lua.require'nvim-treesitter'.indentexpr()"
 vim.o.foldmethod     = 'expr'
 vim.o.foldlevel      = 99
---vim.opt.autocomplete = true
---vim.opt.complete     = "w,b,u,t"
+vim.o.autocomplete   = true
+-- "o" feeds attached LSP clients (omni) into native autocomplete — first
+-- so their results outrank buffer words
+vim.opt.complete     = "o,.,w,b,u"
 vim.opt.pumheight    = 10
 vim.opt.completeopt  = { "menu", "menuone", "noinsert", "fuzzy", "popup" }
 vim.opt.listchars    = { tab = "» ", trail = "·", nbsp = " " }
